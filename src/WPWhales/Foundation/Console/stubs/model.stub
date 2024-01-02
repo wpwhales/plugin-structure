@@ -1,0 +1,11 @@
+<?php
+
+namespace {{ namespace }};
+
+use WPWhales\Database\Eloquent\Factories\HasFactory;
+use WPWhales\Database\Eloquent\Model;
+
+class {{ class }} extends Model
+{
+    use HasFactory;
+}

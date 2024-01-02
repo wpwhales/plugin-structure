@@ -1,0 +1,18 @@
+<?php
+
+namespace {{ namespace }};
+
+use WPWhales\Database\Eloquent\Builder;
+use WPWhales\Database\Eloquent\Model;
+use WPWhales\Database\Eloquent\Scope;
+
+class {{ class }} implements Scope
+{
+    /**
+     * Apply the scope to a given Eloquent query builder.
+     */
+    public function apply(Builder $builder, Model $model): void
+    {
+        //
+    }
+}

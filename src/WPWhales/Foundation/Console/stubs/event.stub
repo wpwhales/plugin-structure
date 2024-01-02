@@ -1,0 +1,36 @@
+<?php
+
+namespace {{ namespace }};
+
+use WPWhales\Broadcasting\Channel;
+use WPWhales\Broadcasting\InteractsWithSockets;
+use WPWhales\Broadcasting\PresenceChannel;
+use WPWhales\Broadcasting\PrivateChannel;
+use WPWhales\Contracts\Broadcasting\ShouldBroadcast;
+use WPWhales\Foundation\Events\Dispatchable;
+use WPWhales\Queue\SerializesModels;
+
+class {{ class }}
+{
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    /**
+     * Create a new event instance.
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Get the channels the event should broadcast on.
+     *
+     * @return array<int, \WPWhales\Broadcasting\Channel>
+     */
+    public function broadcastOn(): array
+    {
+        return [
+            new PrivateChannel('channel-name'),
+        ];
+    }
+}

@@ -1,0 +1,100 @@
+<?php
+
+namespace WPWhales\Foundation\Bus;
+
+use Closure;
+use WPWhales\Contracts\Bus\Dispatcher;
+use WPWhales\Support\Fluent;
+
+trait Dispatchable
+{
+    /**
+     * Dispatch the job with the given arguments.
+     *
+     * @param  mixed  ...$arguments
+     * @return \WPWhales\Foundation\Bus\PendingDispatch
+     */
+    public static function dispatch(...$arguments)
+    {
+        return new PendingDispatch(new static(...$arguments));
+    }
+
+    /**
+     * Dispatch the job with the given arguments if the given truth test passes.
+     *
+     * @param  bool|\Closure  $boolean
+     * @param  mixed  ...$arguments
+     * @return \WPWhales\Foundation\Bus\PendingDispatch|\WPWhales\Support\Fluent
+     */
+    public static function dispatchIf($boolean, ...$arguments)
+    {
+        if ($boolean instanceof Closure) {
+            $dispatchable = new static(...$arguments);
+
+            return value($boolean, $dispatchable)
+                ? new PendingDispatch($dispatchable)
+                : new Fluent;
+        }
+
+        return value($boolean)
+            ? new PendingDispatch(new static(...$arguments))
+            : new Fluent;
+    }
+
+    /**
+     * Dispatch the job with the given arguments unless the given truth test passes.
+     *
+     * @param  bool|\Closure  $boolean
+     * @param  mixed  ...$arguments
+     * @return \WPWhales\Foundation\Bus\PendingDispatch|\WPWhales\Support\Fluent
+     */
+    public static function dispatchUnless($boolean, ...$arguments)
+    {
+        if ($boolean instanceof Closure) {
+            $dispatchable = new static(...$arguments);
+
+            return ! value($boolean, $dispatchable)
+                ? new PendingDispatch($dispatchable)
+                : new Fluent;
+        }
+
+        return ! value($boolean)
+            ? new PendingDispatch(new static(...$arguments))
+            : new Fluent;
+    }
+
+    /**
+     * Dispatch a command to its appropriate handler in the current process.
+     *
+     * Queueable jobs will be dispatched to the "sync" queue.
+     *
+     * @param  mixed  ...$arguments
+     * @return mixed
+     */
+    public static function dispatchSync(...$arguments)
+    {
+        return app(Dispatcher::class)->dispatchSync(new static(...$arguments));
+    }
+
+    /**
+     * Dispatch a command to its appropriate handler after the current process.
+     *
+     * @param  mixed  ...$arguments
+     * @return mixed
+     */
+    public static function dispatchAfterResponse(...$arguments)
+    {
+        return self::dispatch(...$arguments)->afterResponse();
+    }
+
+    /**
+     * Set the jobs that should run if this job is successful.
+     *
+     * @param  array  $chain
+     * @return \WPWhales\Foundation\Bus\PendingChain
+     */
+    public static function withChain($chain)
+    {
+        return new PendingChain(static::class, $chain);
+    }
+}

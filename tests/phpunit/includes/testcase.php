@@ -1,0 +1,11 @@
+<?php
+/**
+ * Basic abstract test class.
+ *
+ * All WordPress unit tests should inherit from this class.
+ */
+abstract class WP_UnitTestCase extends WP_UnitTestCase_Base {
+
+    use WP_Plugin_Application,WP_Makes_Http_Requests;
+
+}

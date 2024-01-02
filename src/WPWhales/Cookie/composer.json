@@ -1,0 +1,40 @@
+{
+    "name": "WPWhales/cookie",
+    "description": "The WPWhales Cookie package.",
+    "license": "MIT",
+    "homepage": "https://laravel.com",
+    "support": {
+        "issues": "https://github.com/laravel/framework/issues",
+        "source": "https://github.com/laravel/framework"
+    },
+    "authors": [
+        {
+            "name": "Taylor Otwell",
+            "email": "taylor@laravel.com"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "ext-hash": "*",
+        "WPWhales/collections": "^10.0",
+        "WPWhales/contracts": "^10.0",
+        "WPWhales/macroable": "^10.0",
+        "WPWhales/support": "^10.0",
+        "symfony/http-foundation": "^6.4",
+        "symfony/http-kernel": "^6.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "WPWhales\\Cookie\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "10.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev"
+}
