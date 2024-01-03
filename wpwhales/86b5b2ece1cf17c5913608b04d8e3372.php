@@ -1,0 +1,1 @@
+<h1>Hello World</h1><?php /**PATH /app/plugin-structure/tests/phpunit/testcases/View/test.blade.php ENDPATH**/ ?>

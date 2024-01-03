@@ -4,6 +4,7 @@ namespace WPWCore;
 
 
 use WPWhales\Container\Container;
+use WPWhales\Support\HigherOrderTapProxy;
 use WPWhales\Support\HtmlString;
 /**
  * Get the available container instance.
@@ -143,4 +144,57 @@ function session($key = null, $default = null)
         return app("session")->put($key);
     }
     return app("session")->get($key, $default);
+}
+
+
+/**
+ * Return a new response from the application.
+ *
+ * @param string $content
+ * @param int $status
+ * @param array $headers
+ * @return \Illuminate\Http\Response|\Laravel\Lumen\Http\ResponseFactory
+ */
+function response($content = '', $status = 200, array $headers = [])
+{
+    $factory = new \WPWCore\Http\ResponseFactory;
+
+    if (func_num_args() === 0) {
+        return $factory;
+    }
+
+    return $factory->make($content, $status, $headers);
+}
+
+
+/**
+ * Call the given Closure with the given value then return the value.
+ *
+ * @param  mixed  $value
+ * @param  callable|null  $callback
+ * @return mixed
+ */
+function tap($value, $callback = null)
+{
+    if (is_null($callback)) {
+        return new HigherOrderTapProxy($value);
+    }
+
+    $callback($value);
+
+    return $value;
+}
+
+
+/**
+ * Generate a URL to a named route.
+ *
+ * @param string $name
+ * @param array $parameters
+ * @param bool|null $secure
+ * @return string
+ */
+function route($name, $parameters = [], $secure = null)
+{
+    return app('url')->route($name, $parameters, $secure);
 }

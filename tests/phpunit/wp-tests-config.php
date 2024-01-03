@@ -6,6 +6,8 @@ define( 'ABSPATH', '/app/' );
 define( 'WP_DEBUG', true );
 define( 'WP_DEBUG_LOG', true );
 
+define('WPW_ENVIRONMENT','local');
+
 // WARNING WARNING WARNING!
 // tests DROPS ALL TABLES in the database. DO NOT use a production database
 

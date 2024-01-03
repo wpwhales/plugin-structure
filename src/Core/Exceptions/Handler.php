@@ -124,6 +124,7 @@ class Handler implements ExceptionHandler
         } elseif ($e instanceof AuthorizationException) {
             $e = new HttpException($e->status() ?? 403, $e->getMessage());
         } elseif ($e instanceof ValidationException && $e->getResponse()) {
+
             return $e->getResponse();
         }
 
@@ -161,6 +162,7 @@ class Handler implements ExceptionHandler
     {
 
 
+        //TODO replace this true with app.debug value and integrate WP_DEBUG value with app.debug
         if (\WPWCore\config('app.debug', false)) {
             return [
                 'message'   => $e->getMessage(),
@@ -188,8 +190,9 @@ class Handler implements ExceptionHandler
      */
     protected function prepareResponse($request, Throwable $e)
     {
+        //TODO replace this true with app.debug value and integrate WP_DEBUG value with app.debug
         $response = new Response(
-            $this->renderExceptionWithSymfony($e, \WPWCore\config('app.debug', false)),
+            $this->renderExceptionWithSymfony($e, \WPWCore\config('app.debug', WP_DEBUG)),
             ($this->isHttpException($e) || $this->isWPWException($e)) ? $e->getStatusCode() : 500,
             $this->isHttpException($e) ? $e->getHeaders() : []
         );

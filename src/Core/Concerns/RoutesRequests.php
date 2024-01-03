@@ -4,6 +4,7 @@ namespace WPWCore\Concerns;
 
 use Closure;
 use FastRoute\Dispatcher;
+use WPWCore\View\View;
 use WPWhales\Contracts\Support\Responsable;
 use WPWhales\Http\Exceptions\HttpResponseException;
 use WPWhales\Http\Request;
@@ -505,12 +506,23 @@ trait RoutesRequests
     {
         $request = \WPWCore\app(Request::class);
 
+
         if ($response instanceof Responsable) {
             $response = $response->toResponse($request);
         }
 
         if ($response instanceof PsrResponseInterface) {
             $response = (new HttpFoundationFactory)->createResponse($response);
+        } elseif ($response instanceof View) {
+            //if it's a ajax call then transform it into json
+            if (wp_doing_ajax()) {
+                $ajax_response = new Response(["html" => $response->render()]);
+                $ajax_response->original = $response;
+
+                $response = $ajax_response;
+            } else {
+                $response = new Response($response);
+            }
         } elseif (!$response instanceof SymfonyResponse) {
             $response = new Response($response);
         } elseif ($response instanceof BinaryFileResponse) {

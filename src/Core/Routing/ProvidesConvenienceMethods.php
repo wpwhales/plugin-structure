@@ -145,7 +145,7 @@ trait ProvidesConvenienceMethods
     {
         [$ability, $arguments] = $this->parseAbilityAndArguments($ability, $arguments);
 
-        return app(Gate::class)->authorize($ability, $arguments);
+        return \WPWCore\app(Gate::class)->authorize($ability, $arguments);
     }
 
     /**
@@ -162,7 +162,7 @@ trait ProvidesConvenienceMethods
     {
         [$ability, $arguments] = $this->parseAbilityAndArguments($ability, $arguments);
 
-        return app(Gate::class)->forUser($user)->authorize($ability, $arguments);
+        return \WPWCore\app(Gate::class)->forUser($user)->authorize($ability, $arguments);
     }
 
     /**
@@ -189,7 +189,7 @@ trait ProvidesConvenienceMethods
      */
     public function dispatch($job)
     {
-        return app(Dispatcher::class)->dispatch($job);
+        return \WPWCore\app(Dispatcher::class)->dispatch($job);
     }
 
     /**
@@ -201,7 +201,7 @@ trait ProvidesConvenienceMethods
      */
     public function dispatchNow($job, $handler = null)
     {
-        return app(Dispatcher::class)->dispatchNow($job, $handler);
+        return \WPWCore\app(Dispatcher::class)->dispatchNow($job, $handler);
     }
 
     /**
@@ -211,6 +211,6 @@ trait ProvidesConvenienceMethods
      */
     protected function getValidationFactory()
     {
-        return app('validator');
+        return \WPWCore\app('validator');
     }
 }

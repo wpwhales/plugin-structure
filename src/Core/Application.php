@@ -16,7 +16,7 @@ use WPWhales\Contracts\Bus\Dispatcher;
 use WPWhales\Contracts\Container\BindingResolutionException;
 use WPWhales\Database\DatabaseServiceProvider;
 use WPWhales\Database\MigrationServiceProvider;
-use WPWhales\Encryption\EncryptionServiceProvider;
+use WPWCore\Encryption\EncryptionServiceProvider;
 use WPWhales\Events\EventServiceProvider;
 use WPWhales\Filesystem\Filesystem;
 use WPWhales\Filesystem\FilesystemServiceProvider;
@@ -31,7 +31,7 @@ use WPWhales\Support\ServiceProvider;
 use WPWhales\Support\Str;
 use WPWhales\Translation\TranslationServiceProvider;
 use WPWhales\Validation\ValidationServiceProvider;
-use WPWhales\View\ViewServiceProvider;
+use WPWCore\View\ViewServiceProvider;
 use WPWCore\Console\ConsoleServiceProvider;
 use WPWCore\Routing\Router;
 use Nyholm\Psr7\Factory\Psr17Factory;
@@ -112,6 +112,13 @@ class Application extends Container
     public $router;
 
     /**
+     * The Admin Ajax Router instance.
+     *
+     * @var \WPWCore\Routing\Router
+     */
+    public $adminAjaxRouter;
+
+    /**
      * The array of terminating callbacks.
      *
      * @var callable[]
@@ -130,33 +137,53 @@ class Application extends Container
 
         $this->bootstrapContainer();
         $this->bootstrapRouter();
+        $this->loadBaseConfigs();
 
     }
 
 
-    protected function createRoutesFromFile($path, $attributes=[])
+    protected function loadBaseConfigs()
+    {
+
+        $this->configure("app");
+        $this->configure("view");
+    }
+
+    protected function createRoutesFromFile($path, $attributes = [], $routerInstance = null)
     {
         if (!file_exists($path)) {
             throw new \Exception("Unable to load the route files.please provide the correct path");
         }
 
-        $this->router->group($attributes, function ($router) use ($path) {
+        if (!is_null($routerInstance) && is_a($routerInstance, Router::class)) {
+            $routerInstance->group($attributes, function ($router) use ($path) {
 
 
-            require $path;
-        });
-    }
+                require $path;
+            });
+        } else {
+            $this->router->group($attributes, function ($router) use ($path) {
 
-    public function createAjaxRoutesFromFile($path, $attributes=[])
-    {
-        if (wp_doing_ajax()) {
-            $this->createRoutesFromFile($path, $attributes);
+
+                require $path;
+            });
         }
 
 
     }
 
-    public function createWebRoutesFromFile($path, $attributes=[])
+    public function createAjaxRoutesFromFile($path, $attributes = [])
+    {
+        if (wp_doing_ajax()) {
+            $this->createRoutesFromFile($path, $attributes);
+        }
+
+        $this->createRoutesFromFile($path, $attributes, $this->adminAjaxRouter);
+
+
+    }
+
+    public function createWebRoutesFromFile($path, $attributes = [])
     {
         if (!wp_doing_ajax()) {
 
@@ -194,6 +221,8 @@ class Application extends Container
     public function bootstrapRouter()
     {
         $this->router = new Router($this);
+
+        $this->adminAjaxRouter = new Router($this);
     }
 
     /**
@@ -765,7 +794,7 @@ class Application extends Container
 
             if (file_exists($appConfigDir)) {
                 return $appConfigDir;
-            } elseif (file_exists($path = __DIR__ . '/../config/')) {
+            } elseif (file_exists($path = __DIR__ . '/../../config/')) {
                 return $path;
             }
         } else {
@@ -773,7 +802,7 @@ class Application extends Container
 
             if (file_exists($appConfigPath)) {
                 return $appConfigPath;
-            } elseif (file_exists($path = __DIR__ . '/../config/' . $name . '.php')) {
+            } elseif (file_exists($path = __DIR__ . '/../../config/' . $name . '.php')) {
                 return $path;
             }
         }

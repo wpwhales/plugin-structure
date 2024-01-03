@@ -362,6 +362,7 @@ trait WP_Makes_Http_Requests
         $this->currentUri = $this->prepareUrlForRequest($uri);
 
 
+
         $server["PHP_SELF"] = $uri;
         $server["DOCUMENT_URI"] = $uri;
         $server["SCRIPT_NAME"] = $uri;
@@ -426,9 +427,12 @@ trait WP_Makes_Http_Requests
 
         try {
 
+
+
             ob_start();
             $response = $this->app->handle($this->app['request']);
             $this->_last_response = ob_get_clean();
+
             return $this->response = TestResponse::fromBaseResponse(
                 $this->app->getResponse()
             );
