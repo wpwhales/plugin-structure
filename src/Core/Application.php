@@ -138,6 +138,33 @@ class Application extends Container
         $this->bootstrapContainer();
         $this->bootstrapRouter();
         $this->loadBaseConfigs();
+        $this->withFacades();
+
+    }
+
+    /**
+     * Register container bindings for the application.
+     *
+     * @return void
+     */
+    protected function registerCookieBindings()
+    {
+        $this->singleton('cookie', function () {
+            return $this->loadComponent('session', 'WPWhales\Cookie\CookieServiceProvider', 'cookie');
+        });
+    }
+
+    protected function registerSessionBindings()
+    {
+
+
+        $this->singleton('session', function () {
+            return $this->loadComponent('session', 'WPWCore\Session\SessionServiceProvider');
+        });
+
+        $this->singleton('session.store', function () {
+            return $this->loadComponent('session', 'WPWCore\Session\SessionServiceProvider', 'session.store');
+        });
 
     }
 
@@ -1182,6 +1209,9 @@ class Application extends Container
             \WPWCore\Routing\UrlGenerator::class                  => 'url',
             \WPWhales\Contracts\Validation\Factory::class         => 'validator',
             \WPWhales\Contracts\View\Factory::class               => 'view',
+            \WPWhales\Session\SessionManager::class => 'session',
+            \WPWhales\Contracts\Cookie\Factory::class => 'cookie',
+            \WPWhales\Contracts\Cookie\QueueingFactory::class => 'cookie',
         ];
     }
 
@@ -1235,5 +1265,11 @@ class Application extends Container
         \WPWhales\Contracts\Validation\Factory::class       => 'registerValidatorBindings',
         'view'                                              => 'registerViewBindings',
         \WPWhales\Contracts\View\Factory::class             => 'registerViewBindings',
+        'session' => 'registerSessionBindings',
+        'session.store' => 'registerSessionBindings',
+        'WPWhales\Session\SessionManager' => 'registerSessionBindings',
+        'cookie' => 'registerCookieBindings',
+        'WPWhales\Contracts\Cookie\Factory' => 'registerCookieBindings',
+        'WPWhales\Contracts\Cookie\QueueingFactory' => 'registerCookieBindings',
     ];
 }

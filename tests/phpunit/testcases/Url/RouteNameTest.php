@@ -26,7 +26,8 @@ class RouteNameTest extends \WP_UnitTestCase
     {
         $this->app->createAjaxRoutesFromFile(__DIR__ . "/routes/ajax.php");
 
-        $this->assertEquals($this->app["url"]->adminAjaxRoute("ajax_route_name"), admin_url("admin-ajax.php?action=wpwhales&route=/test_ajax_route"));
+
+        $this->assertEquals($this->app["url"]->adminAjaxRoute("ajax_route_name"), admin_url("admin-ajax.php?action=wpwhales&route=".urlencode("/test_ajax_route")));
 
     }
 
@@ -37,7 +38,7 @@ class RouteNameTest extends \WP_UnitTestCase
 
         $this->assertEquals($this->app["url"]->route("test_web_route"), site_url("/test_web_route"));
 
-        $this->assertEquals($this->app["url"]->adminAjaxRoute("ajax_route_name"), admin_url("admin-ajax.php?action=wpwhales&route=/test_ajax_route"));
+        $this->assertEquals($this->app["url"]->adminAjaxRoute("ajax_route_name"), admin_url("admin-ajax.php?action=wpwhales&route=".urlencode("/test_ajax_route")));
 
     }
 

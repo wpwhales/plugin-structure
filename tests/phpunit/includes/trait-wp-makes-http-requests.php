@@ -1,7 +1,8 @@
 <?php
 
 
-use WPWhales\Http\Request;
+use Carbon\Carbon;
+use WPWCore\Http\Request;
 use WPWhales\Support\Arr;
 use WPWhales\Support\Str;
 use WPWhales\Testing\Assert as PHPUnit;
@@ -363,12 +364,14 @@ trait WP_Makes_Http_Requests
 
 
 
+
         $server["PHP_SELF"] = $uri;
         $server["DOCUMENT_URI"] = $uri;
         $server["SCRIPT_NAME"] = $uri;
         $server["SCRIPT_NAME"] = $uri;
         $server["SCRIPT_FILENAME"] = ABSPATH . "." . $uri;
-
+        $server["HTTPS"]="https";
+        $server["SERVER_PORT"]=443;
 
         $symfonyRequest = SymfonyRequest::create(
             $this->currentUri, $method, $parameters,

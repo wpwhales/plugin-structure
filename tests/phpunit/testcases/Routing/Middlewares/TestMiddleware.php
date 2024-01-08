@@ -14,12 +14,12 @@ class TestMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \WPWhales\Http\Request  $request
+     * @param  \WPWCore\Http\Request  $request
      * @param  \Closure  $next
      * @param  string|null  $guard
      * @return mixed
      */
-    public function handle($request, \Closure $next)
+    public function handle(\WPWCore\Http\Request $request, \Closure $next)
     {
 
 

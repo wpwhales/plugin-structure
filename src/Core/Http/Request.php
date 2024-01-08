@@ -79,4 +79,25 @@ class Request extends BaseRequest
             $offset
         );
     }
+
+
+
+
+    public function hasValidSignature($absolute = true)
+    {
+        return \WPWCore\app("url")->hasValidSignature($this, $absolute);
+    }
+
+
+    public function hasValidRelativeSignature()
+    {
+        return \WPWCore\app("url")->hasValidSignature($this, $absolute = false);
+
+    }
+
+    public function hasValidSignatureWhileIgnoring($ignoreQuery = [], $absolute = true)
+    {
+        return \WPWCore\app("url")->hasValidSignature($this, $absolute, $ignoreQuery);
+
+    }
 }
