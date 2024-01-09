@@ -486,7 +486,7 @@ class TestResponse implements ArrayAccess
                 }
 
                 $decryptedValue = CookieValuePrefix::remove(
-                    app('encrypter')->decrypt($cookie->getValue(), $unserialize)
+                    \WPWCore\app('encrypter')->decrypt($cookie->getValue(), $unserialize)
                 );
 
                 return new Cookie(

@@ -258,18 +258,32 @@ class CookieJar implements JarContract
 
             // Note: $samesite is available since PHP 7.3.0, so make sure your PHP version supports it.
             if (version_compare(PHP_VERSION, '7.3.0') >= 0) {
-                setcookie($name, $value, [
-                    "expires"   => $expire,
-                    "path" => $path,
-                    "domain" => $domain,
-                    "secure" => $secure,
+                $this->setCookie($name, $value, [
+                    "expires"  => $expire,
+                    "path"     => $path,
+                    "domain"   => $domain,
+                    "secure"   => $secure,
                     "httponly" => $httponly,
                     "samesite" => $samesite
                 ]);
-            }else{
-                setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
+            } else {
+                $this->setCookie($name, $value, $expire, $path, $domain, $secure, $httponly);
 
             }
+        }
+    }
+
+    protected function setCookie($name, $value, $expire_or_options, $path="/", $domain=false, $secure=true, $httponly=true)
+    {
+
+
+        if (is_array($expire_or_options)) {
+            setcookie($name, $value, $expire_or_options);
+        } else {
+
+            setcookie($name, $value, $expire_or_options, $path, $domain, $secure, $httponly);
+
+
         }
     }
 }

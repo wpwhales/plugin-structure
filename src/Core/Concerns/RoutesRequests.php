@@ -34,7 +34,7 @@ trait RoutesRequests
      * @var array
      */
     protected $middleware = [
-//        VerifyCsrfToken::class
+        VerifyCsrfToken::class
     ];
 
     /**

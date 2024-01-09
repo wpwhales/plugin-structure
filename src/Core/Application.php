@@ -163,17 +163,17 @@ class Application extends Container
         add_action("shutdown", [$this, "shutdown"]);
     }
 
-    protected function initSession()
+    public function initSession()
     {
-       
+
 
         $session = $this->make('session');
         $start_session = new StartSession($session);
         $start_session->handle();
 
-        $this->shutting_down(function () use ($session) {
+        $this->shutting_down(function () {
 
-            $session->save();
+            $this->make('session')->save();
         });
 
     }
@@ -181,13 +181,14 @@ class Application extends Container
     protected function sendQueuedCookiesOnTemplateRedirect()
     {
 
-        add_action("template_redirect", function () {
+        add_action("template_redirect", [$this,"sendCookieHeaders"]);
 
-            $cookie = $this->make("cookie");
-            $cookie->sendHeaders();
+    }
 
-        });
 
+    public function sendCookieHeaders(){
+        $cookie = $this->make("cookie");
+        $cookie->sendHeaders();
     }
 
     /**
@@ -1073,7 +1074,7 @@ class Application extends Container
      */
     public function runningUnitTests()
     {
-        return $this->environment() === 'testing';
+        return defined("PHPUNIT_COMPOSER_INSTALL") || defined("WP_TESTS_DOMAIN");
     }
 
     /**
