@@ -18,7 +18,7 @@ return [
     |
     */
 
-    'driver' => "database",
+    'driver' => "file",
 
     /*
     |--------------------------------------------------------------------------
@@ -113,7 +113,7 @@ return [
     |
     */
 
-    'lottery' => [2, 100],
+    'lottery' => [50, 100],
 
     /*
     |--------------------------------------------------------------------------
@@ -126,10 +126,7 @@ return [
     |
     */
 
-    'cookie' => env(
-        'SESSION_COOKIE',
-        Str::slug(env('APP_NAME', 'laravel'), '_').'_session'
-    ),
+    'cookie' => defined("COOKIEHASH") ? "wpwhales_session_".COOKIEHASH : "wpwhales_session",
 
     /*
     |--------------------------------------------------------------------------
@@ -142,7 +139,7 @@ return [
     |
     */
 
-    'path' => '/',
+    'path' =>defined("COOKIEPATH") ? COOKIEPATH : "/",
 
     /*
     |--------------------------------------------------------------------------
@@ -155,7 +152,7 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN'),
+    'domain' => defined("COOKIE_DOMAIN") ? COOKIE_DOMAIN:false,
 
     /*
     |--------------------------------------------------------------------------

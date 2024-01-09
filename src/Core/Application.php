@@ -2,6 +2,7 @@
 
 namespace WPWCore;
 
+use WPWCore\Session\StartSession;
 use WPWhales\Auth\AuthManager;
 use WPWhales\Auth\AuthServiceProvider;
 use WPWhales\Broadcasting\BroadcastServiceProvider;
@@ -125,6 +126,14 @@ class Application extends Container
      */
     protected $terminatingCallbacks = [];
 
+
+    /**
+     * The array of shutdown callbacks.
+     *
+     * @var callable[]
+     */
+    protected $shutdownCallbacks = [];
+
     /**
      * Create a new Lumen application instance.
      *
@@ -140,6 +149,45 @@ class Application extends Container
         $this->loadBaseConfigs();
         $this->withFacades();
 
+
+        $this->sendQueuedCookiesOnTemplateRedirect();
+
+
+        $this->loadShutDownMethodWithWordpress();
+
+
+    }
+
+    protected function loadShutDownMethodWithWordpress()
+    {
+        add_action("shutdown", [$this, "shutdown"]);
+    }
+
+    protected function initSession()
+    {
+       
+
+        $session = $this->make('session');
+        $start_session = new StartSession($session);
+        $start_session->handle();
+
+        $this->shutting_down(function () use ($session) {
+
+            $session->save();
+        });
+
+    }
+
+    protected function sendQueuedCookiesOnTemplateRedirect()
+    {
+
+        add_action("template_redirect", function () {
+
+            $cookie = $this->make("cookie");
+            $cookie->sendHeaders();
+
+        });
+
     }
 
     /**
@@ -150,7 +198,7 @@ class Application extends Container
     protected function registerCookieBindings()
     {
         $this->singleton('cookie', function () {
-            return $this->loadComponent('session', 'WPWhales\Cookie\CookieServiceProvider', 'cookie');
+            return $this->loadComponent('session', 'WPWCore\Cookie\CookieServiceProvider', 'cookie');
         });
     }
 
@@ -1155,6 +1203,35 @@ class Application extends Container
         return $this;
     }
 
+
+    /**
+     * Register a shutting down callback with the application.
+     *
+     * @param callable|string $callback
+     * @return $this
+     */
+    public function shutting_down($callback)
+    {
+        $this->shutdownCallbacks[] = $callback;
+
+        return $this;
+    }
+
+
+    /**
+     * Register a shutdown callback with the application.
+     *
+     * @param callable|string $callback
+     * @return $this
+     */
+    public function shutdown()
+    {
+
+        foreach ($this->shutdownCallbacks as $callback) {
+            $callback();
+        }
+    }
+
     /**
      * Terminate the application.
      *
@@ -1209,9 +1286,9 @@ class Application extends Container
             \WPWCore\Routing\UrlGenerator::class                  => 'url',
             \WPWhales\Contracts\Validation\Factory::class         => 'validator',
             \WPWhales\Contracts\View\Factory::class               => 'view',
-            \WPWhales\Session\SessionManager::class => 'session',
-            \WPWhales\Contracts\Cookie\Factory::class => 'cookie',
-            \WPWhales\Contracts\Cookie\QueueingFactory::class => 'cookie',
+            \WPWhales\Session\SessionManager::class               => 'session',
+            \WPWhales\Contracts\Cookie\Factory::class             => 'cookie',
+            \WPWhales\Contracts\Cookie\QueueingFactory::class     => 'cookie',
         ];
     }
 
@@ -1265,11 +1342,11 @@ class Application extends Container
         \WPWhales\Contracts\Validation\Factory::class       => 'registerValidatorBindings',
         'view'                                              => 'registerViewBindings',
         \WPWhales\Contracts\View\Factory::class             => 'registerViewBindings',
-        'session' => 'registerSessionBindings',
-        'session.store' => 'registerSessionBindings',
-        'WPWhales\Session\SessionManager' => 'registerSessionBindings',
-        'cookie' => 'registerCookieBindings',
-        'WPWhales\Contracts\Cookie\Factory' => 'registerCookieBindings',
-        'WPWhales\Contracts\Cookie\QueueingFactory' => 'registerCookieBindings',
+        'session'                                           => 'registerSessionBindings',
+        'session.store'                                     => 'registerSessionBindings',
+        'WPWhales\Session\SessionManager'                   => 'registerSessionBindings',
+        'cookie'                                            => 'registerCookieBindings',
+        'WPWhales\Contracts\Cookie\Factory'                 => 'registerCookieBindings',
+        'WPWhales\Contracts\Cookie\QueueingFactory'         => 'registerCookieBindings',
     ];
 }

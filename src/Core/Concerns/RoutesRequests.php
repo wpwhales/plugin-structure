@@ -4,6 +4,7 @@ namespace WPWCore\Concerns;
 
 use Closure;
 use FastRoute\Dispatcher;
+use WPWCore\Routing\Middleware\VerifyCsrfToken;
 use WPWCore\View\View;
 use WPWhales\Contracts\Support\Responsable;
 use WPWhales\Http\Exceptions\HttpResponseException;
@@ -32,7 +33,9 @@ trait RoutesRequests
      *
      * @var array
      */
-    protected $middleware = [];
+    protected $middleware = [
+//        VerifyCsrfToken::class
+    ];
 
     /**
      * All of the route specific middleware short-hands.
@@ -114,14 +117,19 @@ trait RoutesRequests
 
     private function handleResponse($response, $callback = null)
     {
+
+
         if ($response !== false && $this->shouldSendResponse()) {
-            $this->response = $response;
+
+            $this->response = $this->attachQueuedCookiesWithResponse($response);
 
             if ($response instanceof SymfonyResponse) {
+
                 $response->send();
             } else {
                 echo (string)$response;
             }
+
 
 
             if (count($this->middleware) > 0) {
@@ -135,6 +143,17 @@ trait RoutesRequests
         }
     }
 
+    private function attachQueuedCookiesWithResponse($response)
+    {
+        $cookies = $this->make("cookie")->getQueuedCookies();
+
+        foreach ($cookies as $cookie) {
+
+            $response->headers->setCookie($cookie);
+        }
+
+        return $response;
+    }
 
     public function getResponse()
     {
@@ -152,11 +171,16 @@ trait RoutesRequests
         $response = $this->dispatch($request);
 
 
+
+
         //It means no route found so we'll terminate the app and
         // let wordpress handle the rest of the stuff
         $this->handleResponse($response, function () {
             $this->app->terminate();
         });
+
+        //TODO Remove all instances for the app container except the
+        // cookies , session , validator
 
 
     }
@@ -197,12 +221,20 @@ trait RoutesRequests
      */
     public function dispatch($request = null)
     {
+
+
         [$method, $pathInfo] = $this->parseIncomingRequest($request);
 
+        //Start the session as well so that the components can utilize it
+        $this->initSession();
+
         try {
+
             //First check if route exists
             if (isset($this->router->getRoutes()[$method . $pathInfo])) {
-
+                $this->currentRoute = [
+                    true, $this->router->getRoutes()[$method . $pathInfo]['action'], []
+                ];
                 //Then boot the app first
                 $this->boot();
 
@@ -220,6 +252,9 @@ trait RoutesRequests
 
 
         } catch (Throwable $e) {
+
+
+
             return $this->prepareResponse($this->sendExceptionToHandler($e));
         }
     }
@@ -313,7 +348,7 @@ trait RoutesRequests
      */
     protected function handleFoundRoute($routeInfo)
     {
-        $this->currentRoute = $routeInfo;
+
 
         $this['request']->setRouteResolver(function () {
             return $this->currentRoute;
@@ -486,6 +521,8 @@ trait RoutesRequests
      */
     protected function sendThroughPipeline(array $middleware, Closure $then)
     {
+
+
         if (count($middleware) > 0 && !$this->shouldSkipMiddleware()) {
             return (new Pipeline($this))
                 ->send($this->make('request'))

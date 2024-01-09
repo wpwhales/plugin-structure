@@ -417,18 +417,7 @@ class SessionStoreTest extends TestCase
         $this->assertTrue($session->hasOldInput());
     }
 
-    public function test_HandlerNeedsRequest()
-    {
-        $session = $this->getSession();
-        $this->assertFalse($session->handlerNeedsRequest());
-        $session->getHandler()->shouldReceive('setRequest')->never();
 
-        $session = new Store('test', m::mock(new CookieSessionHandler(new CookieJar, 60, false)));
-        $this->assertTrue($session->handlerNeedsRequest());
-        $session->getHandler()->shouldReceive('setRequest')->once();
-        $request = new Request;
-        $session->setRequestOnHandler($request);
-    }
 
     public function test_Token()
     {

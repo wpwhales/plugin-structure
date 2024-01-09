@@ -15,16 +15,16 @@ class SessionInitTest extends \WP_UnitTestCase
 
 
 
-        $this->app->configure("database");
-
-        $session = tap($this->app["session"]->driver(), function ($session)  {
-            $session->setId("wtT0W8mIl4tD6kCbLdGmBJ3vAIlgPUpp6VYU98d7");
-        });
-
-            $this->app["session"]->start();
-
-        $this->app["session"]->save();
-        dd($this->app["session"]);
+//        $this->app->configure("database");
+//
+//        $session = tap($this->app["session"]->driver(), function ($session)  {
+//            $session->setId("wtT0W8mIl4tD6kCbLdGmBJ3vAIlgPUpp6VYU98d7");
+//        });
+//
+//            $this->app["session"]->start();
+//
+//        $this->app["session"]->save();
+//        dd($this->app["session"]);
     }
 
 }

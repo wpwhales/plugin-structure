@@ -33,6 +33,7 @@ class AjaxHandlerTest extends \WP_Ajax_UnitTestCase
         $response = $this->adminAjaxCall("GET", "/test_plain_response");
 
 
+
         $response->assertStatus(200);
         $response->assertContent("1");
         $response = $this->adminAjaxCall("POST", "/test_plain_response");
