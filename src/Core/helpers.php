@@ -4,6 +4,7 @@ namespace WPWCore;
 
 
 use WPWCore\Http\Redirector;
+use WPWCore\Routing\UrlGenerator;
 use WPWhales\Container\Container;
 use WPWhales\Support\HigherOrderTapProxy;
 use WPWhales\Support\HtmlString;
@@ -210,4 +211,22 @@ function tap($value, $callback = null)
 function route($name, $parameters = [], $secure = null)
 {
     return app('url')->route($name, $parameters, $secure);
+}
+
+
+/**
+ * Generate a url for the application.
+ *
+ * @param  string|null  $path
+ * @param  mixed  $parameters
+ * @param  bool|null  $secure
+ * @return \WPWhales\Contracts\Routing\UrlGenerator|string
+ */
+function url($path = null, $parameters = [], $secure = null)
+{
+    if (is_null($path)) {
+        return app(UrlGenerator::class);
+    }
+
+    return app(UrlGenerator::class)->to($path, $parameters, $secure);
 }

@@ -603,8 +603,9 @@ class UrlGenerator
         $referrer = $request->headers->get('referer');
 
 
-        //need to implement $this->getPreviousUrlFromSession();
-        $url = $referrer ? $this->to($referrer) : "/";
+
+
+        $url = $referrer ? $this->to($referrer) : $this->getPreviousUrlFromSession();
 
         if ($url) {
             return $url;
@@ -613,5 +614,17 @@ class UrlGenerator
         }
 
         return $this->to('/');
+    }
+
+    /**
+     * Get the previous URL from the session if possible.
+     *
+     * @return string|null
+     */
+    protected function getPreviousUrlFromSession()
+    {
+        $session = $this->app->session;
+
+        return $session ? $session->previousUrl() : null;
     }
 }

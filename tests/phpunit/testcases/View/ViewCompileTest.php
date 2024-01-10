@@ -4,6 +4,9 @@ namespace Tests\View;
 
 
 
+use WPWCore\Http\Request;
+use WPWCore\Session\SessionManager;
+
 /**
  *  !!!! ONLY FOR AJAX CALL !!!!
  *
@@ -31,6 +34,7 @@ class ViewCompileTest extends \WP_UnitTestCase
 
 
 
+
     }
 
 
@@ -39,7 +43,17 @@ class ViewCompileTest extends \WP_UnitTestCase
         /**
          * @var $view \WPWCore\View\Factory
          */
+        $sessionInstance = $this->getMockBuilder(Request::class)->onlyMethods(["session","get"])->getMock();
+
+        $sessionInstance->expects($this->exactly(1))->method("session")->will($this->returnSelf());
+
+        $sessionInstance->expects($this->exactly(1))->method("get")->will($this->returnValue(null));
+        $this->app["request"] = $sessionInstance;
+
         $view = $this->app["view"];
+
+
+
 
         $view->make("test")->render();
 
@@ -54,10 +68,20 @@ class ViewCompileTest extends \WP_UnitTestCase
 
     public function test_compiled_files_contains_ABSPATH_constant_check(){
 
+
+        $sessionInstance = $this->getMockBuilder(Request::class)->onlyMethods(["session","get"])->getMock();
+
+        $sessionInstance->expects($this->exactly(1))->method("session")->will($this->returnSelf());
+
+        $sessionInstance->expects($this->exactly(1))->method("get")->will($this->returnValue(null));
+        $this->app["request"] = $sessionInstance;
+
         /**
          * @var $view \WPWCore\View\Factory
          */
         $view = $this->app["view"];
+
+
 
         $view->make("test")->render();
 

@@ -253,7 +253,7 @@ class TestResponse implements ArrayAccess
             ]), '?');
 
             PHPUnit::assertEquals(
-                app('url')->to($uri), $expectedUri
+                \WPWCore\app('url')->to($uri), $expectedUri
             );
         }
 
@@ -309,7 +309,7 @@ class TestResponse implements ArrayAccess
     public function assertLocation($uri)
     {
         PHPUnit::assertEquals(
-            app('url')->to($uri), app('url')->to($this->headers->get('Location'))
+            \WPWCore\app('url')->to($uri), \WPWCore\app('url')->to($this->headers->get('Location'))
         );
 
         return $this;
@@ -1451,7 +1451,7 @@ class TestResponse implements ArrayAccess
      */
     protected function session()
     {
-        $session = app('session.store');
+        $session = \WPWCore\app('session.store');
 
         if (! $session->isStarted()) {
             $session->start();
