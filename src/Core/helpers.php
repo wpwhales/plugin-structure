@@ -3,6 +3,7 @@
 namespace WPWCore;
 
 
+use WPWCore\DashboardNotices\Notices;
 use WPWCore\Http\Redirector;
 use WPWCore\Routing\UrlGenerator;
 use WPWhales\Container\Container;
@@ -229,4 +230,13 @@ function url($path = null, $parameters = [], $secure = null)
     }
 
     return app(UrlGenerator::class)->to($path, $parameters, $secure);
+}
+
+/**
+ * Generate dashboard notice.
+ *
+ */
+function dashboard_notice(...$parameters)
+{
+    return app(Notices::class)->addNotice(...array_values($parameters));
 }

@@ -72,5 +72,23 @@ class AjaxRequestTest extends \WP_Ajax_UnitTestCase
     }
 
 
+
+    public function test_view_exception_is_accessible_in_response(){
+
+        $this->app->router->get("/view_error_test", [
+            function(){
+
+
+                return  \WPWCore\view("error");
+            }
+        ]);
+
+
+        $response = $this->adminAjaxCall("GET", "/view_error_test");
+
+        $response->assertStatus(500);
+
+    }
+
 }
 

@@ -113,6 +113,7 @@ class Handler implements ExceptionHandler
 
         if (method_exists($e, 'render') && $response = $e->render($request)) {
 
+
             return $e->render($request);
         } elseif ($e instanceof Responsable) {
             return $e->toResponse($request);

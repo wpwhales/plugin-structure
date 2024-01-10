@@ -80,7 +80,7 @@ class WebRequestTest extends \WP_UnitTestCase
             function(){
 
 
-            \WPWCore\view("error");
+           return  \WPWCore\view("error");
             }
         ]);
 

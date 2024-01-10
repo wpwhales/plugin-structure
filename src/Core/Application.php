@@ -2,6 +2,7 @@
 
 namespace WPWCore;
 
+use WPWCore\DashboardNotices\Notices;
 use WPWCore\Session\StartSession;
 use WPWhales\Auth\AuthManager;
 use WPWhales\Auth\AuthServiceProvider;
@@ -156,7 +157,25 @@ class Application extends Container
         $this->loadShutDownMethodWithWordpress();
 
 
+        $this->loadDashboardNotices();
+
+
     }
+
+
+
+    protected function loadDashboardNotices()
+    {
+
+        $dashboardNotice = new Notices($this);
+        $this->instance(Notices::class, $dashboardNotice);
+
+        add_action("admin_notices", function () {
+            $this->make(Notices::class)->renderNotices();
+        });
+
+    }
+
 
     protected function loadShutDownMethodWithWordpress()
     {
