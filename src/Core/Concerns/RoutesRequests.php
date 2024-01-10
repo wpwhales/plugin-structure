@@ -131,7 +131,6 @@ trait RoutesRequests
             }
 
 
-
             if (count($this->middleware) > 0) {
                 $this->callTerminableMiddleware($response);
             }
@@ -145,14 +144,9 @@ trait RoutesRequests
 
     private function attachQueuedCookiesWithResponse($response)
     {
-        $cookies = $this->make("cookie")->getQueuedCookies();
 
-        foreach ($cookies as $cookie) {
 
-            $response->headers->setCookie($cookie);
-        }
-
-        return $response;
+        return $this->make("cookie")->attachCookiesInResponse($response);
     }
 
     public function getResponse()
@@ -169,8 +163,6 @@ trait RoutesRequests
     public function run($request = null)
     {
         $response = $this->dispatch($request);
-
-
 
 
         //It means no route found so we'll terminate the app and
@@ -252,7 +244,6 @@ trait RoutesRequests
 
 
         } catch (Throwable $e) {
-
 
 
             return $this->prepareResponse($this->sendExceptionToHandler($e));

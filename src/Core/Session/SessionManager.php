@@ -181,6 +181,17 @@ class SessionManager extends Manager
         );
     }
 
+    protected function getCookieName()
+    {
+
+
+        if(is_user_logged_in()){
+            return $this->config->get("session.cookie");
+        }
+        return $this->config->get("session.cookie_guest");
+
+    }
+
     /**
      * Build the session instance.
      *
@@ -189,10 +200,11 @@ class SessionManager extends Manager
      */
     protected function buildSession($handler)
     {
+
         return $this->config->get('session.encrypt')
                 ? $this->buildEncryptedSession($handler)
                 : new Store(
-                    $this->config->get('session.cookie'),
+                    $this->getCookieName(),
                     $handler,
                     $id = null,
                     $this->config->get('session.serialization', 'php')
@@ -208,7 +220,7 @@ class SessionManager extends Manager
     protected function buildEncryptedSession($handler)
     {
         return new EncryptedStore(
-            $this->config->get('session.cookie'),
+            $this->getCookieName(),
             $handler,
             $this->container['encrypter'],
             $id = null,

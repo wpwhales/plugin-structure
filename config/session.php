@@ -46,7 +46,7 @@ return [
     |
     */
 
-    'encrypt' => false,
+    'encrypt' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -85,7 +85,7 @@ return [
     |
     */
 
-    'table' => 'sessions',
+    'table' => 'wpwhales_users_sessions',
 
     /*
     |--------------------------------------------------------------------------
@@ -100,7 +100,7 @@ return [
     |
     */
 
-    'store' => env('SESSION_STORE'),
+    'store' => null,
 
     /*
     |--------------------------------------------------------------------------
@@ -113,7 +113,7 @@ return [
     |
     */
 
-    'lottery' => [50, 100],
+    'lottery' => [2, 100],
 
     /*
     |--------------------------------------------------------------------------
@@ -127,6 +127,21 @@ return [
     */
 
     'cookie' => defined("COOKIEHASH") ? "wpwhales_session_".COOKIEHASH : "wpwhales_session",
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Session Cookie Name for Guest
+    |--------------------------------------------------------------------------
+    |
+    | Here you may change the name of the cookie used to identify a session
+    | instance by ID. The name specified here will get used every time a
+    | new session cookie is created by the framework for every driver.
+    |
+    */
+
+    'cookie_guest' => defined("COOKIEHASH") ? "wpwhales_session_guest_".COOKIEHASH : "wpwhales_session_guest",
 
     /*
     |--------------------------------------------------------------------------

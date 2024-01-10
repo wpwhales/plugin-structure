@@ -173,7 +173,19 @@ class Application extends Container
 
         $this->shutting_down(function () {
 
-            $this->make('session')->save();
+
+            $session_name = $this->make('session')->getName();
+            $session_id = $this->make('session')->getId();
+
+            //First make sure that we have sent the session cookie or the request has the session cookie
+            //then save the session otherwise leave it.
+            if (\WPWCore\app("cookie")->isCookieSent($session_name) ||
+                (\WPWCore\app("request")->cookies->get($session_name) === $session_id)) {
+
+                $this->make('session')->save();
+
+            }
+
         });
 
     }
@@ -181,12 +193,17 @@ class Application extends Container
     protected function sendQueuedCookiesOnTemplateRedirect()
     {
 
-        add_action("template_redirect", [$this,"sendCookieHeaders"]);
+        //Will handle both admin and public routes
+        add_action("init", [$this, "sendCookieHeaders"]);
+
+        //Specially if want to send any cookie in shortcodes or hooks
+        add_action("template_redirect", [$this, "sendCookieHeaders"]);
 
     }
 
 
-    public function sendCookieHeaders(){
+    public function sendCookieHeaders()
+    {
         $cookie = $this->make("cookie");
         $cookie->sendHeaders();
     }

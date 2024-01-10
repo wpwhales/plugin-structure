@@ -6,6 +6,8 @@ use WPWCore\Cookie\CookieJar;
 use PHPUnit\Framework\TestCase;
 use ReflectionObject;
 use Symfony\Component\HttpFoundation\Cookie;
+use WPWhales\Http\Response;
+use WPWhales\Testing\TestResponse;
 
 class CookieTest extends TestCase
 {
@@ -208,6 +210,55 @@ class CookieTest extends TestCase
         $cookieJar->flushQueuedCookies();
         $this->assertEmpty($cookieJar->getQueuedCookies());
     }
+
+    public function test_AttachToResponseAndRemoveFromQueueAndAddedInSentCookies()
+    {
+        $response = new Response();
+        $cookieJar = $this->getCreator();
+        $cookieJar->queue("test_cookie", "test_value");
+        $this->assertInstanceOf(Cookie::class, $cookieJar->queued("test_cookie"));
+        $this->assertFalse(in_array("test_cookie", $cookieJar->sentCookies));
+        $response = TestResponse::fromBaseResponse($cookieJar->attachCookiesInResponse($response));
+
+        $response->assertCookie("test_cookie", "test_value", false);
+
+        $this->assertFalse($cookieJar->queued("test_cookie", false));
+
+        $this->assertTrue(in_array("test_cookie", $cookieJar->sentCookies));
+    }
+
+    public function test_SendHeadersMethodUnqueueTheCookieAndAddInSentCookies()
+    {
+
+
+        $cookieJar = $this->createPartialMock(CookieJar::class, ["setCookie"]);
+        $cookieJar->queue("test_cookie", "test_value");
+        $this->assertInstanceOf(Cookie::class, $cookieJar->queued("test_cookie"));
+        $this->assertFalse(in_array("test_cookie", $cookieJar->sentCookies));
+        $cookie = $cookieJar->queued("test_cookie");
+        $name = $cookie->getName();
+        $value = $cookie->getValue();
+        $expire = $cookie->getExpiresTime();
+        $path = $cookie->getPath();
+        $domain = $cookie->getDomain();
+        $secure = $cookie->isSecure();
+        $httponly = $cookie->isHttpOnly();
+        $samesite = $cookie->getSameSite();
+        $cookieJar->expects($this->once())->method("setCookie")->with($name,$value,[
+            "expires"  => $expire,
+            "path"     => $path,
+            "domain"   => $domain,
+            "secure"   => $secure,
+            "httponly" => $httponly,
+            "samesite" => $samesite
+        ]);
+        $cookieJar->sendHeaders();
+
+        $this->assertFalse($cookieJar->queued("test_cookie", false));
+
+        $this->assertTrue(in_array("test_cookie", $cookieJar->sentCookies));
+    }
+
 
     public function getCreator()
     {

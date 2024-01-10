@@ -204,9 +204,8 @@ class DatabaseSessionHandler implements ExistenceAwareInterface, SessionHandlerI
      */
     protected function addUserInformation(&$payload)
     {
-        if ($this->container->bound(Guard::class)) {
-            $payload['user_id'] = $this->userId();
-        }
+            $payload['user_id'] = get_current_user_id();
+
 
         return $this;
     }
@@ -220,8 +219,7 @@ class DatabaseSessionHandler implements ExistenceAwareInterface, SessionHandlerI
     {
         //TODO INTEGRATE THE GUARD LATER
 
-        return 1;
-        return $this->container->make(Guard::class)->id();
+        return get_current_user_id();
     }
 
     /**

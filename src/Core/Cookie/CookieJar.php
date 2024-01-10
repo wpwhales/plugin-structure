@@ -20,6 +20,12 @@ class CookieJar implements JarContract
     protected $path = '/';
 
     /**
+     * list of cookies that has been sent
+     *
+     */
+    public $sentCookies = [];
+
+    /**
      * The default domain (if specified).
      *
      * @var string|null
@@ -270,10 +276,13 @@ class CookieJar implements JarContract
                 $this->setCookie($name, $value, $expire, $path, $domain, $secure, $httponly);
 
             }
+
+            $this->sentCookies[] = $name;
+            $this->unqueue($name,$path);
         }
     }
 
-    protected function setCookie($name, $value, $expire_or_options, $path="/", $domain=false, $secure=true, $httponly=true)
+    protected function setCookie($name, $value, $expire_or_options, $path = "/", $domain = false, $secure = true, $httponly = true)
     {
 
 
@@ -285,5 +294,25 @@ class CookieJar implements JarContract
 
 
         }
+
+
     }
+
+    public function isCookieSent($name){
+
+        return in_array($name,$this->sentCookies);
+    }
+
+
+    public function attachCookiesInResponse($response){
+
+        foreach ($this->getQueuedCookies() as $cookie) {
+            $response->headers->setCookie($cookie);
+            $this->unqueue($cookie->getName());
+            $this->sentCookies[] = $cookie->getName();
+        }
+
+        return $response;
+    }
+
 }
