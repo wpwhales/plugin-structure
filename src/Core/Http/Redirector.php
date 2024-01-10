@@ -2,7 +2,7 @@
 
 namespace WPWCore\Http;
 
-use WPWhales\Http\RedirectResponse;
+use WPWCore\Http\RedirectResponse;
 use WPWCore\Application;
 
 class Redirector
@@ -70,6 +70,8 @@ class Redirector
         $redirect = new RedirectResponse($path, $status, $headers);
 
         $redirect->setRequest($this->app->make('request'));
+        $redirect->setSession($this->app->make('session.store'));
+
 
         return $redirect;
     }

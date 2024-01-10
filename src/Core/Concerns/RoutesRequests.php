@@ -119,6 +119,7 @@ trait RoutesRequests
     {
 
 
+
         if ($response !== false && $this->shouldSendResponse()) {
 
             $this->response = $this->attachQueuedCookiesWithResponse($response);
@@ -512,6 +513,7 @@ trait RoutesRequests
      */
     protected function sendThroughPipeline(array $middleware, Closure $then)
     {
+
 
 
         if (count($middleware) > 0 && !$this->shouldSkipMiddleware()) {

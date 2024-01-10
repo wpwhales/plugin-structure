@@ -125,7 +125,19 @@ class Handler implements ExceptionHandler
             $e = new HttpException($e->status() ?? 403, $e->getMessage());
         } elseif ($e instanceof ValidationException && $e->getResponse()) {
 
-            return $e->getResponse();
+            //if doing ajax
+            if($request->expectsJson() || wp_doing_ajax()){
+                return $e->getResponse();
+            }else{
+                $viewBag = new ViewErrorBag();
+                $viewBag->put($e->errorBag,$e->validator->getMessageBag());
+
+                return \WPWCore\redirect()->to(URL::previous())
+                    ->withInput($request->input())
+                    ->withErrors($viewBag->getBag($e->errorBag), $e->errorBag);
+            }
+
+
         }
 
         return ($request->expectsJson() || wp_doing_ajax())

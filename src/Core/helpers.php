@@ -3,6 +3,7 @@
 namespace WPWCore;
 
 
+use WPWCore\Http\Redirector;
 use WPWhales\Container\Container;
 use WPWhales\Support\HigherOrderTapProxy;
 use WPWhales\Support\HtmlString;
@@ -62,7 +63,7 @@ function config($key = null, $default = null)
  */
 function redirect($to = null, $status = 302, $headers = [], $secure = null)
 {
-    $redirector = new \WPWhales\Routing\Redirector(app());
+    $redirector = new Redirector(app());
 
     if (is_null($to)) {
         return $redirector;
@@ -166,6 +167,18 @@ function response($content = '', $status = 200, array $headers = [])
     return $factory->make($content, $status, $headers);
 }
 
+
+/**
+ * Retrieve an old input item.
+ *
+ * @param string $key
+ * @param mixed $default
+ * @return mixed
+ */
+function old($key = null, $default = null)
+{
+    return app('request')->old($key, $default);
+}
 
 /**
  * Call the given Closure with the given value then return the value.
