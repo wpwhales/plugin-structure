@@ -111,7 +111,8 @@ class Handler implements ExceptionHandler
     public function render($request, Throwable $e)
     {
 
-        if (method_exists($e, 'render')) {
+        if (method_exists($e, 'render') && $response = $e->render($request)) {
+
             return $e->render($request);
         } elseif ($e instanceof Responsable) {
             return $e->toResponse($request);

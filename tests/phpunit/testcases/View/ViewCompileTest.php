@@ -6,6 +6,7 @@ namespace Tests\View;
 
 use WPWCore\Http\Request;
 use WPWCore\Session\SessionManager;
+use WPWhales\View\ViewException;
 
 /**
  *  !!!! ONLY FOR AJAX CALL !!!!
@@ -98,6 +99,30 @@ class ViewCompileTest extends \WP_UnitTestCase
     }
 
 
+
+    public function test_exception_thrown_in_view(){
+
+
+        $sessionInstance = $this->getMockBuilder(Request::class)->onlyMethods(["session","get"])->getMock();
+
+        $sessionInstance->expects($this->exactly(1))->method("session")->will($this->returnSelf());
+
+        $sessionInstance->expects($this->exactly(1))->method("get")->will($this->returnValue(null));
+        $this->app["request"] = $sessionInstance;
+
+        /**
+         * @var $view \WPWCore\View\Factory
+         */
+        $view = $this->app["view"];
+
+
+
+        $this->expectException(ViewException::class);
+        $result = $view->make("error")->render();
+
+
+
+    }
 
 }
 

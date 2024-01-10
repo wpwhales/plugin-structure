@@ -22,7 +22,7 @@ use WPWhales\Events\EventServiceProvider;
 use WPWhales\Filesystem\Filesystem;
 use WPWhales\Filesystem\FilesystemServiceProvider;
 use WPWhales\Hashing\HashServiceProvider;
-use WPWhales\Http\Request;
+use WPWCore\Http\Request;
 use WPWhales\Log\LogManager;
 use WPWhales\Pagination\PaginationServiceProvider;
 use WPWhales\Queue\QueueServiceProvider;
@@ -710,7 +710,7 @@ class Application extends Container
      * Prepare the given request instance for use with the application.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return \WPWhales\Http\Request
+     * @return \WPWCore\Http\Request
      */
     protected function prepareRequest(SymfonyRequest $request)
     {
@@ -1298,7 +1298,7 @@ class Application extends Container
             \WPWhales\Contracts\Redis\Factory::class              => 'redis',
             \WPWhales\Redis\Connections\Connection::class         => 'redis.connection',
             \WPWhales\Contracts\Redis\Connection::class           => 'redis.connection',
-            'request'                                             => \WPWhales\Http\Request::class,
+            'request'                                             => \WPWCore\Http\Request::class,
             \WPWCore\Routing\Router::class                        => 'router',
             \WPWhales\Contracts\Translation\Translator::class     => 'translator',
             \WPWCore\Routing\UrlGenerator::class                  => 'url',

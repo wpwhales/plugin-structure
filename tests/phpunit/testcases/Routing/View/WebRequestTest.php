@@ -74,6 +74,24 @@ class WebRequestTest extends \WP_UnitTestCase
 
 
 
+    public function test_view_exception_is_accessible_in_response(){
+
+        $this->app->router->get("/view_error_test", [
+            function(){
+
+
+            \WPWCore\view("error");
+            }
+        ]);
+
+
+        $response = $this->call("GET", "/view_error_test");
+
+        $response->assertStatus(500);
+
+    }
+
+
 
 }
 

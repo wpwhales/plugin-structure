@@ -8,7 +8,7 @@ use WPWCore\Routing\Middleware\VerifyCsrfToken;
 use WPWCore\View\View;
 use WPWhales\Contracts\Support\Responsable;
 use WPWhales\Http\Exceptions\HttpResponseException;
-use WPWhales\Http\Request;
+use WPWCore\Http\Request;
 use WPWhales\Http\Response;
 use WPWhales\Support\Arr;
 use WPWhales\Support\Str;
@@ -218,6 +218,7 @@ trait RoutesRequests
 
         [$method, $pathInfo] = $this->parseIncomingRequest($request);
 
+
         //Start the session as well so that the components can utilize it
         $this->initSession();
 
@@ -232,7 +233,7 @@ trait RoutesRequests
                 $this->boot();
 
                 return $this->sendThroughPipeline($this->middleware, function ($request) use ($method, $pathInfo) {
-                    $this->instance(Request::class, $request);
+                    $this->instance(\WPWhales\Http\Request::class, $request);
 
 
                     return $this->handleFoundRoute([
@@ -259,11 +260,16 @@ trait RoutesRequests
      */
     protected function parseIncomingRequest($request)
     {
+
         if (!$request) {
             $request = LumenRequest::capture();
         }
 
         $paths = [$request->getMethod()];
+
+        $this->instance(\WPWhales\Http\Request::class, $this->prepareRequest($request));
+        $this->instance(Request::class, $this->prepareRequest($request));
+
         if (wp_doing_ajax()) {
             $action = $request->get("action");
             $route = $request->get("route");
@@ -277,7 +283,6 @@ trait RoutesRequests
         }
 
         $paths[] = '/' . trim($request->getPathInfo(), '/');
-        $this->instance(Request::class, $this->prepareRequest($request));
 
         return $paths;
     }

@@ -4,7 +4,7 @@ namespace WPWCore\Session;
 
 use Closure;
 use WPWhales\Contracts\Session\Session;
-use WPWhales\Http\Request;
+use WPWCore\Http\Request;
 use WPWCore\Routing\Route;
 use WPWCore\Session\SessionManager;
 use WPWhales\Support\Carbon;
