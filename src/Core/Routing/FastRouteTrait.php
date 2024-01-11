@@ -3,7 +3,7 @@
 
 namespace WPWCore\Routing;
 
-trait Dispatcher
+trait FastRouteTrait
 {
 
 

@@ -8,7 +8,7 @@ use FastRoute\Dispatcher\GroupCountBased;
 
 class FastRouteDispatcher extends GroupCountBased
 {
-    use Dispatcher;
+    use FastRouteTrait;
 
 
 }

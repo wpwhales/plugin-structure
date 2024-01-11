@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use FastRoute\RouteParser\Std as RouteParser;
 
 use FastRoute\DataGenerator\GroupCountBased as DataGenerator;
-use WPWCore\Routing\Dispatcher;
+use WPWCore\Routing\FastRouteTrait;
 
 
 class FastRouteDispatcherTestSeparately extends TestCase
@@ -260,7 +260,7 @@ class FastRouteDispatcherTestSeparately extends TestCase
 
 class FastRouteDispatcher extends GroupCountBasedStub {
 
-    use Dispatcher;
+    use FastRouteTrait;
 
 }
 
