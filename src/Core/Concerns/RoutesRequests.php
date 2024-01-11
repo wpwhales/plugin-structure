@@ -238,18 +238,15 @@ trait RoutesRequests
 
         try {
 
+            $this->boot();
             $staticRoute = isset($this->router->getRoutes()[$method . $pathInfo]) ?: [];
             $dynamicRoute = $this->createDispatcher()->dispatch($method, $pathInfo);
 
 
-            //We'll boot the app if and only if the routes are available
             if ((!empty($staticRoute) || $dynamicRoute[0] === Dispatcher::FOUND)
 
             ) {
 
-
-                //Then boot the app first
-                $this->boot();
 
                 return $this->sendThroughPipeline($this->middleware, function ($request) use ($method, $pathInfo, $staticRoute, $dynamicRoute) {
                     $this->instance(\WPWhales\Http\Request::class, $request);
