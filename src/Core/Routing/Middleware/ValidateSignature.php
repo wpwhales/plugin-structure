@@ -3,7 +3,7 @@
 namespace WPWCore\Routing\Middleware;
 
 use Closure;
-use WPWhales\Routing\Exceptions\InvalidSignatureException;
+use WPWCore\Routing\Exceptions\InvalidSignatureException;
 use WPWhales\Support\Arr;
 
 class ValidateSignature

@@ -2,6 +2,8 @@
 
 namespace WPWCore\View;
 
+use InvalidArgumentException;
+use WPWCore\View\Engines\EngineResolver;
 use WPWhales\Contracts\Container\Container;
 use WPWhales\Contracts\Events\Dispatcher;
 use WPWhales\Contracts\Support\Arrayable;
@@ -9,12 +11,6 @@ use WPWhales\Contracts\View\Factory as FactoryContract;
 use WPWhales\Support\Arr;
 use WPWhales\Support\Traits\Macroable;
 use WPWhales\Support\ViewErrorBag;
-use WPWhales\View\Engines\EngineResolver;
-use InvalidArgumentException;
-use WPWhales\View\Concerns;
-use WPWCore\View\View;
-use WPWhales\View\ViewFinderInterface;
-use WPWhales\View\ViewName;
 
 class Factory implements FactoryContract
 {
@@ -24,20 +20,20 @@ class Factory implements FactoryContract
         Concerns\ManagesFragments,
         Concerns\ManagesLayouts,
         Concerns\ManagesLoops,
-        \WPWCore\View\Concerns\ManagesStacks,
+        Concerns\ManagesStacks,
         Concerns\ManagesTranslations;
 
     /**
      * The engine implementation.
      *
-     * @var \WPWhales\View\Engines\EngineResolver
+     * @var \WPWCore\View\Engines\EngineResolver
      */
     protected $engines;
 
     /**
      * The view finder implementation.
      *
-     * @var \WPWhales\View\ViewFinderInterface
+     * @var \WPWCore\View\ViewFinderInterface
      */
     protected $finder;
 
@@ -98,8 +94,8 @@ class Factory implements FactoryContract
     /**
      * Create a new view factory instance.
      *
-     * @param \WPWhales\View\Engines\EngineResolver $engines
-     * @param \WPWhales\View\ViewFinderInterface $finder
+     * @param \WPWCore\View\Engines\EngineResolver $engines
+     * @param \WPWCore\View\ViewFinderInterface $finder
      * @param \WPWhales\Contracts\Events\Dispatcher $events
      * @return void
      */
@@ -517,7 +513,7 @@ class Factory implements FactoryContract
     /**
      * Get the engine resolver instance.
      *
-     * @return \WPWhales\View\Engines\EngineResolver
+     * @return \WPWCore\View\Engines\EngineResolver
      */
     public function getEngineResolver()
     {
@@ -527,7 +523,7 @@ class Factory implements FactoryContract
     /**
      * Get the view finder instance.
      *
-     * @return \WPWhales\View\ViewFinderInterface
+     * @return \WPWCore\View\ViewFinderInterface
      */
     public function getFinder()
     {
@@ -537,7 +533,7 @@ class Factory implements FactoryContract
     /**
      * Set the view finder instance.
      *
-     * @param \WPWhales\View\ViewFinderInterface $finder
+     * @param \WPWCore\View\ViewFinderInterface $finder
      * @return void
      */
     public function setFinder(ViewFinderInterface $finder)

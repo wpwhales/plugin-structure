@@ -2,12 +2,12 @@
 
 namespace WPWhales\Cache\Console;
 
-use WPWhales\Cache\CacheManager;
-use WPWhales\Console\Command;
-use WPWhales\Filesystem\Filesystem;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use WPWCore\Filesystem\Filesystem;
+use WPWhales\Cache\CacheManager;
+use WPWhales\Console\Command;
 
 #[AsCommand(name: 'cache:clear')]
 class ClearCommand extends Command
@@ -36,7 +36,7 @@ class ClearCommand extends Command
     /**
      * The filesystem instance.
      *
-     * @var \WPWhales\Filesystem\Filesystem
+     * @var \WPWCore\Filesystem\Filesystem
      */
     protected $files;
 
@@ -44,7 +44,7 @@ class ClearCommand extends Command
      * Create a new cache clear command instance.
      *
      * @param  \WPWhales\Cache\CacheManager  $cache
-     * @param  \WPWhales\Filesystem\Filesystem  $files
+     * @param  \WPWCore\Filesystem\Filesystem  $files
      * @return void
      */
     public function __construct(CacheManager $cache, Filesystem $files)

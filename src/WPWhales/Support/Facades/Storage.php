@@ -2,7 +2,7 @@
 
 namespace WPWhales\Support\Facades;
 
-use WPWhales\Filesystem\Filesystem;
+use WPWCore\Filesystem\Filesystem;
 
 /**
  * @method static \WPWhales\Contracts\Filesystem\Filesystem drive(string|null $name = null)
@@ -14,13 +14,13 @@ use WPWhales\Filesystem\Filesystem;
  * @method static \WPWhales\Contracts\Filesystem\Filesystem createSftpDriver(array $config)
  * @method static \WPWhales\Contracts\Filesystem\Cloud createS3Driver(array $config)
  * @method static \WPWhales\Contracts\Filesystem\Filesystem createScopedDriver(array $config)
- * @method static \WPWhales\Filesystem\FilesystemManager set(string $name, mixed $disk)
+ * @method static \WPWCore\Filesystem\FilesystemManager set(string $name, mixed $disk)
  * @method static string getDefaultDriver()
  * @method static string getDefaultCloudDriver()
- * @method static \WPWhales\Filesystem\FilesystemManager forgetDisk(array|string $disk)
+ * @method static \WPWCore\Filesystem\FilesystemManager forgetDisk(array|string $disk)
  * @method static void purge(string|null $name = null)
- * @method static \WPWhales\Filesystem\FilesystemManager extend(string $driver, \Closure $callback)
- * @method static \WPWhales\Filesystem\FilesystemManager setApplication(\WPWhales\Contracts\Foundation\Application $app)
+ * @method static \WPWCore\Filesystem\FilesystemManager extend(string $driver, \Closure $callback)
+ * @method static \WPWCore\Filesystem\FilesystemManager setApplication(\WPWhales\Contracts\Foundation\Application $app)
  * @method static bool exists(string $path)
  * @method static string|null get(string $path)
  * @method static resource|null readStream(string $path)
@@ -41,9 +41,9 @@ use WPWhales\Filesystem\Filesystem;
  * @method static array allDirectories(string|null $directory = null)
  * @method static bool makeDirectory(string $path)
  * @method static bool deleteDirectory(string $directory)
- * @method static \WPWhales\Filesystem\FilesystemAdapter assertExists(string|array $path, string|null $content = null)
- * @method static \WPWhales\Filesystem\FilesystemAdapter assertMissing(string|array $path)
- * @method static \WPWhales\Filesystem\FilesystemAdapter assertDirectoryEmpty(string $path)
+ * @method static \WPWCore\Filesystem\FilesystemAdapter assertExists(string|array $path, string|null $content = null)
+ * @method static \WPWCore\Filesystem\FilesystemAdapter assertMissing(string|array $path)
+ * @method static \WPWCore\Filesystem\FilesystemAdapter assertDirectoryEmpty(string $path)
  * @method static bool missing(string $path)
  * @method static bool fileExists(string $path)
  * @method static bool fileMissing(string $path)
@@ -65,8 +65,8 @@ use WPWhales\Filesystem\Filesystem;
  * @method static \League\Flysystem\FilesystemAdapter getAdapter()
  * @method static array getConfig()
  * @method static void buildTemporaryUrlsUsing(\Closure $callback)
- * @method static \WPWhales\Filesystem\FilesystemAdapter|mixed when(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)
- * @method static \WPWhales\Filesystem\FilesystemAdapter|mixed unless(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)
+ * @method static \WPWCore\Filesystem\FilesystemAdapter|mixed when(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)
+ * @method static \WPWCore\Filesystem\FilesystemAdapter|mixed unless(\Closure|mixed|null $value = null, callable|null $callback = null, callable|null $default = null)
  * @method static void macro(string $name, object|callable $macro)
  * @method static void mixin(object $mixin, bool $replace = true)
  * @method static bool hasMacro(string $name)
@@ -80,7 +80,7 @@ use WPWhales\Filesystem\Filesystem;
  * @method static void write(string $location, string $contents, array $config = [])
  * @method static void createDirectory(string $location, array $config = [])
  *
- * @see \WPWhales\Filesystem\FilesystemManager
+ * @see \WPWCore\Filesystem\FilesystemManager
  */
 class Storage extends Facade
 {

@@ -3,18 +3,18 @@
 namespace WPWhales\Support;
 
 use Closure;
-use WPWhales\Filesystem\Filesystem;
 use RuntimeException;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
+use WPWCore\Filesystem\Filesystem;
 
 class Composer
 {
     /**
      * The filesystem instance.
      *
-     * @var \WPWhales\Filesystem\Filesystem
+     * @var \WPWCore\Filesystem\Filesystem
      */
     protected $files;
 
@@ -28,7 +28,7 @@ class Composer
     /**
      * Create a new Composer manager instance.
      *
-     * @param  \WPWhales\Filesystem\Filesystem  $files
+     * @param  \WPWCore\Filesystem\Filesystem  $files
      * @param  string|null  $workingPath
      * @return void
      */

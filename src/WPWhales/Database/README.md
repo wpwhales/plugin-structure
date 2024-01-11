@@ -7,7 +7,7 @@ The WPWhales Database component is a full database toolkit for PHP, providing an
 First, create a new "Capsule" manager instance. Capsule aims to make configuring the library for usage outside of the Laravel framework as easy as possible.
 
 ```PHP
-use WPWhales\Database\Capsule\Manager as Capsule;
+use WPWCore\Events\Dispatcher;use WPWhales\Container\Container;use WPWhales\Database\Capsule\Manager as Capsule;
 
 $capsule = new Capsule;
 
@@ -23,8 +23,6 @@ $capsule->addConnection([
 ]);
 
 // Set the event dispatcher used by Eloquent models... (optional)
-use WPWhales\Events\Dispatcher;
-use WPWhales\Container\Container;
 $capsule->setEventDispatcher(new Dispatcher(new Container));
 
 // Make this Capsule instance available globally via static methods... (optional)

@@ -2,16 +2,16 @@
 
 namespace WPWhales\Translation;
 
-use WPWhales\Contracts\Translation\Loader;
-use WPWhales\Filesystem\Filesystem;
 use RuntimeException;
+use WPWCore\Filesystem\Filesystem;
+use WPWhales\Contracts\Translation\Loader;
 
 class FileLoader implements Loader
 {
     /**
      * The filesystem instance.
      *
-     * @var \WPWhales\Filesystem\Filesystem
+     * @var \WPWCore\Filesystem\Filesystem
      */
     protected $files;
 
@@ -39,7 +39,7 @@ class FileLoader implements Loader
     /**
      * Create a new file loader instance.
      *
-     * @param  \WPWhales\Filesystem\Filesystem  $files
+     * @param  \WPWCore\Filesystem\Filesystem  $files
      * @param  array|string  $path
      * @return void
      */

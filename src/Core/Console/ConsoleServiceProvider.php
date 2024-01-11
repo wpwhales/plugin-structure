@@ -2,7 +2,7 @@
 
 namespace WPWCore\Console;
 
-use WPWhales\Auth\Console\ClearResetsCommand;
+use WPWCore\Auth\Console\ClearResetsCommand;
 use WPWhales\Cache\Console\CacheTableCommand;
 use WPWhales\Cache\Console\ClearCommand as CacheClearCommand;
 use WPWhales\Cache\Console\ForgetCommand as CacheForgetCommand;

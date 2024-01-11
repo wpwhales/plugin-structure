@@ -2,9 +2,9 @@
 
 namespace WPWhales\Database\Schema;
 
-use WPWhales\Database\Connection;
-use WPWhales\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
+use WPWCore\Filesystem\Filesystem;
+use WPWhales\Database\Connection;
 
 abstract class SchemaState
 {
@@ -18,7 +18,7 @@ abstract class SchemaState
     /**
      * The filesystem instance.
      *
-     * @var \WPWhales\Filesystem\Filesystem
+     * @var \WPWCore\Filesystem\Filesystem
      */
     protected $files;
 
@@ -47,7 +47,7 @@ abstract class SchemaState
      * Create a new dumper instance.
      *
      * @param  \WPWhales\Database\Connection  $connection
-     * @param  \WPWhales\Filesystem\Filesystem|null  $files
+     * @param  \WPWCore\Filesystem\Filesystem|null  $files
      * @param  callable|null  $processFactory
      * @return void
      */

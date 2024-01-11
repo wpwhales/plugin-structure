@@ -3,13 +3,13 @@
 namespace WPWhales\Database;
 
 use Exception;
+use WPWCore\Filesystem\Filesystem;
 use WPWhales\Database\PDO\PostgresDriver;
 use WPWhales\Database\Query\Grammars\PostgresGrammar as QueryGrammar;
 use WPWhales\Database\Query\Processors\PostgresProcessor;
 use WPWhales\Database\Schema\Grammars\PostgresGrammar as SchemaGrammar;
 use WPWhales\Database\Schema\PostgresBuilder;
 use WPWhales\Database\Schema\PostgresSchemaState;
-use WPWhales\Filesystem\Filesystem;
 
 class PostgresConnection extends Connection
 {
@@ -89,7 +89,7 @@ class PostgresConnection extends Connection
     /**
      * Get the schema state for the connection.
      *
-     * @param  \WPWhales\Filesystem\Filesystem|null  $files
+     * @param  \WPWCore\Filesystem\Filesystem|null  $files
      * @param  callable|null  $processFactory
      * @return \WPWhales\Database\Schema\PostgresSchemaState
      */

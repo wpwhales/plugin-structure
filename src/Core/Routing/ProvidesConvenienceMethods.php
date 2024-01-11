@@ -137,9 +137,9 @@ trait ProvidesConvenienceMethods
      *
      * @param  mixed  $ability
      * @param  mixed|array  $arguments
-     * @return \WPWhales\Auth\Access\Response
+     * @return \WPWCore\Auth\Access\Response
      *
-     * @throws \WPWhales\Auth\Access\AuthorizationException
+     * @throws \WPWCore\Auth\Access\AuthorizationException
      */
     public function authorize($ability, $arguments = [])
     {
@@ -154,9 +154,9 @@ trait ProvidesConvenienceMethods
      * @param  \WPWhales\Contracts\Auth\Authenticatable|mixed  $user
      * @param  mixed  $ability
      * @param  mixed|array  $arguments
-     * @return \WPWhales\Auth\Access\Response
+     * @return \WPWCore\Auth\Access\Response
      *
-     * @throws \WPWhales\Auth\Access\AuthorizationException
+     * @throws \WPWCore\Auth\Access\AuthorizationException
      */
     public function authorizeForUser($user, $ability, $arguments = [])
     {

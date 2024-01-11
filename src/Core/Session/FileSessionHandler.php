@@ -2,10 +2,10 @@
 
 namespace WPWCore\Session;
 
-use WPWhales\Filesystem\Filesystem;
-use WPWhales\Support\Carbon;
 use SessionHandlerInterface;
 use Symfony\Component\Finder\Finder;
+use WPWCore\Filesystem\Filesystem;
+use WPWhales\Support\Carbon;
 
 
 class FileSessionHandler implements SessionHandlerInterface
@@ -13,7 +13,7 @@ class FileSessionHandler implements SessionHandlerInterface
     /**
      * The filesystem instance.
      *
-     * @var \WPWhales\Filesystem\Filesystem
+     * @var \WPWCore\Filesystem\Filesystem
      */
     protected $files;
 
@@ -34,7 +34,7 @@ class FileSessionHandler implements SessionHandlerInterface
     /**
      * Create a new file driven handler instance.
      *
-     * @param  \WPWhales\Filesystem\Filesystem  $files
+     * @param  \WPWCore\Filesystem\Filesystem  $files
      * @param  string  $path
      * @param  int  $minutes
      * @return void

@@ -10,7 +10,7 @@ class TestComponent
     /**
      * The original component.
      *
-     * @var \WPWhales\View\Component
+     * @var \WPWCore\View\Component
      */
     public $component;
 
@@ -24,7 +24,7 @@ class TestComponent
     /**
      * Create a new test component instance.
      *
-     * @param  \WPWhales\View\Component  $component
+     * @param  \WPWCore\View\Component  $component
      * @param  \WPWhales\View\View  $view
      * @return void
      */

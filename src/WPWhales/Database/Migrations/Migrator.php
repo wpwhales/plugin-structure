@@ -3,6 +3,9 @@
 namespace WPWhales\Database\Migrations;
 
 use Doctrine\DBAL\Schema\SchemaException;
+use ReflectionClass;
+use Symfony\Component\Console\Output\OutputInterface;
+use WPWCore\Filesystem\Filesystem;
 use WPWhales\Console\View\Components\BulletList;
 use WPWhales\Console\View\Components\Error;
 use WPWhales\Console\View\Components\Info;
@@ -15,12 +18,9 @@ use WPWhales\Database\Events\MigrationsEnded;
 use WPWhales\Database\Events\MigrationsStarted;
 use WPWhales\Database\Events\MigrationStarted;
 use WPWhales\Database\Events\NoPendingMigrations;
-use WPWhales\Filesystem\Filesystem;
 use WPWhales\Support\Arr;
 use WPWhales\Support\Collection;
 use WPWhales\Support\Str;
-use ReflectionClass;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class Migrator
 {
@@ -41,7 +41,7 @@ class Migrator
     /**
      * The filesystem instance.
      *
-     * @var \WPWhales\Filesystem\Filesystem
+     * @var \WPWCore\Filesystem\Filesystem
      */
     protected $files;
 
@@ -85,7 +85,7 @@ class Migrator
      *
      * @param  \WPWhales\Database\Migrations\MigrationRepositoryInterface  $repository
      * @param  \WPWhales\Database\ConnectionResolverInterface  $resolver
-     * @param  \WPWhales\Filesystem\Filesystem  $files
+     * @param  \WPWCore\Filesystem\Filesystem  $files
      * @param  \WPWhales\Contracts\Events\Dispatcher|null  $dispatcher
      * @return void
      */
@@ -723,7 +723,7 @@ class Migrator
     /**
      * Get the file system instance.
      *
-     * @return \WPWhales\Filesystem\Filesystem
+     * @return \WPWCore\Filesystem\Filesystem
      */
     public function getFilesystem()
     {

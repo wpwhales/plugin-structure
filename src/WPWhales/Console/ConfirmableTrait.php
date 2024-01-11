@@ -2,7 +2,7 @@
 
 namespace WPWhales\Console;
 
-use function Laravel\Prompts\confirm;
+use function WPWhales\Prompts\confirm;
 
 trait ConfirmableTrait
 {

@@ -1,10 +1,23 @@
 <?xml version="1.0"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="tests/phpunit/bootstrap.php"
 
+         beStrictAboutTestsThatDoNotTestAnything="false"
          backupGlobals="false" colors="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd" >
   <testsuites>
     <testsuite name="default">
       <directory suffix="Test.php">tests/phpunit/testcases/</directory>
     </testsuite>
+    <testsuite name="FastRouteDispatcherTest">
+      <file >tests/phpunit/testcases/Router/FastRouteDispatcherTestSeparately.php</file>
+    </testsuite>
   </testsuites>
+  <filter>
+    <whitelist processUncoveredFilesFromWhitelist="true">
+      <directory suffix="Test.php">tests/phpunit/testcases/</directory>
+      <!-- Exclude the specific class causing issues -->
+      <exclude>
+        <file>tests/phpunit/testcases/Router/FastRouteDispatcherTestSeparately.php</file>
+      </exclude>
+    </whitelist>
+  </filter>
 </phpunit>

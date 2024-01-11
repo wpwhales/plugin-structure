@@ -2,6 +2,8 @@
 
 namespace WPWCore\View\Compilers;
 
+use InvalidArgumentException;
+use WPWCore\View\Component;
 use WPWhales\Container\Container;
 use WPWhales\Contracts\Support\Htmlable;
 use WPWhales\Contracts\View\Factory as ViewFactory;
@@ -9,13 +11,7 @@ use WPWhales\Contracts\View\View;
 use WPWhales\Support\Arr;
 use WPWhales\Support\Str;
 use WPWhales\Support\Traits\ReflectsClosures;
-use WPWhales\View\Compilers\Compiler;
-use WPWhales\View\Compilers\CompilerInterface;
-use WPWCore\View\Compilers\ComponentTagCompiler;
-use WPWhales\View\Component;
-use InvalidArgumentException;
 
-use WPWhales\View\Compilers\Concerns;
 class BladeCompiler extends Compiler implements CompilerInterface
 {
     use Concerns\CompilesAuthorizations,
@@ -360,7 +356,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
     /**
      * Render a component instance to HTML.
      *
-     * @param  \WPWhales\View\Component  $component
+     * @param  \WPWCore\View\Component  $component
      * @return string
      */
     public static function renderComponent(Component $component)

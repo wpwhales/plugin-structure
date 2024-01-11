@@ -3,15 +3,15 @@
 namespace WPWhales\Console\Concerns;
 
 use WPWhales\Console\PromptValidationException;
-use Laravel\Prompts\ConfirmPrompt;
-use Laravel\Prompts\MultiSearchPrompt;
-use Laravel\Prompts\MultiSelectPrompt;
-use Laravel\Prompts\PasswordPrompt;
-use Laravel\Prompts\Prompt;
-use Laravel\Prompts\SearchPrompt;
-use Laravel\Prompts\SelectPrompt;
-use Laravel\Prompts\SuggestPrompt;
-use Laravel\Prompts\TextPrompt;
+use WPWhales\Prompts\ConfirmPrompt;
+use WPWhales\Prompts\MultiSearchPrompt;
+use WPWhales\Prompts\MultiSelectPrompt;
+use WPWhales\Prompts\PasswordPrompt;
+use WPWhales\Prompts\Prompt;
+use WPWhales\Prompts\SearchPrompt;
+use WPWhales\Prompts\SelectPrompt;
+use WPWhales\Prompts\SuggestPrompt;
+use WPWhales\Prompts\TextPrompt;
 use Symfony\Component\Console\Input\InputInterface;
 
 trait ConfiguresPrompts

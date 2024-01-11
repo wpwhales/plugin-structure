@@ -2,16 +2,12 @@
 
 namespace WPWCore\View;
 
-use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
-use WPWhales\Support\ServiceProvider;
 use WPWCore\View\Compilers\BladeCompiler;
-use WPWhales\View\Component;
-use WPWhales\View\DynamicComponent;
-use WPWhales\View\Engines\CompilerEngine;
-use WPWhales\View\Engines\EngineResolver;
-use WPWhales\View\Engines\FileEngine;
-use WPWhales\View\Engines\PhpEngine;
-use WPWhales\View\FileViewFinder;
+use WPWCore\View\Engines\CompilerEngine;
+use WPWCore\View\Engines\EngineResolver;
+use WPWCore\View\Engines\FileEngine;
+use WPWCore\View\Engines\PhpEngine;
+use WPWhales\Support\ServiceProvider;
 
 class ViewServiceProvider extends ServiceProvider
 {
@@ -67,8 +63,8 @@ class ViewServiceProvider extends ServiceProvider
     /**
      * Create a new Factory Instance.
      *
-     * @param \WPWhales\View\Engines\EngineResolver $resolver
-     * @param \WPWhales\View\ViewFinderInterface $finder
+     * @param \WPWCore\View\Engines\EngineResolver $resolver
+     * @param \WPWCore\View\ViewFinderInterface $finder
      * @param \WPWhales\Contracts\Events\Dispatcher $events
      * @return \WPWCore\View\Factory
      */
@@ -137,7 +133,7 @@ class ViewServiceProvider extends ServiceProvider
     /**
      * Register the file engine implementation.
      *
-     * @param \WPWhales\View\Engines\EngineResolver $resolver
+     * @param \WPWCore\View\Engines\EngineResolver $resolver
      * @return void
      */
     public function registerFileEngine($resolver)
@@ -150,7 +146,7 @@ class ViewServiceProvider extends ServiceProvider
     /**
      * Register the PHP engine implementation.
      *
-     * @param \WPWhales\View\Engines\EngineResolver $resolver
+     * @param \WPWCore\View\Engines\EngineResolver $resolver
      * @return void
      */
     public function registerPhpEngine($resolver)
@@ -163,7 +159,7 @@ class ViewServiceProvider extends ServiceProvider
     /**
      * Register the Blade engine implementation.
      *
-     * @param \WPWhales\View\Engines\EngineResolver $resolver
+     * @param \WPWCore\View\Engines\EngineResolver $resolver
      * @return void
      */
     public function registerBladeEngine($resolver)

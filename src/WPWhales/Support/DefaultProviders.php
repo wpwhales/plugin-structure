@@ -19,7 +19,7 @@ class DefaultProviders
     public function __construct(?array $providers = null)
     {
         $this->providers = $providers ?: [
-            \WPWhales\Auth\AuthServiceProvider::class,
+            \WPWCore\Auth\AuthServiceProvider::class,
             \WPWhales\Broadcasting\BroadcastServiceProvider::class,
             \WPWhales\Bus\BusServiceProvider::class,
             \WPWhales\Cache\CacheServiceProvider::class,
@@ -27,7 +27,7 @@ class DefaultProviders
             \WPWhales\Cookie\CookieServiceProvider::class,
             \WPWhales\Database\DatabaseServiceProvider::class,
             \WPWhales\Encryption\EncryptionServiceProvider::class,
-            \WPWhales\Filesystem\FilesystemServiceProvider::class,
+            \WPWCore\Filesystem\FilesystemServiceProvider::class,
             \WPWhales\Foundation\Providers\FoundationServiceProvider::class,
             \WPWhales\Hashing\HashServiceProvider::class,
             \WPWhales\Mail\MailServiceProvider::class,
@@ -36,7 +36,7 @@ class DefaultProviders
             \WPWhales\Pipeline\PipelineServiceProvider::class,
             \WPWhales\Queue\QueueServiceProvider::class,
             \WPWhales\Redis\RedisServiceProvider::class,
-            \WPWhales\Auth\Passwords\PasswordResetServiceProvider::class,
+            \WPWCore\Auth\Passwords\PasswordResetServiceProvider::class,
             \WPWhales\Session\SessionServiceProvider::class,
             \WPWhales\Translation\TranslationServiceProvider::class,
             \WPWhales\Validation\ValidationServiceProvider::class,

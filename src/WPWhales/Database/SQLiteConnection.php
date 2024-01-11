@@ -3,13 +3,13 @@
 namespace WPWhales\Database;
 
 use Exception;
+use WPWCore\Filesystem\Filesystem;
 use WPWhales\Database\PDO\SQLiteDriver;
 use WPWhales\Database\Query\Grammars\SQLiteGrammar as QueryGrammar;
 use WPWhales\Database\Query\Processors\SQLiteProcessor;
 use WPWhales\Database\Schema\Grammars\SQLiteGrammar as SchemaGrammar;
 use WPWhales\Database\Schema\SQLiteBuilder;
 use WPWhales\Database\Schema\SqliteSchemaState;
-use WPWhales\Filesystem\Filesystem;
 
 class SQLiteConnection extends Connection
 {
@@ -102,7 +102,7 @@ class SQLiteConnection extends Connection
     /**
      * Get the schema state for the connection.
      *
-     * @param  \WPWhales\Filesystem\Filesystem|null  $files
+     * @param  \WPWCore\Filesystem\Filesystem|null  $files
      * @param  callable|null  $processFactory
      *
      * @throws \RuntimeException

@@ -11,7 +11,7 @@ namespace WPWhales\Support\Facades;
  * @method static string decryptString(string $payload)
  * @method static string getKey()
  *
- * @see \WPWhales\Encryption\Encrypter
+ * @see \WPWCore\Encryption\Encrypter
  */
 class Crypt extends Facade
 {

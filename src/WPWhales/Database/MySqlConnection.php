@@ -3,14 +3,14 @@
 namespace WPWhales\Database;
 
 use Exception;
+use PDO;
+use WPWCore\Filesystem\Filesystem;
 use WPWhales\Database\PDO\MySqlDriver;
 use WPWhales\Database\Query\Grammars\MySqlGrammar as QueryGrammar;
 use WPWhales\Database\Query\Processors\MySqlProcessor;
 use WPWhales\Database\Schema\Grammars\MySqlGrammar as SchemaGrammar;
 use WPWhales\Database\Schema\MySqlBuilder;
 use WPWhales\Database\Schema\MySqlSchemaState;
-use WPWhales\Filesystem\Filesystem;
-use PDO;
 
 class MySqlConnection extends Connection
 {
@@ -89,7 +89,7 @@ class MySqlConnection extends Connection
     /**
      * Get the schema state for the connection.
      *
-     * @param  \WPWhales\Filesystem\Filesystem|null  $files
+     * @param  \WPWCore\Filesystem\Filesystem|null  $files
      * @param  callable|null  $processFactory
      * @return \WPWhales\Database\Schema\MySqlSchemaState
      */

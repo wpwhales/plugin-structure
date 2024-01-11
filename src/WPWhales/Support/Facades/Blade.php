@@ -8,7 +8,7 @@ namespace WPWhales\Support\Facades;
  * @method static void setPath(string $path)
  * @method static string compileString(string $value)
  * @method static string render(string $string, array $data = [], bool $deleteCachedView = false)
- * @method static string renderComponent(\WPWhales\View\Component $component)
+ * @method static string renderComponent(\WPWCore\View\Component $component)
  * @method static string stripParentheses(string $expression)
  * @method static void extend(callable $compiler)
  * @method static array getExtensions()

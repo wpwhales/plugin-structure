@@ -97,9 +97,9 @@ interface Gate
      *
      * @param  string  $ability
      * @param  array|mixed  $arguments
-     * @return \WPWhales\Auth\Access\Response
+     * @return \WPWCore\Auth\Access\Response
      *
-     * @throws \WPWhales\Auth\Access\AuthorizationException
+     * @throws \WPWCore\Auth\Access\AuthorizationException
      */
     public function authorize($ability, $arguments = []);
 
@@ -108,7 +108,7 @@ interface Gate
      *
      * @param  string  $ability
      * @param  array|mixed  $arguments
-     * @return \WPWhales\Auth\Access\Response
+     * @return \WPWCore\Auth\Access\Response
      */
     public function inspect($ability, $arguments = []);
 
@@ -119,7 +119,7 @@ interface Gate
      * @param  array|mixed  $arguments
      * @return mixed
      *
-     * @throws \WPWhales\Auth\Access\AuthorizationException
+     * @throws \WPWCore\Auth\Access\AuthorizationException
      */
     public function raw($ability, $arguments = []);
 

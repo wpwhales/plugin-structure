@@ -23,6 +23,8 @@ class Controller
     public function middleware($middleware, array $options = [])
     {
         $this->middleware[$middleware] = $options;
+
+        return new ControllerMiddlewareOptions($options);
     }
 
     /**

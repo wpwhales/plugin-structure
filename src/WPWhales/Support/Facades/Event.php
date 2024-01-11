@@ -19,8 +19,8 @@ use WPWhales\Support\Testing\Fakes\EventFake;
  * @method static \Closure createClassListener(string $listener, bool $wildcard = false)
  * @method static void forget(string $event)
  * @method static void forgetPushed()
- * @method static \WPWhales\Events\Dispatcher setQueueResolver(callable $resolver)
- * @method static \WPWhales\Events\Dispatcher setTransactionManagerResolver(callable $resolver)
+ * @method static \WPWCore\Events\Dispatcher setQueueResolver(callable $resolver)
+ * @method static \WPWCore\Events\Dispatcher setTransactionManagerResolver(callable $resolver)
  * @method static array getRawListeners()
  * @method static void macro(string $name, object|callable $macro)
  * @method static void mixin(object $mixin, bool $replace = true)
@@ -35,7 +35,7 @@ use WPWhales\Support\Testing\Fakes\EventFake;
  * @method static \WPWhales\Support\Collection dispatched(string $event, callable|null $callback = null)
  * @method static bool hasDispatched(string $event)
  *
- * @see \WPWhales\Events\Dispatcher
+ * @see \WPWCore\Events\Dispatcher
  * @see \WPWhales\Support\Testing\Fakes\EventFake
  */
 class Event extends Facade

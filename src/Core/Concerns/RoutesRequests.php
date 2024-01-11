@@ -4,6 +4,14 @@ namespace WPWCore\Concerns;
 
 use Closure;
 use FastRoute\Dispatcher;
+use FastRoute\RouteCollector;
+use FastRoute\RouteParser\Std as RouteParser;
+use FastRoute\DataGenerator\GroupCountBased as DataGenerator;
+
+use WPWCore\Exceptions\NotADefinedRouteException;
+use WPWCore\Exceptions\WPWException;
+use WPWCore\Routing\BindingResolver;
+use WPWCore\Routing\FastRouteDispatcher;
 use WPWCore\Routing\Middleware\VerifyCsrfToken;
 use WPWCore\View\View;
 use WPWhales\Contracts\Support\Responsable;
@@ -120,7 +128,7 @@ trait RoutesRequests
 
 
 
-        if ($response !== false && $this->shouldSendResponse()) {
+        if ( $this->shouldSendResponse()) {
 
             $this->response = $this->attachQueuedCookiesWithResponse($response);
 
@@ -224,28 +232,38 @@ trait RoutesRequests
 
         try {
 
-            //First check if route exists
-            if (isset($this->router->getRoutes()[$method . $pathInfo])) {
-                $this->currentRoute = [
-                    true, $this->router->getRoutes()[$method . $pathInfo]['action'], []
-                ];
+            $staticRoute = isset($this->router->getRoutes()[$method . $pathInfo]) ?: [];
+            $dynamicRoute = $this->createDispatcher()->dispatch($method, $pathInfo);
+
+
+            if (!empty($staticRoute) || !empty($dynamicRoute)) {
+
                 //Then boot the app first
                 $this->boot();
 
-                return $this->sendThroughPipeline($this->middleware, function ($request) use ($method, $pathInfo) {
+                return $this->sendThroughPipeline($this->middleware, function ($request) use ($method, $pathInfo, $staticRoute, $dynamicRoute) {
                     $this->instance(\WPWhales\Http\Request::class, $request);
 
 
-                    return $this->handleFoundRoute([
-                        true, $this->router->getRoutes()[$method . $pathInfo]['action'], []
-                    ]);
+                    if (!empty($staticRoute)) {
+                        return $this->handleFoundRoute([
+                            true, $this->router->getRoutes()[$method . $pathInfo]['action'], []
+                        ]);
+                    }
+
+
+                    return $this->handleDispatcherResponse(
+                        $dynamicRoute
+                    );
+
 
                 });
+
+
             }
-            return false;
-
-
+            throw new NotADefinedRouteException("Route is not defined may be it's a wordpress route");
         } catch (Throwable $e) {
+
 
 
             return $this->prepareResponse($this->sendExceptionToHandler($e));
@@ -297,16 +315,37 @@ trait RoutesRequests
     /**
      * Create a FastRoute dispatcher instance for the application.
      *
-     * @return \FastRoute\Dispatcher
+     * @return FastRouteDispatcher
      */
     protected function createDispatcher()
     {
-        return $this->dispatcher ?: \FastRoute\simpleDispatcher(function ($r) {
-            foreach ($this->router->getRoutes() as $route) {
-                $r->addRoute($route['method'], $route['uri'], $route['action']);
-            }
-        });
+
+        if (!$this->dispatcher) {
+            $routeResolver = function () {
+                // Create fast-route collector
+                $routeCollector = new RouteCollector(new RouteParser(), new DataGenerator);
+
+                // Get routes data from application
+                foreach ($this->router->getRoutes() as $route) {
+                    $routeCollector->addRoute($route['method'], $route['uri'], $route['action']);
+                }
+
+                return $routeCollector->getData();
+            };
+
+            $dispatcher = new FastRouteDispatcher(null);
+
+
+            $dispatcher->setRoutesResolver($routeResolver);
+            $dispatcher->setBindingResolver($this->app->bindingResolver);
+            $this->dispatcher = $dispatcher;
+
+        }
+
+        return $this->dispatcher;
+
     }
+
 
     /**
      * Set the FastRoute dispatcher instance.
@@ -327,6 +366,8 @@ trait RoutesRequests
      */
     protected function handleDispatcherResponse($routeInfo)
     {
+
+
         switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:
                 throw new NotFoundHttpException;
@@ -345,6 +386,8 @@ trait RoutesRequests
      */
     protected function handleFoundRoute($routeInfo)
     {
+
+        $this->currentRoute = $routeInfo;
 
 
         $this['request']->setRouteResolver(function () {
@@ -396,6 +439,7 @@ trait RoutesRequests
         if (!isset($callable)) {
             throw new RuntimeException('Unable to resolve route handler.');
         }
+
 
         try {
             return $this->prepareResponse($this->call($callable, $routeInfo[2]));
@@ -518,7 +562,6 @@ trait RoutesRequests
      */
     protected function sendThroughPipeline(array $middleware, Closure $then)
     {
-
 
 
         if (count($middleware) > 0 && !$this->shouldSkipMiddleware()) {

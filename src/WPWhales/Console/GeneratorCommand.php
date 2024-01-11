@@ -2,19 +2,19 @@
 
 namespace WPWhales\Console;
 
-use WPWhales\Console\Concerns\CreatesMatchingTest;
-use WPWhales\Contracts\Console\PromptsForMissingInput;
-use WPWhales\Filesystem\Filesystem;
-use WPWhales\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Finder\Finder;
+use WPWCore\Filesystem\Filesystem;
+use WPWhales\Console\Concerns\CreatesMatchingTest;
+use WPWhales\Contracts\Console\PromptsForMissingInput;
+use WPWhales\Support\Str;
 
 abstract class GeneratorCommand extends Command implements PromptsForMissingInput
 {
     /**
      * The filesystem instance.
      *
-     * @var \WPWhales\Filesystem\Filesystem
+     * @var \WPWCore\Filesystem\Filesystem
      */
     protected $files;
 
@@ -118,7 +118,7 @@ abstract class GeneratorCommand extends Command implements PromptsForMissingInpu
     /**
      * Create a new controller creator command instance.
      *
-     * @param  \WPWhales\Filesystem\Filesystem  $files
+     * @param  \WPWCore\Filesystem\Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)

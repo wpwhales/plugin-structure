@@ -4,14 +4,14 @@ namespace WPWhales\Database;
 
 use Closure;
 use Exception;
+use RuntimeException;
+use Throwable;
+use WPWCore\Filesystem\Filesystem;
 use WPWhales\Database\PDO\SqlServerDriver;
 use WPWhales\Database\Query\Grammars\SqlServerGrammar as QueryGrammar;
 use WPWhales\Database\Query\Processors\SqlServerProcessor;
 use WPWhales\Database\Schema\Grammars\SqlServerGrammar as SchemaGrammar;
 use WPWhales\Database\Schema\SqlServerBuilder;
-use WPWhales\Filesystem\Filesystem;
-use RuntimeException;
-use Throwable;
 
 class SqlServerConnection extends Connection
 {
@@ -120,7 +120,7 @@ class SqlServerConnection extends Connection
     /**
      * Get the schema state for the connection.
      *
-     * @param  \WPWhales\Filesystem\Filesystem|null  $files
+     * @param  \WPWCore\Filesystem\Filesystem|null  $files
      * @param  callable|null  $processFactory
      *
      * @throws \RuntimeException

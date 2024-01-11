@@ -3,11 +3,11 @@
 namespace WPWhales\Cache;
 
 use Exception;
+use WPWCore\Filesystem\Filesystem;
+use WPWCore\Filesystem\LockableFile;
 use WPWhales\Contracts\Cache\LockProvider;
 use WPWhales\Contracts\Cache\Store;
 use WPWhales\Contracts\Filesystem\LockTimeoutException;
-use WPWhales\Filesystem\Filesystem;
-use WPWhales\Filesystem\LockableFile;
 use WPWhales\Support\InteractsWithTime;
 
 class FileStore implements Store, LockProvider
@@ -17,7 +17,7 @@ class FileStore implements Store, LockProvider
     /**
      * The WPWhales Filesystem instance.
      *
-     * @var \WPWhales\Filesystem\Filesystem
+     * @var \WPWCore\Filesystem\Filesystem
      */
     protected $files;
 
@@ -45,7 +45,7 @@ class FileStore implements Store, LockProvider
     /**
      * Create a new file cache store instance.
      *
-     * @param  \WPWhales\Filesystem\Filesystem  $files
+     * @param  \WPWCore\Filesystem\Filesystem  $files
      * @param  string  $directory
      * @param  int|null  $filePermission
      * @return void
@@ -361,7 +361,7 @@ class FileStore implements Store, LockProvider
     /**
      * Get the Filesystem instance.
      *
-     * @return \WPWhales\Filesystem\Filesystem
+     * @return \WPWCore\Filesystem\Filesystem
      */
     public function getFilesystem()
     {

@@ -2,10 +2,27 @@
 
 namespace WPWCore;
 
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Nyholm\Psr7\Response as PsrResponse;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
+use RuntimeException;
+use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use WPWCore\Auth\AuthManager;
+use WPWCore\Auth\AuthServiceProvider;
+use WPWCore\Console\ConsoleServiceProvider;
 use WPWCore\DashboardNotices\Notices;
+use WPWCore\Encryption\EncryptionServiceProvider;
+use WPWCore\Events\EventServiceProvider;
+use WPWCore\Filesystem\Filesystem;
+use WPWCore\Filesystem\FilesystemServiceProvider;
+use WPWCore\Http\Request;
+use WPWCore\Routing\BindingResolver;
+use WPWCore\Routing\Router;
 use WPWCore\Session\StartSession;
-use WPWhales\Auth\AuthManager;
-use WPWhales\Auth\AuthServiceProvider;
+use WPWCore\View\ViewServiceProvider;
 use WPWhales\Broadcasting\BroadcastServiceProvider;
 use WPWhales\Bus\BusServiceProvider;
 use WPWhales\Cache\CacheServiceProvider;
@@ -18,12 +35,7 @@ use WPWhales\Contracts\Bus\Dispatcher;
 use WPWhales\Contracts\Container\BindingResolutionException;
 use WPWhales\Database\DatabaseServiceProvider;
 use WPWhales\Database\MigrationServiceProvider;
-use WPWCore\Encryption\EncryptionServiceProvider;
-use WPWhales\Events\EventServiceProvider;
-use WPWhales\Filesystem\Filesystem;
-use WPWhales\Filesystem\FilesystemServiceProvider;
 use WPWhales\Hashing\HashServiceProvider;
-use WPWCore\Http\Request;
 use WPWhales\Log\LogManager;
 use WPWhales\Pagination\PaginationServiceProvider;
 use WPWhales\Queue\QueueServiceProvider;
@@ -33,17 +45,6 @@ use WPWhales\Support\ServiceProvider;
 use WPWhales\Support\Str;
 use WPWhales\Translation\TranslationServiceProvider;
 use WPWhales\Validation\ValidationServiceProvider;
-use WPWCore\View\ViewServiceProvider;
-use WPWCore\Console\ConsoleServiceProvider;
-use WPWCore\Routing\Router;
-use Nyholm\Psr7\Factory\Psr17Factory;
-use Nyholm\Psr7\Response as PsrResponse;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
-use RuntimeException;
-use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
-use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class Application extends Container
 {
@@ -332,6 +333,9 @@ class Application extends Container
      */
     public function bootstrapRouter()
     {
+
+        $this->app->instance('bindingResolver', new BindingResolver([$this, 'make']));
+
         $this->router = new Router($this);
 
         $this->adminAjaxRouter = new Router($this);
@@ -1335,14 +1339,7 @@ class Application extends Container
      * @var array
      */
     public $availableBindings = [
-        'auth'                                              => 'registerAuthBindings',
-        'auth.driver'                                       => 'registerAuthBindings',
-        \WPWhales\Auth\AuthManager::class                   => 'registerAuthBindings',
-        \WPWhales\Contracts\Auth\Guard::class               => 'registerAuthBindings',
-        \WPWhales\Contracts\Auth\Access\Gate::class         => 'registerAuthBindings',
-        \WPWhales\Contracts\Broadcasting\Broadcaster::class => 'registerBroadcastingBindings',
-        \WPWhales\Contracts\Broadcasting\Factory::class     => 'registerBroadcastingBindings',
-        \WPWhales\Contracts\Bus\Dispatcher::class           => 'registerBusBindings',
+
         'cache'                                             => 'registerCacheBindings',
         'cache.store'                                       => 'registerCacheBindings',
         \WPWhales\Contracts\Cache\Factory::class            => 'registerCacheBindings',
@@ -1366,10 +1363,6 @@ class Application extends Container
         \WPWhales\Contracts\Hashing\Hasher::class           => 'registerHashBindings',
         'log'                                               => 'registerLogBindings',
         \Psr\Log\LoggerInterface::class                     => 'registerLogBindings',
-        'queue'                                             => 'registerQueueBindings',
-        'queue.connection'                                  => 'registerQueueBindings',
-        \WPWhales\Contracts\Queue\Factory::class            => 'registerQueueBindings',
-        \WPWhales\Contracts\Queue\Queue::class              => 'registerQueueBindings',
         'router'                                            => 'registerRouterBindings',
         \Psr\Http\Message\ServerRequestInterface::class     => 'registerPsrRequestBindings',
         \Psr\Http\Message\ResponseInterface::class          => 'registerPsrResponseBindings',

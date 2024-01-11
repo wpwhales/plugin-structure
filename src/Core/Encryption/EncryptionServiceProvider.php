@@ -2,10 +2,9 @@
 
 namespace WPWCore\Encryption;
 
-use WPWhales\Encryption\Encrypter;
+
 use WPWhales\Support\ServiceProvider;
 use WPWhales\Support\Str;
-use Laravel\SerializableClosure\SerializableClosure;
 
 class EncryptionServiceProvider extends ServiceProvider
 {
@@ -17,7 +16,6 @@ class EncryptionServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerEncrypter();
-        $this->registerSerializableClosureSecurityKey();
     }
 
     /**
@@ -34,21 +32,7 @@ class EncryptionServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Configure Serializable Closure signing for security.
-     *
-     * @return void
-     */
-    protected function registerSerializableClosureSecurityKey()
-    {
-        $config = $this->app->make('config')->get('app');
 
-        if (! class_exists(SerializableClosure::class) || empty($config['key'])) {
-            return;
-        }
-
-        SerializableClosure::setSecretKey($this->parseKey($config));
-    }
 
     /**
      * Parse the encryption key.
@@ -71,7 +55,7 @@ class EncryptionServiceProvider extends ServiceProvider
      * @param  array  $config
      * @return string
      *
-     * @throws \WPWhales\Encryption\MissingAppKeyException
+     * @throws \WPWCore\Encryption\MissingAppKeyException
      */
     protected function key(array $config)
     {

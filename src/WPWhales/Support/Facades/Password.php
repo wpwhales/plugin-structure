@@ -14,10 +14,10 @@ use WPWhales\Contracts\Auth\PasswordBroker;
  * @method static string createToken(\WPWhales\Contracts\Auth\CanResetPassword $user)
  * @method static void deleteToken(\WPWhales\Contracts\Auth\CanResetPassword $user)
  * @method static bool tokenExists(\WPWhales\Contracts\Auth\CanResetPassword $user, string $token)
- * @method static \WPWhales\Auth\Passwords\TokenRepositoryInterface getRepository()
+ * @method static \WPWCore\Auth\Passwords\TokenRepositoryInterface getRepository()
  *
- * @see \WPWhales\Auth\Passwords\PasswordBrokerManager
- * @see \WPWhales\Auth\Passwords\PasswordBroker
+ * @see \WPWCore\Auth\Passwords\PasswordBrokerManager
+ * @see \WPWCore\Auth\Passwords\PasswordBroker
  */
 class Password extends Facade
 {

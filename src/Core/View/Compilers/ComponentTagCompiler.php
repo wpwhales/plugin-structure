@@ -2,17 +2,16 @@
 
 namespace WPWCore\View\Compilers;
 
+use InvalidArgumentException;
+use ReflectionClass;
+use WPWCore\Filesystem\Filesystem;
+use WPWCore\View\AnonymousComponent;
+use WPWCore\View\DynamicComponent;
+use WPWCore\View\ViewFinderInterface;
 use WPWhales\Container\Container;
 use WPWhales\Contracts\Foundation\Application;
 use WPWhales\Contracts\View\Factory;
-use WPWhales\Filesystem\Filesystem;
 use WPWhales\Support\Str;
-use WPWhales\View\AnonymousComponent;
-use WPWCore\View\Compilers\BladeCompiler;
-use WPWhales\View\DynamicComponent;
-use WPWhales\View\ViewFinderInterface;
-use InvalidArgumentException;
-use ReflectionClass;
 
 /**
  * @author Spatie bvba <info@spatie.be>

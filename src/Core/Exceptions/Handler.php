@@ -3,8 +3,15 @@
 namespace WPWCore\Exceptions;
 
 use Exception;
-use WPWCore\Exceptions\WPWExceptionInterface;
-use WPWhales\Auth\Access\AuthorizationException;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Application as ConsoleApplication;
+use Symfony\Component\Console\Exception\CommandNotFoundException;
+use Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Throwable;
+use WPWCore\Auth\Access\AuthorizationException;
 use WPWhales\Console\View\Components\BulletList;
 use WPWhales\Console\View\Components\Error;
 use WPWhales\Contracts\Debug\ExceptionHandler;
@@ -17,14 +24,6 @@ use WPWhales\Support\Arr;
 use WPWhales\Support\Facades\URL;
 use WPWhales\Support\ViewErrorBag;
 use WPWhales\Validation\ValidationException;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Console\Application as ConsoleApplication;
-use Symfony\Component\Console\Exception\CommandNotFoundException;
-use Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Throwable;
 
 class Handler implements ExceptionHandler
 {
@@ -111,6 +110,8 @@ class Handler implements ExceptionHandler
     public function render($request, Throwable $e)
     {
 
+
+
         if (method_exists($e, 'render') && $response = $e->render($request)) {
 
 
@@ -124,7 +125,7 @@ class Handler implements ExceptionHandler
         } elseif ($e instanceof ModelNotFoundException) {
             $e = new NotFoundHttpException($e->getMessage(), $e);
         } elseif ($e instanceof AuthorizationException) {
-            $e = new HttpException($e->status() ?? 403, $e->getMessage());
+            $e = new HttpException($e->status() ?? 403, $e->getMessage(),$e);
         } elseif ($e instanceof ValidationException && $e->getResponse()) {
 
             //if doing ajax

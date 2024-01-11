@@ -5,8 +5,7 @@ namespace Tests\View;
 
 
 use WPWCore\Http\Request;
-use WPWCore\Session\SessionManager;
-use WPWhales\View\ViewException;
+use WPWCore\View\ViewException;
 
 /**
  *  !!!! ONLY FOR AJAX CALL !!!!

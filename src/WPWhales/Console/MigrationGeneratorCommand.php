@@ -2,9 +2,8 @@
 
 namespace WPWhales\Console;
 
-use WPWhales\Filesystem\Filesystem;
+use WPWCore\Filesystem\Filesystem;
 use WPWhales\Support\Composer;
-
 use function WPWhales\Filesystem\join_paths;
 
 abstract class MigrationGeneratorCommand extends Command
@@ -12,7 +11,7 @@ abstract class MigrationGeneratorCommand extends Command
     /**
      * The filesystem instance.
      *
-     * @var \WPWhales\Filesystem\Filesystem
+     * @var \WPWCore\Filesystem\Filesystem
      */
     protected $files;
 
@@ -28,7 +27,7 @@ abstract class MigrationGeneratorCommand extends Command
     /**
      * Create a new migration generator command instance.
      *
-     * @param  \WPWhales\Filesystem\Filesystem  $files
+     * @param  \WPWCore\Filesystem\Filesystem  $files
      * @param  \WPWhales\Support\Composer  $composer
      * @return void
      */

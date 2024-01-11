@@ -3,12 +3,12 @@
 namespace WPWCore\Testing;
 
 use Exception;
+use Mockery;
+use PHPUnit\Framework\TestCase as BaseTestCase;
+use WPWCore\View\Component;
 use WPWhales\Contracts\Auth\Authenticatable;
 use WPWhales\Contracts\Console\Kernel;
 use WPWhales\Support\Facades\Facade;
-use WPWhales\View\Component;
-use Mockery;
-use PHPUnit\Framework\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {

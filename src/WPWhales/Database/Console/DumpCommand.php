@@ -2,14 +2,14 @@
 
 namespace WPWhales\Database\Console;
 
+use Symfony\Component\Console\Attribute\AsCommand;
+use WPWCore\Filesystem\Filesystem;
 use WPWhales\Console\Command;
 use WPWhales\Contracts\Events\Dispatcher;
 use WPWhales\Database\Connection;
 use WPWhales\Database\ConnectionResolverInterface;
 use WPWhales\Database\Events\SchemaDumped;
-use WPWhales\Filesystem\Filesystem;
 use WPWhales\Support\Facades\Config;
-use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'schema:dump')]
 class DumpCommand extends Command

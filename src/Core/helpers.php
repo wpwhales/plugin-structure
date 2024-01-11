@@ -3,6 +3,7 @@
 namespace WPWCore;
 
 
+use Carbon\Carbon;
 use WPWCore\DashboardNotices\Notices;
 use WPWCore\Http\Redirector;
 use WPWCore\Routing\UrlGenerator;
@@ -239,4 +240,25 @@ function url($path = null, $parameters = [], $secure = null)
 function dashboard_notice(...$parameters)
 {
     return app(Notices::class)->addNotice(...array_values($parameters));
+}
+
+
+function now(){
+
+    return Carbon::now();
+}
+
+
+
+/**
+ * Dispatch an event and call the listeners.
+ *
+ * @param object|string $event
+ * @param mixed $payload
+ * @param bool $halt
+ * @return array|null
+ */
+function event($event, $payload = [], $halt = false)
+{
+    return app('events')->dispatch($event, $payload, $halt);
 }
