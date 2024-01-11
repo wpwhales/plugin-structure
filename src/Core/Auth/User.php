@@ -1,20 +1,13 @@
 <?php
 
-namespace Illuminate\Foundation\Auth;
+namespace WPWCore\Auth;
 
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Auth\MustVerifyEmail;
-use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\Access\Authorizable;
+use WPWhales\Database\Eloquent\Model;
 
-class User extends Model implements
-    AuthenticatableContract,
-    AuthorizableContract,
-    CanResetPasswordContract
+class User extends Model
 {
-    use Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail;
+
+
+    protected $table = "users";
+    protected $primaryKey = "ID";
 }

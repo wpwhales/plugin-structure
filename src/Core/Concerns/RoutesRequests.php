@@ -68,11 +68,18 @@ trait RoutesRequests
 
 
     /**
-     * The FastRoute dispatcher.
+     * The response.
      *
      * @var Response
      */
     protected $response;
+
+    /**
+     * should send the response ?.
+     *
+     * @var bool
+     */
+    protected $shouldSend = true;
 
     /**
      * Add new middleware to the application.
@@ -127,8 +134,7 @@ trait RoutesRequests
     {
 
 
-
-        if ( $this->shouldSendResponse()) {
+        if ($this->shouldSendResponse()) {
 
             $this->response = $this->attachQueuedCookiesWithResponse($response);
 
@@ -236,7 +242,11 @@ trait RoutesRequests
             $dynamicRoute = $this->createDispatcher()->dispatch($method, $pathInfo);
 
 
-            if (!empty($staticRoute) || !empty($dynamicRoute)) {
+            //We'll boot the app if and only if the routes are available
+            if ((!empty($staticRoute) || $dynamicRoute[0] === Dispatcher::FOUND)
+
+            ) {
+
 
                 //Then boot the app first
                 $this->boot();
@@ -261,9 +271,10 @@ trait RoutesRequests
 
 
             }
-            throw new NotADefinedRouteException("Route is not defined may be it's a wordpress route");
-        } catch (Throwable $e) {
 
+            $this->shouldSend = false;
+            throw new NotFoundHttpException("May be a wordpress route", null, 404);
+        } catch (Throwable $e) {
 
 
             return $this->prepareResponse($this->sendExceptionToHandler($e));
@@ -309,7 +320,7 @@ trait RoutesRequests
     public function shouldSendResponse()
     {
 
-        return !empty($this->currentRoute);
+        return $this->shouldSend;
     }
 
     /**
