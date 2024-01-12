@@ -171,7 +171,7 @@ if (! function_exists('object_get')) {
 
         foreach (explode('.', $key) as $segment) {
             if (! is_object($object) || ! isset($object->{$segment})) {
-                return value($default);
+                return \WPWCore\Collections\value($default);
             }
 
             $object = $object->{$segment};
@@ -256,7 +256,8 @@ if (! function_exists('retry')) {
             $sleepMilliseconds = $backoff[$attempts - 1] ?? $sleepMilliseconds;
 
             if ($sleepMilliseconds) {
-                Sleep::usleep(value($sleepMilliseconds, $attempts, $e) * 1000);
+                Sleep::usleep(\WPWCore\Collections\value($sleepMilliseconds, $attempts, $e)
+                    * 1000);
             }
 
             goto beginning;

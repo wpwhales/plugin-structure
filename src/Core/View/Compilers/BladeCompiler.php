@@ -234,7 +234,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
      */
     protected function getOpenAndClosingPhpTokens($contents)
     {
-        return collect(token_get_all($contents))
+        return \WPWCore\Collections\collect(token_get_all($contents))
             ->pluck(0)
             ->filter(function ($token) {
                 return in_array($token, [T_OPEN_TAG, T_OPEN_TAG_WITH_ECHO, T_CLOSE_TAG]);
@@ -363,7 +363,8 @@ class BladeCompiler extends Compiler implements CompilerInterface
     {
         $data = $component->data();
 
-        $view = value($component->resolveView(), $data);
+        $view = \WPWCore\Collections\value($component->resolveView(), $data)
+;
 
         if ($view instanceof View) {
             return $view->with($data)->render();
@@ -774,9 +775,10 @@ class BladeCompiler extends Compiler implements CompilerInterface
 
         if (is_null($alias)) {
             $alias = str_contains($class, '\\View\\Components\\')
-                            ? collect(explode('\\', Str::after($class, '\\View\\Components\\')))->map(function ($segment) {
-                                return Str::kebab($segment);
-                            })->implode(':')
+                            ? \WPWCore\Collections\collect(explode('\\', Str::after($class, '\\View\\Components\\')))
+                    ->map(function ($segment) {
+                        return Str::kebab($segment);
+                    })->implode(':')
                             : Str::kebab(\WPWCore\Support\class_basename($class)
 );
         }

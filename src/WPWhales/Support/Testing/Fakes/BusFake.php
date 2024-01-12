@@ -512,7 +512,8 @@ class BusFake implements Fake, QueueingDispatcher
 
         $callback = $callback ?: fn () => true;
 
-        return collect($this->commands[$command])->filter(fn ($command) => $callback($command));
+        return \WPWCore\Collections\collect($this->commands[$command])
+            ->filter(fn($command) => $callback($command));
     }
 
     /**
@@ -530,7 +531,8 @@ class BusFake implements Fake, QueueingDispatcher
 
         $callback = $callback ?: fn () => true;
 
-        return collect($this->commandsSync[$command])->filter(fn ($command) => $callback($command));
+        return \WPWCore\Collections\collect($this->commandsSync[$command])
+            ->filter(fn($command) => $callback($command));
     }
 
     /**
@@ -548,7 +550,8 @@ class BusFake implements Fake, QueueingDispatcher
 
         $callback = $callback ?: fn () => true;
 
-        return collect($this->commandsAfterResponse[$command])->filter(fn ($command) => $callback($command));
+        return \WPWCore\Collections\collect($this->commandsAfterResponse[$command])
+            ->filter(fn($command) => $callback($command));
     }
 
     /**
@@ -563,7 +566,8 @@ class BusFake implements Fake, QueueingDispatcher
             return collect();
         }
 
-        return collect($this->batches)->filter(fn ($batch) => $callback($batch));
+        return \WPWCore\Collections\collect($this->batches)
+            ->filter(fn($batch) => $callback($batch));
     }
 
     /**
@@ -754,11 +758,11 @@ class BusFake implements Fake, QueueingDispatcher
             return true;
         }
 
-        return collect($this->jobsToFake)
+        return \WPWCore\Collections\collect($this->jobsToFake)
             ->filter(function ($job) use ($command) {
                 return $job instanceof Closure
-                            ? $job($command)
-                            : $job === get_class($command);
+                    ? $job($command)
+                    : $job === get_class($command);
             })->isNotEmpty();
     }
 
@@ -770,7 +774,7 @@ class BusFake implements Fake, QueueingDispatcher
      */
     protected function shouldDispatchCommand($command)
     {
-        return collect($this->jobsToDispatch)
+        return \WPWCore\Collections\collect($this->jobsToDispatch)
             ->filter(function ($job) use ($command) {
                 return $job instanceof Closure
                     ? $job($command)

@@ -281,9 +281,10 @@ abstract class Relation implements BuilderContract
      */
     protected function getKeys(array $models, $key = null)
     {
-        return collect($models)->map(function ($value) use ($key) {
-            return $key ? $value->getAttribute($key) : $value->getKey();
-        })->values()->unique(null, true)->sort()->all();
+        return \WPWCore\Collections\collect($models)
+            ->map(function ($value) use ($key) {
+                return $key ? $value->getAttribute($key) : $value->getKey();
+            })->values()->unique(null, true)->sort()->all();
     }
 
     /**
@@ -413,7 +414,8 @@ abstract class Relation implements BuilderContract
      */
     protected function whereInMethod(Model $model, $key)
     {
-        return $model->getKeyName() === last(explode('.', $key))
+        return $model->getKeyName() === \WPWCore\Collections\last(explode('.', $key))
+
                     && in_array($model->getKeyType(), ['int', 'integer'])
                         ? 'whereIntegerInRaw'
                         : 'whereIn';

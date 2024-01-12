@@ -46,7 +46,8 @@ class ComponentAttributeBag implements Arrayable, ArrayAccess, IteratorAggregate
      */
     public function first($default = null)
     {
-        return $this->getIterator()->current() ?? value($default);
+        return $this->getIterator()->current() ?? \WPWCore\Collections\value($default)
+;
     }
 
     /**
@@ -58,7 +59,8 @@ class ComponentAttributeBag implements Arrayable, ArrayAccess, IteratorAggregate
      */
     public function get($key, $default = null)
     {
-        return $this->attributes[$key] ?? value($default);
+        return $this->attributes[$key] ?? \WPWCore\Collections\value($default)
+;
     }
 
     /**
@@ -160,7 +162,8 @@ class ComponentAttributeBag implements Arrayable, ArrayAccess, IteratorAggregate
      */
     public function filter($callback)
     {
-        return new static(collect($this->attributes)->filter($callback)->all());
+        return new static(\WPWCore\Collections\collect($this->attributes)
+            ->filter($callback)->all());
     }
 
     /**
@@ -284,13 +287,13 @@ class ComponentAttributeBag implements Arrayable, ArrayAccess, IteratorAggregate
                 : $value;
         }, $attributeDefaults);
 
-        [$appendableAttributes, $nonAppendableAttributes] = collect($this->attributes)
-                    ->partition(function ($value, $key) use ($attributeDefaults) {
-                        return $key === 'class' || $key === 'style' || (
-                            isset($attributeDefaults[$key]) &&
-                            $attributeDefaults[$key] instanceof AppendableAttributeValue
-                        );
-                    });
+        [$appendableAttributes, $nonAppendableAttributes] = \WPWCore\Collections\collect($this->attributes)
+            ->partition(function ($value, $key) use ($attributeDefaults) {
+                return $key === 'class' || $key === 'style' || (
+                        isset($attributeDefaults[$key]) &&
+                        $attributeDefaults[$key] instanceof AppendableAttributeValue
+                    );
+            });
 
         $attributes = $appendableAttributes->mapWithKeys(function ($value, $key) use ($attributeDefaults, $escape) {
             $defaultsValue = isset($attributeDefaults[$key]) && $attributeDefaults[$key] instanceof AppendableAttributeValue

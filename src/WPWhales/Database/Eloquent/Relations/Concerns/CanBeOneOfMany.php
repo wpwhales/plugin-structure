@@ -150,9 +150,10 @@ trait CanBeOneOfMany
      */
     public function latestOfMany($column = 'id', $relation = null)
     {
-        return $this->ofMany(collect(Arr::wrap($column))->mapWithKeys(function ($column) {
-            return [$column => 'MAX'];
-        })->all(), 'MAX', $relation);
+        return $this->ofMany(\WPWCore\Collections\collect(Arr::wrap($column))
+            ->mapWithKeys(function ($column) {
+                return [$column => 'MAX'];
+            })->all(), 'MAX', $relation);
     }
 
     /**
@@ -164,9 +165,10 @@ trait CanBeOneOfMany
      */
     public function oldestOfMany($column = 'id', $relation = null)
     {
-        return $this->ofMany(collect(Arr::wrap($column))->mapWithKeys(function ($column) {
-            return [$column => 'MIN'];
-        })->all(), 'MIN', $relation);
+        return $this->ofMany(\WPWCore\Collections\collect(Arr::wrap($column))
+            ->mapWithKeys(function ($column) {
+                return [$column => 'MIN'];
+            })->all(), 'MIN', $relation);
     }
 
     /**
@@ -285,7 +287,8 @@ trait CanBeOneOfMany
      */
     public function qualifySubSelectColumn($column)
     {
-        return $this->getRelationName().'.'.last(explode('.', $column));
+        return $this->getRelationName() . '.' . \WPWCore\Collections\last(explode('.', $column))
+;
     }
 
     /**

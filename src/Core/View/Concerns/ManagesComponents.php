@@ -93,7 +93,8 @@ trait ManagesComponents
         );
 
         try {
-            $view = value($view, $data);
+            $view = \WPWCore\Collections\value($view, $data)
+;
 
             if ($view instanceof View) {
                 return $view->with($data)->render();
@@ -144,7 +145,7 @@ trait ManagesComponents
         $currentComponent = count($this->componentStack);
 
         if ($currentComponent === 0) {
-            return value($default);
+            return \WPWCore\Collections\value($default);
         }
 
         for ($i = $currentComponent - 1; $i >= 0; $i--) {
@@ -155,7 +156,7 @@ trait ManagesComponents
             }
         }
 
-        return value($default);
+        return \WPWCore\Collections\value($default);
     }
 
     /**
@@ -184,7 +185,7 @@ trait ManagesComponents
      */
     public function endSlot()
     {
-        last($this->componentStack);
+        \WPWCore\Collections\last($this->componentStack);
 
         $currentSlot = array_pop(
             $this->slotStack[$this->currentComponent()]

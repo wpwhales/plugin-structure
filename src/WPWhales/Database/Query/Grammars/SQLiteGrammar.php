@@ -223,10 +223,12 @@ class SQLiteGrammar extends Grammar
     {
         $jsonGroups = $this->groupJsonColumnsForUpdate($values);
 
-        return collect($values)->reject(function ($value, $key) {
-            return $this->isJsonSelector($key);
-        })->merge($jsonGroups)->map(function ($value, $key) use ($jsonGroups) {
-            $column = last(explode('.', $key));
+        return \WPWCore\Collections\collect($values)
+            ->reject(function ($value, $key) {
+                return $this->isJsonSelector($key);
+            })->merge($jsonGroups)->map(function ($value, $key) use ($jsonGroups) {
+                $column = \WPWCore\Collections\last(explode('.', $key))
+;
 
             $value = isset($jsonGroups[$key]) ? $this->compileJsonPatch($column, $value) : $this->parameter($value);
 
@@ -249,11 +251,12 @@ class SQLiteGrammar extends Grammar
 
         $sql .= ' on conflict ('.$this->columnize($uniqueBy).') do update set ';
 
-        $columns = collect($update)->map(function ($value, $key) {
-            return is_numeric($key)
-                ? $this->wrap($value).' = '.$this->wrapValue('excluded').'.'.$this->wrap($value)
-                : $this->wrap($key).' = '.$this->parameter($value);
-        })->implode(', ');
+        $columns = \WPWCore\Collections\collect($update)
+            ->map(function ($value, $key) {
+                return is_numeric($key)
+                    ? $this->wrap($value) . ' = ' . $this->wrapValue('excluded') . '.' . $this->wrap($value)
+                    : $this->wrap($key) . ' = ' . $this->parameter($value);
+            })->implode(', ');
 
         return $sql.$columns;
     }
@@ -302,7 +305,8 @@ class SQLiteGrammar extends Grammar
 
         $columns = $this->compileUpdateColumns($query, $values);
 
-        $alias = last(preg_split('/\s+as\s+/i', $query->from));
+        $alias = \WPWCore\Collections\last(preg_split('/\s+as\s+/i', $query->from))
+;
 
         $selectSql = $this->compileSelect($query->select($alias.'.rowid'));
 
@@ -320,9 +324,10 @@ class SQLiteGrammar extends Grammar
     {
         $groups = $this->groupJsonColumnsForUpdate($values);
 
-        $values = collect($values)->reject(function ($value, $key) {
-            return $this->isJsonSelector($key);
-        })->merge($groups)->map(function ($value) {
+        $values = \WPWCore\Collections\collect($values)
+            ->reject(function ($value, $key) {
+                return $this->isJsonSelector($key);
+            })->merge($groups)->map(function ($value) {
             return is_array($value) ? json_encode($value) : $value;
         })->all();
 
@@ -358,7 +363,8 @@ class SQLiteGrammar extends Grammar
     {
         $table = $this->wrapTable($query->from);
 
-        $alias = last(preg_split('/\s+as\s+/i', $query->from));
+        $alias = \WPWCore\Collections\last(preg_split('/\s+as\s+/i', $query->from))
+;
 
         $selectSql = $this->compileSelect($query->select($alias.'.rowid'));
 

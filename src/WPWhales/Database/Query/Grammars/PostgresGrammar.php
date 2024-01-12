@@ -125,9 +125,10 @@ class PostgresGrammar extends Grammar
             $language = 'english';
         }
 
-        $columns = collect($where['columns'])->map(function ($column) use ($language) {
-            return "to_tsvector('{$language}', {$this->wrap($column)})";
-        })->implode(' || ');
+        $columns = \WPWCore\Collections\collect($where['columns'])
+            ->map(function ($column) use ($language) {
+                return "to_tsvector('{$language}', {$this->wrap($column)})";
+            })->implode(' || ');
 
         $mode = 'plainto_tsquery';
 
@@ -361,15 +362,17 @@ class PostgresGrammar extends Grammar
      */
     protected function compileUpdateColumns(Builder $query, array $values)
     {
-        return collect($values)->map(function ($value, $key) {
-            $column = last(explode('.', $key));
+        return \WPWCore\Collections\collect($values)
+            ->map(function ($value, $key) {
+                $column = \WPWCore\Collections\last(explode('.', $key))
+;
 
-            if ($this->isJsonSelector($key)) {
-                return $this->compileJsonUpdateColumn($column, $value);
-            }
+                if ($this->isJsonSelector($key)) {
+                    return $this->compileJsonUpdateColumn($column, $value);
+                }
 
-            return $this->wrap($column).' = '.$this->parameter($value);
-        })->implode(', ');
+                return $this->wrap($column) . ' = ' . $this->parameter($value);
+            })->implode(', ');
     }
 
     /**
@@ -387,11 +390,12 @@ class PostgresGrammar extends Grammar
 
         $sql .= ' on conflict ('.$this->columnize($uniqueBy).') do update set ';
 
-        $columns = collect($update)->map(function ($value, $key) {
-            return is_numeric($key)
-                ? $this->wrap($value).' = '.$this->wrapValue('excluded').'.'.$this->wrap($value)
-                : $this->wrap($key).' = '.$this->parameter($value);
-        })->implode(', ');
+        $columns = \WPWCore\Collections\collect($update)
+            ->map(function ($value, $key) {
+                return is_numeric($key)
+                    ? $this->wrap($value) . ' = ' . $this->wrapValue('excluded') . '.' . $this->wrap($value)
+                    : $this->wrap($key) . ' = ' . $this->parameter($value);
+            })->implode(', ');
 
         return $sql.$columns;
     }
@@ -436,9 +440,10 @@ class PostgresGrammar extends Grammar
             // When using Postgres, updates with joins list the joined tables in the from
             // clause, which is different than other systems like MySQL. Here, we will
             // compile out the tables that are joined and add them to a from clause.
-            $froms = collect($query->joins)->map(function ($join) {
-                return $this->wrapTable($join->table);
-            })->all();
+            $froms = \WPWCore\Collections\collect($query->joins)
+                ->map(function ($join) {
+                    return $this->wrapTable($join->table);
+                })->all();
 
             if (count($froms) > 0) {
                 $from = ' from '.implode(', ', $froms);
@@ -509,11 +514,12 @@ class PostgresGrammar extends Grammar
      */
     public function prepareBindingsForUpdateFrom(array $bindings, array $values)
     {
-        $values = collect($values)->map(function ($value, $column) {
-            return is_array($value) || ($this->isJsonSelector($column) && ! $this->isExpression($value))
-                ? json_encode($value)
-                : $value;
-        })->all();
+        $values = \WPWCore\Collections\collect($values)
+            ->map(function ($value, $column) {
+                return is_array($value) || ($this->isJsonSelector($column) && !$this->isExpression($value))
+                    ? json_encode($value)
+                    : $value;
+            })->all();
 
         $bindingsWithoutWhere = Arr::except($bindings, ['select', 'where']);
 
@@ -535,7 +541,8 @@ class PostgresGrammar extends Grammar
 
         $columns = $this->compileUpdateColumns($query, $values);
 
-        $alias = last(preg_split('/\s+as\s+/i', $query->from));
+        $alias = \WPWCore\Collections\last(preg_split('/\s+as\s+/i', $query->from))
+;
 
         $selectSql = $this->compileSelect($query->select($alias.'.ctid'));
 
@@ -551,11 +558,12 @@ class PostgresGrammar extends Grammar
      */
     public function prepareBindingsForUpdate(array $bindings, array $values)
     {
-        $values = collect($values)->map(function ($value, $column) {
-            return is_array($value) || ($this->isJsonSelector($column) && ! $this->isExpression($value))
-                ? json_encode($value)
-                : $value;
-        })->all();
+        $values = \WPWCore\Collections\collect($values)
+            ->map(function ($value, $column) {
+                return is_array($value) || ($this->isJsonSelector($column) && !$this->isExpression($value))
+                    ? json_encode($value)
+                    : $value;
+            })->all();
 
         $cleanBindings = Arr::except($bindings, 'select');
 
@@ -589,7 +597,8 @@ class PostgresGrammar extends Grammar
     {
         $table = $this->wrapTable($query->from);
 
-        $alias = last(preg_split('/\s+as\s+/i', $query->from));
+        $alias = \WPWCore\Collections\last(preg_split('/\s+as\s+/i', $query->from))
+;
 
         $selectSql = $this->compileSelect($query->select($alias.'.ctid'));
 
@@ -667,9 +676,10 @@ class PostgresGrammar extends Grammar
     {
         $quote = func_num_args() === 2 ? func_get_arg(1) : "'";
 
-        return collect($path)->map(function ($attribute) {
-            return $this->parseJsonPathArrayKeys($attribute);
-        })->collapse()->map(function ($attribute) use ($quote) {
+        return \WPWCore\Collections\collect($path)
+            ->map(function ($attribute) {
+                return $this->parseJsonPathArrayKeys($attribute);
+            })->collapse()->map(function ($attribute) use ($quote) {
             return filter_var($attribute, FILTER_VALIDATE_INT) !== false
                         ? $attribute
                         : $quote.$attribute.$quote;
@@ -689,7 +699,7 @@ class PostgresGrammar extends Grammar
 
             preg_match_all('/\[([^\]]+)\]/', $parts[0], $keys);
 
-            return collect([$key])
+            return \WPWCore\Collections\collect([$key])
                 ->merge($keys[1])
                 ->diff('')
                 ->values()

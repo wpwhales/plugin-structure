@@ -249,9 +249,10 @@ abstract class Factory
         }
 
         return new EloquentCollection(
-            collect($records)->map(function ($record) {
-                return $this->state($record)->create();
-            })
+            \WPWCore\Collections\collect($records)
+                ->map(function ($record) {
+                    return $this->state($record)->create();
+                })
         );
     }
 
@@ -284,9 +285,11 @@ abstract class Factory
         $results = $this->make($attributes, $parent);
 
         if ($results instanceof Model) {
-            $this->store(collect([$results]));
+            $this->store(\WPWCore\Collections\collect([$results])
+);
 
-            $this->callAfterCreating(collect([$results]), $parent);
+            $this->callAfterCreating(\WPWCore\Collections\collect([$results])
+                , $parent);
         } else {
             $this->store($results);
 
@@ -388,7 +391,8 @@ abstract class Factory
 
         if ($this->count === null) {
             return tap($this->makeInstance($parent), function ($instance) {
-                $this->callAfterMaking(collect([$instance]));
+                $this->callAfterMaking(\WPWCore\Collections\collect([$instance])
+);
             });
         }
 
@@ -476,7 +480,7 @@ abstract class Factory
      */
     protected function expandAttributes(array $definition)
     {
-        return collect($definition)
+        return \WPWCore\Collections\collect($definition)
             ->map($evaluateRelations = function ($attribute) {
                 if ($attribute instanceof self) {
                     $attribute = $this->getRandomRecycledModel($attribute->modelName())?->getKey()

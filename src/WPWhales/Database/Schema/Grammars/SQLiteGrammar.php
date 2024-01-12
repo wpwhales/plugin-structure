@@ -191,25 +191,26 @@ class SQLiteGrammar extends Grammar
     {
         $foreigns = $this->getCommandsByName($blueprint, 'foreign');
 
-        return collect($foreigns)->reduce(function ($sql, $foreign) {
-            // Once we have all the foreign key commands for the table creation statement
-            // we'll loop through each of them and add them to the create table SQL we
-            // are building, since SQLite needs foreign keys on the tables creation.
-            $sql .= $this->getForeignKey($foreign);
+        return \WPWCore\Collections\collect($foreigns)
+            ->reduce(function ($sql, $foreign) {
+                // Once we have all the foreign key commands for the table creation statement
+                // we'll loop through each of them and add them to the create table SQL we
+                // are building, since SQLite needs foreign keys on the tables creation.
+                $sql .= $this->getForeignKey($foreign);
 
-            if (! is_null($foreign->onDelete)) {
-                $sql .= " on delete {$foreign->onDelete}";
-            }
+                if (!is_null($foreign->onDelete)) {
+                    $sql .= " on delete {$foreign->onDelete}";
+                }
 
-            // If this foreign key specifies the action to be taken on update we will add
-            // that to the statement here. We'll append it to this SQL and then return
-            // the SQL so we can keep adding any other foreign constraints onto this.
-            if (! is_null($foreign->onUpdate)) {
-                $sql .= " on update {$foreign->onUpdate}";
-            }
+                // If this foreign key specifies the action to be taken on update we will add
+                // that to the statement here. We'll append it to this SQL and then return
+                // the SQL so we can keep adding any other foreign constraints onto this.
+                if (!is_null($foreign->onUpdate)) {
+                    $sql .= " on update {$foreign->onUpdate}";
+                }
 
-            return $sql;
-        }, '');
+                return $sql;
+            }, '');
     }
 
     /**
@@ -254,9 +255,10 @@ class SQLiteGrammar extends Grammar
     {
         $columns = $this->prefixArray('add column', $this->getColumns($blueprint));
 
-        return collect($columns)->reject(function ($column) {
-            return preg_match('/as \(.*\) stored/', $column) > 0;
-        })->map(function ($column) use ($blueprint) {
+        return \WPWCore\Collections\collect($columns)
+            ->reject(function ($column) {
+                return preg_match('/as \(.*\) stored/', $column) > 0;
+            })->map(function ($column) use ($blueprint) {
             return 'alter table '.$this->wrapTable($blueprint).' '.$column;
         })->all();
     }
@@ -407,8 +409,9 @@ class SQLiteGrammar extends Grammar
 
             $columns = $this->prefixArray('drop column', $this->wrapArray($command->columns));
 
-            return collect($columns)->map(fn ($column) => 'alter table '.$table.' '.$column
-            )->all();
+            return \WPWCore\Collections\collect($columns)
+                ->map(fn($column) => 'alter table ' . $table . ' ' . $column
+                )->all();
         } else {
             $tableDiff = $this->getDoctrineTableDiff(
                 $blueprint, $schema = $connection->getDoctrineSchemaManager()

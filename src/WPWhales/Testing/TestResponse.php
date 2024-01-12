@@ -1514,7 +1514,8 @@ class TestResponse implements ArrayAccess
         }
 
         if (! is_null($key)) {
-            dump(data_get($content, $key));
+            dump(\WPWCore\Collections\data_get($content, $key)
+);
         } else {
             dump($content);
         }

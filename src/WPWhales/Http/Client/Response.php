@@ -79,7 +79,7 @@ class Response implements ArrayAccess
             return $this->decoded;
         }
 
-        return data_get($this->decoded, $key, $default);
+        return \WPWCore\Collections\data_get($this->decoded, $key, $default);
     }
 
     /**
@@ -308,7 +308,8 @@ class Response implements ArrayAccess
      */
     public function throwIf($condition)
     {
-        return value($condition, $this) ? $this->throw(func_get_args()[1] ?? null) : $this;
+        return \WPWCore\Collections\value($condition, $this)
+            ? $this->throw(func_get_args()[1] ?? null) : $this;
     }
 
     /**

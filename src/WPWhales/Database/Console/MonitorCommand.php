@@ -80,19 +80,20 @@ class MonitorCommand extends DatabaseInspectionCommand
      */
     protected function parseDatabases($databases)
     {
-        return collect(explode(',', $databases))->map(function ($database) {
-            if (! $database) {
-                $database = $this->laravel['config']['database.default'];
-            }
+        return \WPWCore\Collections\collect(explode(',', $databases))
+            ->map(function ($database) {
+                if (!$database) {
+                    $database = $this->laravel['config']['database.default'];
+                }
 
-            $maxConnections = $this->option('max');
+                $maxConnections = $this->option('max');
 
-            return [
-                'database' => $database,
-                'connections' => $connections = $this->getConnectionCount($this->connection->connection($database)),
-                'status' => $maxConnections && $connections >= $maxConnections ? '<fg=yellow;options=bold>ALERT</>' : '<fg=green;options=bold>OK</>',
-            ];
-        });
+                return [
+                    'database'    => $database,
+                    'connections' => $connections = $this->getConnectionCount($this->connection->connection($database)),
+                    'status'      => $maxConnections && $connections >= $maxConnections ? '<fg=yellow;options=bold>ALERT</>' : '<fg=green;options=bold>OK</>',
+                ];
+            });
     }
 
     /**

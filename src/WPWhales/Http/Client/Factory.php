@@ -181,22 +181,23 @@ class Factory
             return $this;
         }
 
-        $this->stubCallbacks = $this->stubCallbacks->merge(collect([
-            function ($request, $options) use ($callback) {
-                $response = $callback instanceof Closure
-                                ? $callback($request, $options)
-                                : $callback;
+        $this->stubCallbacks = $this->stubCallbacks->merge(\WPWCore\Collections\collect([
+                function ($request, $options) use ($callback) {
+                    $response = $callback instanceof Closure
+                        ? $callback($request, $options)
+                        : $callback;
 
-                if ($response instanceof PromiseInterface) {
-                    $options['on_stats'](new TransferStats(
-                        $request->toPsrRequest(),
-                        $response->wait(),
-                    ));
-                }
+                    if ($response instanceof PromiseInterface) {
+                        $options['on_stats'](new TransferStats(
+                            $request->toPsrRequest(),
+                            $response->wait(),
+                        ));
+                    }
 
-                return $response;
-            },
-        ]));
+                    return $response;
+                },
+            ])
+);
 
         return $this;
     }
@@ -388,9 +389,10 @@ class Factory
             return true;
         };
 
-        return collect($this->recorded)->filter(function ($pair) use ($callback) {
-            return $callback($pair[0], $pair[1]);
-        });
+        return \WPWCore\Collections\collect($this->recorded)
+            ->filter(function ($pair) use ($callback) {
+                return $callback($pair[0], $pair[1]);
+            });
     }
 
     /**

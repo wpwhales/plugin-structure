@@ -175,15 +175,16 @@ class Grammar extends BaseGrammar
      */
     protected function compileJoins(Builder $query, $joins)
     {
-        return collect($joins)->map(function ($join) use ($query) {
-            $table = $this->wrapTable($join->table);
+        return \WPWCore\Collections\collect($joins)
+            ->map(function ($join) use ($query) {
+                $table = $this->wrapTable($join->table);
 
-            $nestedJoins = is_null($join->joins) ? '' : ' '.$this->compileJoins($query, $join->joins);
+                $nestedJoins = is_null($join->joins) ? '' : ' ' . $this->compileJoins($query, $join->joins);
 
-            $tableAndNestedJoins = is_null($join->joins) ? $table : '('.$table.$nestedJoins.')';
+                $tableAndNestedJoins = is_null($join->joins) ? $table : '(' . $table . $nestedJoins . ')';
 
-            return trim("{$join->type} join {$tableAndNestedJoins} {$this->compileWheres($join)}");
-        })->implode(' ');
+                return trim("{$join->type} join {$tableAndNestedJoins} {$this->compileWheres($join)}");
+            })->implode(' ');
     }
 
     /**
@@ -219,9 +220,10 @@ class Grammar extends BaseGrammar
      */
     protected function compileWheresToArray($query)
     {
-        return collect($query->wheres)->map(function ($where) use ($query) {
-            return $where['boolean'].' '.$this->{"where{$where['type']}"}($query, $where);
-        })->all();
+        return \WPWCore\Collections\collect($query->wheres)
+            ->map(function ($where) use ($query) {
+                return $where['boolean'] . ' ' . $this->{"where{$where['type']}"}($query, $where);
+            })->all();
     }
 
     /**
@@ -739,9 +741,10 @@ class Grammar extends BaseGrammar
      */
     protected function compileHavings(Builder $query)
     {
-        return 'having '.$this->removeLeadingBoolean(collect($query->havings)->map(function ($having) {
-            return $having['boolean'].' '.$this->compileHaving($having);
-        })->implode(' '));
+        return 'having '.$this->removeLeadingBoolean(\WPWCore\Collections\collect($query->havings)
+                ->map(function ($having) {
+                    return $having['boolean'] . ' ' . $this->compileHaving($having);
+                })->implode(' '));
     }
 
     /**
@@ -794,9 +797,11 @@ class Grammar extends BaseGrammar
 
         $column = $this->wrap($having['column']);
 
-        $min = $this->parameter(head($having['values']));
+        $min = $this->parameter(\WPWCore\Collections\head($having['values'])
+);
 
-        $max = $this->parameter(last($having['values']));
+        $max = $this->parameter(\WPWCore\Collections\last($having['values'])
+);
 
         return $column.' '.$between.' '.$min.' and '.$max;
     }
@@ -1037,9 +1042,10 @@ class Grammar extends BaseGrammar
         // We need to build a list of parameter place-holders of values that are bound
         // to the query. Each insert should have the exact same number of parameter
         // bindings so we will loop through the record and parameterize them all.
-        $parameters = collect($values)->map(function ($record) {
-            return '('.$this->parameterize($record).')';
-        })->implode(', ');
+        $parameters = \WPWCore\Collections\collect($values)
+            ->map(function ($record) {
+                return '(' . $this->parameterize($record) . ')';
+            })->implode(', ');
 
         return "insert into $table ($columns) values $parameters";
     }
@@ -1121,9 +1127,10 @@ class Grammar extends BaseGrammar
      */
     protected function compileUpdateColumns(Builder $query, array $values)
     {
-        return collect($values)->map(function ($value, $key) {
-            return $this->wrap($key).' = '.$this->parameter($value);
-        })->implode(', ');
+        return \WPWCore\Collections\collect($values)
+            ->map(function ($value, $key) {
+                return $this->wrap($key) . ' = ' . $this->parameter($value);
+            })->implode(', ');
     }
 
     /**
@@ -1230,7 +1237,8 @@ class Grammar extends BaseGrammar
      */
     protected function compileDeleteWithJoins(Builder $query, $table, $where)
     {
-        $alias = last(explode(' as ', $table));
+        $alias = \WPWCore\Collections\last(explode(' as ', $table))
+;
 
         $joins = $this->compileJoins($query, $query->joins);
 

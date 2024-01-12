@@ -918,7 +918,8 @@ class Builder implements BuilderContract
     {
         $page = $page ?: Paginator::resolveCurrentPage($pageName);
 
-        $total = func_num_args() === 5 ? value(func_get_arg(4)) : $this->toBase()->getCountForPagination();
+        $total = func_num_args() === 5 ? \WPWCore\Collections\value(func_get_arg(4))
+            : $this->toBase()->getCountForPagination();
 
         $perPage = ($perPage instanceof Closure
             ? $perPage($total)
@@ -1000,14 +1001,16 @@ class Builder implements BuilderContract
         };
 
         if ($shouldReverse) {
-            $this->query->orders = collect($this->query->orders)->map($reverseDirection)->toArray();
-            $this->query->unionOrders = collect($this->query->unionOrders)->map($reverseDirection)->toArray();
+            $this->query->orders = \WPWCore\Collections\collect($this->query->orders)
+                ->map($reverseDirection)->toArray();
+            $this->query->unionOrders = \WPWCore\Collections\collect($this->query->unionOrders)
+                ->map($reverseDirection)->toArray();
         }
 
         $orders = ! empty($this->query->unionOrders) ? $this->query->unionOrders : $this->query->orders;
 
-        return collect($orders)
-            ->filter(fn ($order) => Arr::has($order, 'direction'))
+        return \WPWCore\Collections\collect($orders)
+            ->filter(fn($order) => Arr::has($order, 'direction'))
             ->values();
     }
 
@@ -1448,7 +1451,8 @@ class Builder implements BuilderContract
      */
     protected function groupWhereSliceForScope(QueryBuilder $query, $whereSlice)
     {
-        $whereBooleans = collect($whereSlice)->pluck('boolean');
+        $whereBooleans = \WPWCore\Collections\collect($whereSlice)
+            ->pluck('boolean');
 
         // Here we'll check if the given subset of where clauses contains any "or"
         // booleans and in this case create a nested where expression. That way

@@ -330,9 +330,10 @@ class File implements Rule, DataAwareRule, ValidatorAwareRule
      */
     protected function fail($messages)
     {
-        $messages = collect(Arr::wrap($messages))->map(function ($message) {
-            return $this->validator->getTranslator()->get($message);
-        })->all();
+        $messages = \WPWCore\Collections\collect(Arr::wrap($messages))
+            ->map(function ($message) {
+                return $this->validator->getTranslator()->get($message);
+            })->all();
 
         $this->messages = array_merge($this->messages, $messages);
 

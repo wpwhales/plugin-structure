@@ -328,7 +328,8 @@ class Sleep
      */
     public static function assertSlept($expected, $times = 1)
     {
-        $count = collect(static::$sequence)->filter($expected)->count();
+        $count = \WPWCore\Collections\collect(static::$sequence)
+            ->filter($expected)->count();
 
         PHPUnit::assertSame(
             $times,
@@ -358,7 +359,7 @@ class Sleep
     {
         static::assertSleptTimes(count($sequence));
 
-        collect($sequence)
+        \WPWCore\Collections\collect($sequence)
             ->zip(static::$sequence)
             ->eachSpread(function (?Sleep $expected, CarbonInterval $actual) {
                 if ($expected === null) {
@@ -432,7 +433,8 @@ class Sleep
      */
     public function when($condition)
     {
-        $this->shouldSleep = (bool) value($condition, $this);
+        $this->shouldSleep = (bool)\WPWCore\Collections\value($condition, $this)
+;
 
         return $this;
     }
@@ -445,7 +447,8 @@ class Sleep
      */
     public function unless($condition)
     {
-        return $this->when(! value($condition, $this));
+        return $this->when(!\WPWCore\Collections\value($condition, $this)
+);
     }
 
     /**

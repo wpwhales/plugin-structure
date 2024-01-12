@@ -22,10 +22,11 @@ class SqliteSchemaState extends SchemaState
             //
         ]));
 
-        $migrations = collect(preg_split("/\r\n|\n|\r/", $process->getOutput()))->filter(function ($line) {
-            return stripos($line, 'sqlite_sequence') === false &&
-                   strlen($line) > 0;
-        })->all();
+        $migrations = \WPWCore\Collections\collect(preg_split("/\r\n|\n|\r/", $process->getOutput()))
+            ->filter(function ($line) {
+                return stripos($line, 'sqlite_sequence') === false &&
+                    strlen($line) > 0;
+            })->all();
 
         $this->files->put($path, implode(PHP_EOL, $migrations).PHP_EOL);
 
@@ -47,10 +48,11 @@ class SqliteSchemaState extends SchemaState
                 //
             ]));
 
-        $migrations = collect(preg_split("/\r\n|\n|\r/", $process->getOutput()))->filter(function ($line) {
-            return preg_match('/^\s*(--|INSERT\s)/iu', $line) === 1 &&
-                   strlen($line) > 0;
-        })->all();
+        $migrations = \WPWCore\Collections\collect(preg_split("/\r\n|\n|\r/", $process->getOutput()))
+            ->filter(function ($line) {
+                return preg_match('/^\s*(--|INSERT\s)/iu', $line) === 1 &&
+                    strlen($line) > 0;
+            })->all();
 
         $this->files->append($path, implode(PHP_EOL, $migrations).PHP_EOL);
     }

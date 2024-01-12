@@ -357,9 +357,9 @@ class ComponentTagCompiler
      */
     protected function guessAnonymousComponentUsingNamespaces(Factory $viewFactory, string $component)
     {
-        return collect($this->blade->getAnonymousComponentNamespaces())
+        return \WPWCore\Collections\collect($this->blade->getAnonymousComponentNamespaces())
             ->filter(function ($directory, $prefix) use ($component) {
-                return Str::startsWith($component, $prefix.'::');
+                return Str::startsWith($component, $prefix . '::');
             })
             ->prepend('components', $component)
             ->reduce(function ($carry, $directory, $prefix) use ($component, $viewFactory) {
@@ -467,18 +467,23 @@ class ComponentTagCompiler
         // return all of the attributes as both data and attributes since we have
         // now way to partition them. The user can exclude attributes manually.
         if (! class_exists($class)) {
-            return [collect($attributes), collect($attributes)];
+            return [
+                \WPWCore\Collections\collect($attributes)
+, \WPWCore\Collections\collect($attributes)
+];
         }
 
         $constructor = (new ReflectionClass($class))->getConstructor();
 
         $parameterNames = $constructor
-                    ? collect($constructor->getParameters())->map->getName()->all()
+                    ? \WPWCore\Collections\collect($constructor->getParameters())
+                ->map->getName()->all()
                     : [];
 
-        return collect($attributes)->partition(function ($value, $key) use ($parameterNames) {
-            return in_array(Str::camel($key), $parameterNames);
-        })->all();
+        return \WPWCore\Collections\collect($attributes)
+            ->partition(function ($value, $key) use ($parameterNames) {
+                return in_array(Str::camel($key), $parameterNames);
+            })->all();
     }
 
     /**
@@ -607,32 +612,33 @@ class ComponentTagCompiler
             return [];
         }
 
-        return collect($matches)->mapWithKeys(function ($match) {
-            $attribute = $match['attribute'];
-            $value = $match['value'] ?? null;
+        return \WPWCore\Collections\collect($matches)
+            ->mapWithKeys(function ($match) {
+                $attribute = $match['attribute'];
+                $value = $match['value'] ?? null;
 
-            if (is_null($value)) {
-                $value = 'true';
+                if (is_null($value)) {
+                    $value = 'true';
 
-                $attribute = Str::start($attribute, 'bind:');
-            }
+                    $attribute = Str::start($attribute, 'bind:');
+                }
 
-            $value = $this->stripQuotes($value);
+                $value = $this->stripQuotes($value);
 
-            if (str_starts_with($attribute, 'bind:')) {
-                $attribute = Str::after($attribute, 'bind:');
+                if (str_starts_with($attribute, 'bind:')) {
+                    $attribute = Str::after($attribute, 'bind:');
 
-                $this->boundAttributes[$attribute] = true;
-            } else {
-                $value = "'".$this->compileAttributeEchos($value)."'";
-            }
+                    $this->boundAttributes[$attribute] = true;
+                } else {
+                    $value = "'" . $this->compileAttributeEchos($value) . "'";
+                }
 
-            if (str_starts_with($attribute, '::')) {
-                $attribute = substr($attribute, 1);
-            }
+                if (str_starts_with($attribute, '::')) {
+                    $attribute = substr($attribute, 1);
+                }
 
-            return [$attribute => $value];
-        })->toArray();
+                return [$attribute => $value];
+            })->toArray();
     }
 
     /**
@@ -754,15 +760,16 @@ class ComponentTagCompiler
      */
     protected function escapeSingleQuotesOutsideOfPhpBlocks(string $value)
     {
-        return collect(token_get_all($value))->map(function ($token) {
-            if (! is_array($token)) {
-                return $token;
-            }
+        return \WPWCore\Collections\collect(token_get_all($value))
+            ->map(function ($token) {
+                if (!is_array($token)) {
+                    return $token;
+                }
 
-            return $token[0] === T_INLINE_HTML
-                        ? str_replace("'", "\\'", $token[1])
-                        : $token[1];
-        })->implode('');
+                return $token[0] === T_INLINE_HTML
+                    ? str_replace("'", "\\'", $token[1])
+                    : $token[1];
+            })->implode('');
     }
 
     /**
@@ -774,12 +781,12 @@ class ComponentTagCompiler
      */
     protected function attributesToString(array $attributes, $escapeBound = true)
     {
-        return collect($attributes)
-                ->map(function (string $value, string $attribute) use ($escapeBound) {
-                    return $escapeBound && isset($this->boundAttributes[$attribute]) && $value !== 'true' && ! is_numeric($value)
-                                ? "'{$attribute}' => \WPWhales\View\Compilers\BladeCompiler::sanitizeComponentAttribute({$value})"
-                                : "'{$attribute}' => {$value}";
-                })
+        return \WPWCore\Collections\collect($attributes)
+            ->map(function (string $value, string $attribute) use ($escapeBound) {
+                return $escapeBound && isset($this->boundAttributes[$attribute]) && $value !== 'true' && !is_numeric($value)
+                    ? "'{$attribute}' => \WPWhales\View\Compilers\BladeCompiler::sanitizeComponentAttribute({$value})"
+                    : "'{$attribute}' => {$value}";
+            })
                 ->implode(',');
     }
 

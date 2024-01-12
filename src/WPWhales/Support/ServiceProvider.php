@@ -329,9 +329,10 @@ abstract class ServiceProvider
             return $paths;
         }
 
-        return collect(static::$publishes)->reduce(function ($paths, $p) {
-            return array_merge($paths, $p);
-        }, []);
+        return \WPWCore\Collections\collect(static::$publishes)
+            ->reduce(function ($paths, $p) {
+                return array_merge($paths, $p);
+            }, []);
     }
 
     /**

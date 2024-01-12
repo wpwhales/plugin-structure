@@ -352,9 +352,10 @@ class Migrator
         // Since the getRan method that retrieves the migration name just gives us the
         // migration name, we will format the names into objects with the name as a
         // property on the objects so that we can pass it to the rollback method.
-        $migrations = collect($migrations)->map(function ($m) {
-            return (object) ['migration' => $m];
-        })->all();
+        $migrations = \WPWCore\Collections\collect($migrations)
+            ->map(function ($m) {
+                return (object)['migration' => $m];
+            })->all();
 
         return $this->rollbackMigrations(
             $migrations, $paths, compact('pretend')
@@ -439,9 +440,10 @@ class Migrator
 
             $this->write(TwoColumnDetail::class, $name);
 
-            $this->write(BulletList::class, collect($this->getQueries($migration, $method))->map(function ($query) {
-                return $query['query'];
-            }));
+            $this->write(BulletList::class, \WPWCore\Collections\collect($this->getQueries($migration, $method))
+                ->map(function ($query) {
+                    return $query['query'];
+                }));
         } catch (SchemaException) {
             $name = get_class($migration);
 

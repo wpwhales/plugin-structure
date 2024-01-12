@@ -65,14 +65,14 @@ class Composer
      */
     public function requirePackages(array $packages, bool $dev = false, Closure|OutputInterface $output = null, $composerBinary = null)
     {
-        $command = collect([
+        $command = \WPWCore\Collections\collect([
             ...$this->findComposer($composerBinary),
             'require',
             ...$packages,
         ])
-        ->when($dev, function ($command) {
-            $command->push('--dev');
-        })->all();
+            ->when($dev, function ($command) {
+                $command->push('--dev');
+            })->all();
 
         return 0 === $this->getProcess($command, ['COMPOSER_MEMORY_LIMIT' => '-1'])
             ->run(
@@ -94,14 +94,14 @@ class Composer
      */
     public function removePackages(array $packages, bool $dev = false, Closure|OutputInterface $output = null, $composerBinary = null)
     {
-        $command = collect([
+        $command = \WPWCore\Collections\collect([
             ...$this->findComposer($composerBinary),
             'remove',
             ...$packages,
         ])
-        ->when($dev, function ($command) {
-            $command->push('--dev');
-        })->all();
+            ->when($dev, function ($command) {
+                $command->push('--dev');
+            })->all();
 
         return 0 === $this->getProcess($command, ['COMPOSER_MEMORY_LIMIT' => '-1'])
             ->run(

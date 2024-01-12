@@ -189,14 +189,14 @@ class Arr
     {
         if (is_null($callback)) {
             if (empty($array)) {
-                return value($default);
+                return \WPWCore\Collections\value($default);
             }
 
             foreach ($array as $item) {
                 return $item;
             }
 
-            return value($default);
+            return \WPWCore\Collections\value($default);
         }
 
         foreach ($array as $key => $value) {
@@ -205,7 +205,7 @@ class Arr
             }
         }
 
-        return value($default);
+        return \WPWCore\Collections\value($default);
     }
 
     /**
@@ -219,7 +219,8 @@ class Arr
     public static function last($array, callable $callback = null, $default = null)
     {
         if (is_null($callback)) {
-            return empty($array) ? value($default) : end($array);
+            return empty($array) ? \WPWCore\Collections\value($default)
+                : end($array);
         }
 
         return static::first(array_reverse($array, true), $callback, $default);
@@ -310,7 +311,7 @@ class Arr
     public static function get($array, $key, $default = null)
     {
         if (! static::accessible($array)) {
-            return value($default);
+            return \WPWCore\Collections\value($default);
         }
 
         if (is_null($key)) {
@@ -322,14 +323,15 @@ class Arr
         }
 
         if (! str_contains($key, '.')) {
-            return $array[$key] ?? value($default);
+            return $array[$key] ?? \WPWCore\Collections\value($default)
+;
         }
 
         foreach (explode('.', $key) as $segment) {
             if (static::accessible($array) && static::exists($array, $segment)) {
                 $array = $array[$segment];
             } else {
-                return value($default);
+                return \WPWCore\Collections\value($default);
             }
         }
 
@@ -506,7 +508,8 @@ class Arr
         [$value, $key] = static::explodePluckParameters($value, $key);
 
         foreach ($array as $item) {
-            $itemValue = data_get($item, $value);
+            $itemValue = \WPWCore\Collections\data_get($item, $value)
+;
 
             // If the key is "null", we will just append the value to the array and keep
             // looping. Otherwise we will key the array using the value of the key we
@@ -514,7 +517,8 @@ class Arr
             if (is_null($key)) {
                 $results[] = $itemValue;
             } else {
-                $itemKey = data_get($item, $key);
+                $itemKey = \WPWCore\Collections\data_get($item, $key)
+;
 
                 if (is_object($itemKey) && method_exists($itemKey, '__toString')) {
                     $itemKey = (string) $itemKey;

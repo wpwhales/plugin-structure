@@ -21,7 +21,7 @@ class ArrayObject extends BaseArrayObject implements Arrayable, JsonSerializable
      */
     public function collect()
     {
-        return collect($this->getArrayCopy());
+        return \WPWCore\Collections\collect($this->getArrayCopy());
     }
 
     /**

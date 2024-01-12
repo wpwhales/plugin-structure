@@ -30,7 +30,7 @@ if (! function_exists('data_fill')) {
      */
     function data_fill(&$target, $key, $value)
     {
-        return data_set($target, $key, $value, false);
+        return \WPWCore\Collections\data_set($target, $key, $value, false);
     }
 }
 
@@ -62,13 +62,14 @@ if (! function_exists('data_get')) {
                 if ($target instanceof Collection) {
                     $target = $target->all();
                 } elseif (! is_iterable($target)) {
-                    return value($default);
+                    return \WPWCore\Collections\value($default);
                 }
 
                 $result = [];
 
                 foreach ($target as $item) {
-                    $result[] = data_get($item, $key);
+                    $result[] = \WPWCore\Collections\data_get($item, $key)
+;
                 }
 
                 return in_array('*', $key) ? Arr::collapse($result) : $result;
@@ -79,7 +80,7 @@ if (! function_exists('data_get')) {
             } elseif (is_object($target) && isset($target->{$segment})) {
                 $target = $target->{$segment};
             } else {
-                return value($default);
+                return \WPWCore\Collections\value($default);
             }
         }
 
@@ -108,7 +109,7 @@ if (! function_exists('data_set')) {
 
             if ($segments) {
                 foreach ($target as &$inner) {
-                    data_set($inner, $segments, $value, $overwrite);
+                    \WPWCore\Collections\data_set($inner, $segments, $value, $overwrite);
                 }
             } elseif ($overwrite) {
                 foreach ($target as &$inner) {
@@ -121,7 +122,7 @@ if (! function_exists('data_set')) {
                     $target[$segment] = [];
                 }
 
-                data_set($target[$segment], $segments, $value, $overwrite);
+                \WPWCore\Collections\data_set($target[$segment], $segments, $value, $overwrite);
             } elseif ($overwrite || ! Arr::exists($target, $segment)) {
                 $target[$segment] = $value;
             }
@@ -131,7 +132,7 @@ if (! function_exists('data_set')) {
                     $target->{$segment} = [];
                 }
 
-                data_set($target->{$segment}, $segments, $value, $overwrite);
+                \WPWCore\Collections\data_set($target->{$segment}, $segments, $value, $overwrite);
             } elseif ($overwrite || ! isset($target->{$segment})) {
                 $target->{$segment} = $value;
             }
@@ -139,7 +140,7 @@ if (! function_exists('data_set')) {
             $target = [];
 
             if ($segments) {
-                data_set($target[$segment], $segments, $value, $overwrite);
+                \WPWCore\Collections\data_set($target[$segment], $segments, $value, $overwrite);
             } elseif ($overwrite) {
                 $target[$segment] = $value;
             }

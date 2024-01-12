@@ -76,13 +76,14 @@ class ShowCommand extends DatabaseInspectionCommand
      */
     protected function tables(ConnectionInterface $connection, AbstractSchemaManager $schema)
     {
-        return collect($schema->listTables())->map(fn (Table $table, $index) => [
-            'table' => $table->getName(),
-            'size' => $this->getTableSize($connection, $table->getName()),
-            'rows' => $this->option('counts') ? $connection->table($table->getName())->count() : null,
-            'engine' => rescue(fn () => $table->getOption('engine'), null, false),
-            'comment' => $table->getComment(),
-        ]);
+        return \WPWCore\Collections\collect($schema->listTables())
+            ->map(fn(Table $table, $index) => [
+                'table'   => $table->getName(),
+                'size'    => $this->getTableSize($connection, $table->getName()),
+                'rows'    => $this->option('counts') ? $connection->table($table->getName())->count() : null,
+                'engine'  => rescue(fn() => $table->getOption('engine'), null, false),
+                'comment' => $table->getComment(),
+            ]);
     }
 
     /**
@@ -94,8 +95,8 @@ class ShowCommand extends DatabaseInspectionCommand
      */
     protected function collectViews(ConnectionInterface $connection, AbstractSchemaManager $schema)
     {
-        return collect($schema->listViews())
-            ->reject(fn (View $view) => \WPWCore\Support\str($view->getName())
+        return \WPWCore\Collections\collect($schema->listViews())
+            ->reject(fn(View $view) => \WPWCore\Support\str($view->getName())
                 ->startsWith(['pg_catalog', 'information_schema', 'spt_']))
             ->map(fn (View $view) => [
                 'view' => $view->getName(),

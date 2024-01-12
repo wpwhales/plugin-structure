@@ -56,8 +56,9 @@ class Sequence implements Countable
      */
     public function __invoke()
     {
-        return \WPWCore\Support\tap(value($this->sequence[$this->index % $this->count], $this), function () {
-            $this->index = $this->index + 1;
-        });
+        return \WPWCore\Support\tap(\WPWCore\Collections\value($this->sequence[$this->index % $this->count], $this)
+            , function () {
+                $this->index = $this->index + 1;
+            });
     }
 }

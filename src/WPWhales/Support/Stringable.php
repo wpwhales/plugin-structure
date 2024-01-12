@@ -271,7 +271,7 @@ class Stringable implements JsonSerializable, ArrayAccess
      */
     public function explode($delimiter, $limit = PHP_INT_MAX)
     {
-        return collect(explode($delimiter, $this->value, $limit));
+        return \WPWCore\Collections\collect(explode($delimiter, $this->value, $limit));
     }
 
     /**
@@ -285,12 +285,13 @@ class Stringable implements JsonSerializable, ArrayAccess
     public function split($pattern, $limit = -1, $flags = 0)
     {
         if (filter_var($pattern, FILTER_VALIDATE_INT) !== false) {
-            return collect(mb_str_split($this->value, $pattern));
+            return \WPWCore\Collections\collect(mb_str_split($this->value, $pattern));
         }
 
         $segments = preg_split($pattern, $this->value, $limit, $flags);
 
-        return ! empty($segments) ? collect($segments) : collect();
+        return !empty($segments) ? \WPWCore\Collections\collect($segments)
+            : collect();
     }
 
     /**
@@ -743,7 +744,7 @@ class Stringable implements JsonSerializable, ArrayAccess
      */
     public function scan($format)
     {
-        return collect(sscanf($this->value, $format));
+        return \WPWCore\Collections\collect(sscanf($this->value, $format));
     }
 
     /**
@@ -1000,7 +1001,7 @@ class Stringable implements JsonSerializable, ArrayAccess
      */
     public function ucsplit()
     {
-        return collect(Str::ucsplit($this->value));
+        return \WPWCore\Collections\collect(Str::ucsplit($this->value));
     }
 
     /**

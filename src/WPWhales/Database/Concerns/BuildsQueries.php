@@ -175,7 +175,8 @@ trait BuildsQueries
                 return false;
             }
 
-            $lastId = data_get($results->last(), $alias);
+            $lastId = \WPWCore\Collections\data_get($results->last(), $alias)
+;
 
             if ($lastId === null) {
                 throw new RuntimeException("The chunkById operation was aborted because the [{$alias}] column is not present in the query result.");
@@ -380,7 +381,8 @@ trait BuildsQueries
 
         if (! is_null($cursor)) {
             $addCursorConditions = function (self $builder, $previousColumn, $i) use (&$addCursorConditions, $cursor, $orders) {
-                $unionBuilders = isset($builder->unions) ? collect($builder->unions)->pluck('query') : collect();
+                $unionBuilders = isset($builder->unions) ? \WPWCore\Collections\collect($builder->unions)
+                    ->pluck('query') : collect();
 
                 if (! is_null($previousColumn)) {
                     $originalColumn = $this->getOriginalColumnNameForCursorPagination($this, $previousColumn);

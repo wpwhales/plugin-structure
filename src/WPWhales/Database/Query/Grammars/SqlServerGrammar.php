@@ -379,7 +379,8 @@ class SqlServerGrammar extends Grammar
      */
     protected function compileUpdateWithJoins(Builder $query, $table, $columns, $where)
     {
-        $alias = last(explode(' as ', $table));
+        $alias = \WPWCore\Collections\last(explode(' as ', $table))
+;
 
         $joins = $this->compileJoins($query, $query->joins);
 
@@ -401,24 +402,27 @@ class SqlServerGrammar extends Grammar
 
         $sql = 'merge '.$this->wrapTable($query->from).' ';
 
-        $parameters = collect($values)->map(function ($record) {
-            return '('.$this->parameterize($record).')';
-        })->implode(', ');
+        $parameters = \WPWCore\Collections\collect($values)
+            ->map(function ($record) {
+                return '(' . $this->parameterize($record) . ')';
+            })->implode(', ');
 
         $sql .= 'using (values '.$parameters.') '.$this->wrapTable('laravel_source').' ('.$columns.') ';
 
-        $on = collect($uniqueBy)->map(function ($column) use ($query) {
-            return $this->wrap('laravel_source.'.$column).' = '.$this->wrap($query->from.'.'.$column);
-        })->implode(' and ');
+        $on = \WPWCore\Collections\collect($uniqueBy)
+            ->map(function ($column) use ($query) {
+                return $this->wrap('laravel_source.' . $column) . ' = ' . $this->wrap($query->from . '.' . $column);
+            })->implode(' and ');
 
         $sql .= 'on '.$on.' ';
 
         if ($update) {
-            $update = collect($update)->map(function ($value, $key) {
-                return is_numeric($key)
-                    ? $this->wrap($value).' = '.$this->wrap('laravel_source.'.$value)
-                    : $this->wrap($key).' = '.$this->parameter($value);
-            })->implode(', ');
+            $update = \WPWCore\Collections\collect($update)
+                ->map(function ($value, $key) {
+                    return is_numeric($key)
+                        ? $this->wrap($value) . ' = ' . $this->wrap('laravel_source.' . $value)
+                        : $this->wrap($key) . ' = ' . $this->parameter($value);
+                })->implode(', ');
 
             $sql .= 'when matched then update set '.$update.' ';
         }

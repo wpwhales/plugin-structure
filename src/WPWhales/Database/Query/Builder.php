@@ -2736,7 +2736,7 @@ class Builder implements BuilderContract
      */
     public function get($columns = ['*'])
     {
-        return collect($this->onceWithColumns(Arr::wrap($columns), function () {
+        return \WPWCore\Collections\collect($this->onceWithColumns(Arr::wrap($columns), function () {
             return $this->processor->processSelect($this, $this->runSelect());
         }));
     }
@@ -2767,7 +2767,8 @@ class Builder implements BuilderContract
     {
         $page = $page ?: Paginator::resolveCurrentPage($pageName);
 
-        $total = func_num_args() === 5 ? value(func_get_arg(4)) : $this->getCountForPagination();
+        $total = func_num_args() === 5 ? \WPWCore\Collections\value(func_get_arg(4))
+            : $this->getCountForPagination();
 
         $perPage = $perPage instanceof Closure ? $perPage($total) : $perPage;
 
@@ -2841,14 +2842,16 @@ class Builder implements BuilderContract
         };
 
         if ($shouldReverse) {
-            $this->orders = collect($this->orders)->map($reverseDirection)->toArray();
-            $this->unionOrders = collect($this->unionOrders)->map($reverseDirection)->toArray();
+            $this->orders = \WPWCore\Collections\collect($this->orders)
+                ->map($reverseDirection)->toArray();
+            $this->unionOrders = \WPWCore\Collections\collect($this->unionOrders)
+                ->map($reverseDirection)->toArray();
         }
 
         $orders = ! empty($this->unionOrders) ? $this->unionOrders : $this->orders;
 
-        return collect($orders)
-            ->filter(fn ($order) => Arr::has($order, 'direction'))
+        return \WPWCore\Collections\collect($orders)
+            ->filter(fn($order) => Arr::has($order, 'direction'))
             ->values();
     }
 
@@ -3016,7 +3019,7 @@ class Builder implements BuilderContract
 
         $separator = str_contains(strtolower($columnString), ' as ') ? ' as ' : '\.';
 
-        return last(preg_split('~'.$separator.'~i', $columnString));
+        return \WPWCore\Collections\last(preg_split('~' . $separator . '~i', $columnString));
     }
 
     /**
@@ -3041,7 +3044,7 @@ class Builder implements BuilderContract
             }
         }
 
-        return collect($results);
+        return \WPWCore\Collections\collect($results);
     }
 
     /**
@@ -3066,7 +3069,7 @@ class Builder implements BuilderContract
             }
         }
 
-        return collect($results);
+        return \WPWCore\Collections\collect($results);
     }
 
     /**
@@ -3498,9 +3501,10 @@ class Builder implements BuilderContract
 
         $bindings = $this->cleanBindings(array_merge(
             Arr::flatten($values, 1),
-            collect($update)->reject(function ($value, $key) {
-                return is_int($key);
-            })->all()
+            \WPWCore\Collections\collect($update)
+                ->reject(function ($value, $key) {
+                    return is_int($key);
+                })->all()
         ));
 
         return $this->connection->affectingStatement(
@@ -3775,10 +3779,10 @@ class Builder implements BuilderContract
      */
     public function cleanBindings(array $bindings)
     {
-        return collect($bindings)
-                    ->reject(function ($binding) {
-                        return $binding instanceof ExpressionContract;
-                    })
+        return \WPWCore\Collections\collect($bindings)
+            ->reject(function ($binding) {
+                return $binding instanceof ExpressionContract;
+            })
                     ->map([$this, 'castBinding'])
                     ->values()
                     ->all();
@@ -3792,7 +3796,8 @@ class Builder implements BuilderContract
      */
     protected function flattenValue($value)
     {
-        return is_array($value) ? head(Arr::flatten($value)) : $value;
+        return is_array($value) ? \WPWCore\Collections\head(Arr::flatten($value))
+            : $value;
     }
 
     /**

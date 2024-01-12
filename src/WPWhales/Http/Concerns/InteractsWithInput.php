@@ -123,7 +123,8 @@ trait InteractsWithInput
     public function whenHas($key, callable $callback, callable $default = null)
     {
         if ($this->has($key)) {
-            return $callback(data_get($this->all(), $key)) ?: $this;
+            return $callback(\WPWCore\Collections\data_get($this->all(), $key)
+) ?: $this;
         }
 
         if ($default) {
@@ -201,7 +202,8 @@ trait InteractsWithInput
     public function whenFilled($key, callable $callback, callable $default = null)
     {
         if ($this->filled($key)) {
-            return $callback(data_get($this->all(), $key)) ?: $this;
+            return $callback(\WPWCore\Collections\data_get($this->all(), $key)
+) ?: $this;
         }
 
         if ($default) {
@@ -235,7 +237,8 @@ trait InteractsWithInput
     public function whenMissing($key, callable $callback, callable $default = null)
     {
         if ($this->missing($key)) {
-            return $callback(data_get($this->all(), $key)) ?: $this;
+            return $callback(\WPWCore\Collections\data_get($this->all(), $key)
+) ?: $this;
         }
 
         if ($default) {
@@ -300,9 +303,7 @@ trait InteractsWithInput
      */
     public function input($key = null, $default = null)
     {
-        return data_get(
-            $this->getInputSource()->all() + $this->query->all(), $key, $default
-        );
+        return \WPWCore\Collections\data_get($this->getInputSource()->all() + $this->query->all(), $key, $default);
     }
 
     /**
@@ -418,7 +419,7 @@ trait InteractsWithInput
      */
     public function collect($key = null)
     {
-        return collect(is_array($key) ? $this->only($key) : $this->input($key));
+        return \WPWCore\Collections\collect(is_array($key) ? $this->only($key) : $this->input($key));
     }
 
     /**
@@ -436,7 +437,8 @@ trait InteractsWithInput
         $placeholder = new stdClass;
 
         foreach (is_array($keys) ? $keys : func_get_args() as $key) {
-            $value = data_get($input, $key, $placeholder);
+            $value = \WPWCore\Collections\data_get($input, $key, $placeholder)
+;
 
             if ($value !== $placeholder) {
                 Arr::set($results, $key, $value);
@@ -582,7 +584,7 @@ trait InteractsWithInput
      */
     public function file($key = null, $default = null)
     {
-        return data_get($this->allFiles(), $key, $default);
+        return \WPWCore\Collections\data_get($this->allFiles(), $key, $default);
     }
 
     /**

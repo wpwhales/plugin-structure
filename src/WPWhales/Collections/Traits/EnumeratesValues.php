@@ -310,10 +310,10 @@ trait EnumeratesValues
     public function value($key, $default = null)
     {
         if ($value = $this->firstWhere($key)) {
-            return data_get($value, $key, $default);
+            return \WPWCore\Collections\data_get($value, $key, $default);
         }
 
-        return value($default);
+        return \WPWCore\Collections\value($default);
     }
 
     /**
@@ -640,7 +640,8 @@ trait EnumeratesValues
     {
         $values = $this->getArrayableItems($values);
 
-        return $this->filter(fn ($item) => in_array(data_get($item, $key), $values, $strict));
+        return $this->filter(fn ($item) => in_array(\WPWCore\Collections\data_get($item, $key)
+            , $values, $strict));
     }
 
     /**
@@ -677,7 +678,9 @@ trait EnumeratesValues
     public function whereNotBetween($key, $values)
     {
         return $this->filter(
-            fn ($item) => data_get($item, $key) < reset($values) || data_get($item, $key) > end($values)
+            fn ($item) => \WPWCore\Collections\data_get($item, $key)
+                < reset($values) || \WPWCore\Collections\data_get($item, $key)
+                > end($values)
         );
     }
 
@@ -693,7 +696,8 @@ trait EnumeratesValues
     {
         $values = $this->getArrayableItems($values);
 
-        return $this->reject(fn ($item) => in_array(data_get($item, $key), $values, $strict));
+        return $this->reject(fn ($item) => in_array(\WPWCore\Collections\data_get($item, $key)
+            , $values, $strict));
     }
 
     /**
@@ -1067,7 +1071,8 @@ trait EnumeratesValues
         }
 
         return function ($item) use ($key, $operator, $value) {
-            $retrieved = data_get($item, $key);
+            $retrieved = \WPWCore\Collections\data_get($item, $key)
+;
 
             $strings = array_filter([$retrieved, $value], function ($value) {
                 return is_string($value) || (is_object($value) && method_exists($value, '__toString'));
@@ -1117,7 +1122,8 @@ trait EnumeratesValues
             return $value;
         }
 
-        return fn ($item) => data_get($item, $value);
+        return fn($item) => \WPWCore\Collections\data_get($item, $value)
+;
     }
 
     /**

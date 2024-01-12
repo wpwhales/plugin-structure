@@ -92,7 +92,8 @@ trait HidesAttributes
      */
     public function makeVisibleIf($condition, $attributes)
     {
-        return value($condition, $this) ? $this->makeVisible($attributes) : $this;
+        return \WPWCore\Collections\value($condition, $this)
+            ? $this->makeVisible($attributes) : $this;
     }
 
     /**
@@ -119,6 +120,7 @@ trait HidesAttributes
      */
     public function makeHiddenIf($condition, $attributes)
     {
-        return value($condition, $this) ? $this->makeHidden($attributes) : $this;
+        return \WPWCore\Collections\value($condition, $this)
+            ? $this->makeHidden($attributes) : $this;
     }
 }

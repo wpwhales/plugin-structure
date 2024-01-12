@@ -727,8 +727,8 @@ class PostgresGrammar extends Grammar
     public function escapeNames($names)
     {
         return array_map(static function ($name) {
-            return '"'.collect(explode('.', $name))
-                ->map(fn ($segment) => trim($segment, '\'"'))
+            return '"'. \WPWCore\Collections\collect(explode('.', $name))
+                    ->map(fn($segment) => trim($segment, '\'"'))
                 ->implode('"."').'"';
         }, $names);
     }

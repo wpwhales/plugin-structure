@@ -101,7 +101,7 @@ class FileLoader implements Loader
      */
     protected function loadNamespaceOverrides(array $lines, $locale, $group, $namespace)
     {
-        return collect($this->paths)
+        return \WPWCore\Collections\collect($this->paths)
             ->reduce(function ($output, $path) use ($lines, $locale, $group, $namespace) {
                 $file = "{$path}/vendor/{$namespace}/{$locale}/{$group}.php";
 
@@ -123,7 +123,7 @@ class FileLoader implements Loader
      */
     protected function loadPaths(array $paths, $locale, $group)
     {
-        return collect($paths)
+        return \WPWCore\Collections\collect($paths)
             ->reduce(function ($output, $path) use ($locale, $group) {
                 if ($this->files->exists($full = "{$path}/{$locale}/{$group}.php")) {
                     $output = array_replace_recursive($output, $this->files->getRequire($full));
@@ -143,7 +143,7 @@ class FileLoader implements Loader
      */
     protected function loadJsonPaths($locale)
     {
-        return collect(array_merge($this->jsonPaths, $this->paths))
+        return \WPWCore\Collections\collect(array_merge($this->jsonPaths, $this->paths))
             ->reduce(function ($output, $path) use ($locale) {
                 if ($this->files->exists($full = "{$path}/{$locale}.json")) {
                     $decoded = json_decode($this->files->get($full), true);

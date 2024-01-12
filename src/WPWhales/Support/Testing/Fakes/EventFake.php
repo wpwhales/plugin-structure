@@ -213,9 +213,10 @@ class EventFake implements Dispatcher, Fake
 
         $callback = $callback ?: fn () => true;
 
-        return collect($this->events[$event])->filter(
-            fn ($arguments) => $callback(...$arguments)
-        );
+        return \WPWCore\Collections\collect($this->events[$event])
+            ->filter(
+                fn($arguments) => $callback(...$arguments)
+            );
     }
 
     /**
@@ -322,11 +323,11 @@ class EventFake implements Dispatcher, Fake
             return true;
         }
 
-        return collect($this->eventsToFake)
+        return \WPWCore\Collections\collect($this->eventsToFake)
             ->filter(function ($event) use ($eventName, $payload) {
                 return $event instanceof Closure
-                            ? $event($eventName, $payload)
-                            : $event === $eventName;
+                    ? $event($eventName, $payload)
+                    : $event === $eventName;
             })
             ->isNotEmpty();
     }
@@ -362,7 +363,7 @@ class EventFake implements Dispatcher, Fake
             return false;
         }
 
-        return collect($this->eventsToDispatch)
+        return \WPWCore\Collections\collect($this->eventsToDispatch)
             ->filter(function ($event) use ($eventName, $payload) {
                 return $event instanceof Closure
                     ? $event($eventName, $payload)

@@ -206,7 +206,8 @@ class ValidationRuleParser
      */
     protected function mergeRulesForAttribute($results, $attribute, $rules)
     {
-        $merge = head($this->explodeRules([$rules]));
+        $merge = \WPWCore\Collections\head($this->explodeRules([$rules]))
+;
 
         $results[$attribute] = array_merge(
             isset($results[$attribute]) ? $this->explodeExplicitRule($results[$attribute], $attribute) : [], $merge
@@ -318,25 +319,31 @@ class ValidationRuleParser
      */
     public static function filterConditionalRules($rules, array $data = [])
     {
-        return collect($rules)->mapWithKeys(function ($attributeRules, $attribute) use ($data) {
-            if (! is_array($attributeRules) &&
-                ! $attributeRules instanceof ConditionalRules) {
-                return [$attribute => $attributeRules];
-            }
-
-            if ($attributeRules instanceof ConditionalRules) {
-                return [$attribute => $attributeRules->passes($data)
-                                ? array_filter($attributeRules->rules($data))
-                                : array_filter($attributeRules->defaultRules($data)), ];
-            }
-
-            return [$attribute => collect($attributeRules)->map(function ($rule) use ($data) {
-                if (! $rule instanceof ConditionalRules) {
-                    return [$rule];
+        return \WPWCore\Collections\collect($rules)
+            ->mapWithKeys(function ($attributeRules, $attribute) use ($data) {
+                if (!is_array($attributeRules) &&
+                    !$attributeRules instanceof ConditionalRules) {
+                    return [$attribute => $attributeRules];
                 }
 
-                return $rule->passes($data) ? $rule->rules($data) : $rule->defaultRules($data);
-            })->filter()->flatten(1)->values()->all()];
-        })->all();
+                if ($attributeRules instanceof ConditionalRules) {
+                    return [
+                        $attribute => $attributeRules->passes($data)
+                            ? array_filter($attributeRules->rules($data))
+                            : array_filter($attributeRules->defaultRules($data)),
+                    ];
+                }
+
+                return [
+                    $attribute => \WPWCore\Collections\collect($attributeRules)
+                        ->map(function ($rule) use ($data) {
+                            if (!$rule instanceof ConditionalRules) {
+                                return [$rule];
+                            }
+
+                            return $rule->passes($data) ? $rule->rules($data) : $rule->defaultRules($data);
+                        })->filter()->flatten(1)->values()->all()
+                ];
+            })->all();
     }
 }

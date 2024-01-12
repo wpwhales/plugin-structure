@@ -831,13 +831,15 @@ trait QueriesRelationships
      */
     protected function requalifyWhereTables(array $wheres, string $from, string $to): array
     {
-        return collect($wheres)->map(function ($where) use ($from, $to) {
-            return collect($where)->map(function ($value) use ($from, $to) {
-                return is_string($value) && str_starts_with($value, $from.'.')
-                    ? $to.'.'.Str::afterLast($value, '.')
-                    : $value;
-            });
-        })->toArray();
+        return \WPWCore\Collections\collect($wheres)
+            ->map(function ($where) use ($from, $to) {
+                return \WPWCore\Collections\collect($where)
+                    ->map(function ($value) use ($from, $to) {
+                        return is_string($value) && str_starts_with($value, $from . '.')
+                            ? $to . '.' . Str::afterLast($value, '.')
+                            : $value;
+                    });
+            })->toArray();
     }
 
     /**

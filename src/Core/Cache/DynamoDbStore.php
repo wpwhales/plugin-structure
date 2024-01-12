@@ -143,34 +143,37 @@ class DynamoDbStore implements LockProvider, Store
             'RequestItems' => [
                 $this->table => [
                     'ConsistentRead' => false,
-                    'Keys' => collect($prefixedKeys)->map(function ($key) {
-                        return [
-                            $this->keyAttribute => [
-                                'S' => $key,
-                            ],
-                        ];
-                    })->all(),
+                    'Keys' => \WPWCore\Collections\collect($prefixedKeys)
+                        ->map(function ($key) {
+                            return [
+                                $this->keyAttribute => [
+                                    'S' => $key,
+                                ],
+                            ];
+                        })->all(),
                 ],
             ],
         ]);
 
         $now = Carbon::now();
 
-        return array_merge(collect(array_flip($keys))->map(function () {
-            //
-        })->all(), collect($response['Responses'][$this->table])->mapWithKeys(function ($response) use ($now) {
-            if ($this->isExpired($response, $now)) {
-                $value = null;
-            } else {
-                $value = $this->unserialize(
-                    $response[$this->valueAttribute]['S'] ??
-                    $response[$this->valueAttribute]['N'] ??
-                    null
-                );
-            }
+        return array_merge(\WPWCore\Collections\collect(array_flip($keys))
+            ->map(function () {
+                //
+            })->all(), \WPWCore\Collections\collect($response['Responses'][$this->table])
+            ->mapWithKeys(function ($response) use ($now) {
+                if ($this->isExpired($response, $now)) {
+                    $value = null;
+                } else {
+                    $value = $this->unserialize(
+                        $response[$this->valueAttribute]['S'] ??
+                        $response[$this->valueAttribute]['N'] ??
+                        null
+                    );
+                }
 
-            return [Str::replaceFirst($this->prefix, '', $response[$this->keyAttribute]['S']) => $value];
-        })->all());
+                return [Str::replaceFirst($this->prefix, '', $response[$this->keyAttribute]['S']) => $value];
+            })->all());
     }
 
     /**
@@ -233,23 +236,24 @@ class DynamoDbStore implements LockProvider, Store
 
         $this->dynamo->batchWriteItem([
             'RequestItems' => [
-                $this->table => collect($values)->map(function ($value, $key) use ($expiration) {
-                    return [
-                        'PutRequest' => [
-                            'Item' => [
-                                $this->keyAttribute => [
-                                    'S' => $this->prefix.$key,
-                                ],
-                                $this->valueAttribute => [
-                                    $this->type($value) => $this->serialize($value),
-                                ],
-                                $this->expirationAttribute => [
-                                    'N' => (string) $expiration,
+                $this->table => \WPWCore\Collections\collect($values)
+                    ->map(function ($value, $key) use ($expiration) {
+                        return [
+                            'PutRequest' => [
+                                'Item' => [
+                                    $this->keyAttribute        => [
+                                        'S' => $this->prefix . $key,
+                                    ],
+                                    $this->valueAttribute      => [
+                                        $this->type($value) => $this->serialize($value),
+                                    ],
+                                    $this->expirationAttribute => [
+                                        'N' => (string)$expiration,
+                                    ],
                                 ],
                             ],
-                        ],
-                    ];
-                })->values()->all(),
+                        ];
+                    })->values()->all(),
             ],
         ]);
 

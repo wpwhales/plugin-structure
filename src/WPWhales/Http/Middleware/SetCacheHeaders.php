@@ -22,8 +22,8 @@ class SetCacheHeaders
             return static::class.':'.$options;
         }
 
-        return collect($options)
-            ->map(fn ($value, $key) => is_int($key) ? $value : "{$key}={$value}")
+        return \WPWCore\Collections\collect($options)
+            ->map(fn($value, $key) => is_int($key) ? $value : "{$key}={$value}")
             ->map(fn ($value) => Str::finish($value, ';'))
             ->pipe(fn ($options) => rtrim(static::class.':'.$options->implode(''), ';'));
     }
@@ -76,10 +76,11 @@ class SetCacheHeaders
      */
     protected function parseOptions($options)
     {
-        return collect(explode(';', rtrim($options, ';')))->mapWithKeys(function ($option) {
-            $data = explode('=', $option, 2);
+        return \WPWCore\Collections\collect(explode(';', rtrim($options, ';')))
+            ->mapWithKeys(function ($option) {
+                $data = explode('=', $option, 2);
 
-            return [$data[0] => $data[1] ?? true];
-        })->all();
+                return [$data[0] => $data[1] ?? true];
+            })->all();
     }
 }

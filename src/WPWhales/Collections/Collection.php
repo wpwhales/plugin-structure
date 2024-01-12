@@ -192,7 +192,8 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
     public function containsStrict($key, $value = null)
     {
         if (func_num_args() === 2) {
-            return $this->contains(fn ($item) => data_get($item, $key) === $value);
+            return $this->contains(fn ($item) => \WPWCore\Collections\data_get($item, $key)
+                === $value);
         }
 
         if ($this->useAsCallable($key)) {
@@ -456,7 +457,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
             return $this->items[$key];
         }
 
-        return value($default);
+        return \WPWCore\Collections\value($default);
     }
 
     /**
@@ -474,7 +475,8 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
             return $this->items[$key];
         }
 
-        $this->offsetSet($key, $value = value($value));
+        $this->offsetSet($key, $value = \WPWCore\Collections\value($value)
+);
 
         return $value;
     }
@@ -1425,7 +1427,10 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
                 if (! is_string($prop) && is_callable($prop)) {
                     $result = $prop($a, $b);
                 } else {
-                    $values = [data_get($a, $prop), data_get($b, $prop)];
+                    $values = [
+                        \WPWCore\Collections\data_get($a, $prop)
+, \WPWCore\Collections\data_get($b, $prop)
+];
 
                     if (! $ascending) {
                         $values = array_reverse($values);

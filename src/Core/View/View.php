@@ -102,7 +102,8 @@ class View implements ArrayAccess, Htmlable, ViewContract
     {
         return is_null($fragments)
             ? $this->allFragments()
-            : collect($fragments)->map(fn ($f) => $this->fragment($f))->implode('');
+            : \WPWCore\Collections\collect($fragments)
+                ->map(fn($f) => $this->fragment($f))->implode('');
     }
 
     /**
@@ -114,7 +115,8 @@ class View implements ArrayAccess, Htmlable, ViewContract
      */
     public function fragmentIf($boolean, $fragment)
     {
-        if (value($boolean)) {
+        if (\WPWCore\Collections\value($boolean)
+        ) {
             return $this->fragment($fragment);
         }
 
@@ -130,7 +132,8 @@ class View implements ArrayAccess, Htmlable, ViewContract
      */
     public function fragmentsIf($boolean, ?array $fragments = null)
     {
-        if (value($boolean)) {
+        if (\WPWCore\Collections\value($boolean)
+        ) {
             return $this->fragments($fragments);
         }
 
@@ -144,7 +147,8 @@ class View implements ArrayAccess, Htmlable, ViewContract
      */
     protected function allFragments()
     {
-        return collect($this->render(fn () => $this->factory->getFragments()))->implode('');
+        return \WPWCore\Collections\collect($this->render(fn() => $this->factory->getFragments()))
+            ->implode('');
     }
 
     /**

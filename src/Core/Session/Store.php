@@ -266,9 +266,10 @@ class Store implements Session
     {
         $placeholder = new stdClass;
 
-        return ! collect(is_array($key) ? $key : func_get_args())->contains(function ($key) use ($placeholder) {
-            return $this->get($key, $placeholder) === $placeholder;
-        });
+        return !\WPWCore\Collections\collect(is_array($key) ? $key : func_get_args())
+            ->contains(function ($key) use ($placeholder) {
+                return $this->get($key, $placeholder) === $placeholder;
+            });
     }
 
     /**
@@ -290,9 +291,10 @@ class Store implements Session
      */
     public function has($key)
     {
-        return ! collect(is_array($key) ? $key : func_get_args())->contains(function ($key) {
-            return is_null($this->get($key));
-        });
+        return !\WPWCore\Collections\collect(is_array($key) ? $key : func_get_args())
+            ->contains(function ($key) {
+                return is_null($this->get($key));
+            });
     }
 
     /**

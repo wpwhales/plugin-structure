@@ -1855,9 +1855,10 @@ trait HasAttributes
             );
         }
 
-        return collect($this->original)->mapWithKeys(function ($value, $key) {
-            return [$key => $this->transformModelValue($key, $value)];
-        })->all();
+        return \WPWCore\Collections\collect($this->original)
+            ->mapWithKeys(function ($value, $key) {
+                return [$key => $this->transformModelValue($key, $value)];
+            })->all();
     }
 
     /**
@@ -2223,13 +2224,13 @@ trait HasAttributes
         $class = $reflection->getName();
 
         static::$getAttributeMutatorCache[$class] =
-            collect($attributeMutatorMethods = static::getAttributeMarkedMutatorMethods($classOrInstance))
-                    ->mapWithKeys(function ($match) {
-                        return [lcfirst(static::$snakeAttributes ? Str::snake($match) : $match) => true];
-                    })->all();
+            \WPWCore\Collections\collect($attributeMutatorMethods = static::getAttributeMarkedMutatorMethods($classOrInstance))
+                ->mapWithKeys(function ($match) {
+                    return [lcfirst(static::$snakeAttributes ? Str::snake($match) : $match) => true];
+                })->all();
 
-        static::$mutatorCache[$class] = collect(static::getMutatorMethods($class))
-                ->merge($attributeMutatorMethods)
+        static::$mutatorCache[$class] = \WPWCore\Collections\collect(static::getMutatorMethods($class))
+            ->merge($attributeMutatorMethods)
                 ->map(function ($match) {
                     return lcfirst(static::$snakeAttributes ? Str::snake($match) : $match);
                 })->all();
@@ -2258,17 +2259,18 @@ trait HasAttributes
     {
         $instance = is_object($class) ? $class : new $class;
 
-        return collect((new ReflectionClass($instance))->getMethods())->filter(function ($method) use ($instance) {
-            $returnType = $method->getReturnType();
+        return \WPWCore\Collections\collect((new ReflectionClass($instance))->getMethods())
+            ->filter(function ($method) use ($instance) {
+                $returnType = $method->getReturnType();
 
-            if ($returnType instanceof ReflectionNamedType &&
-                $returnType->getName() === Attribute::class) {
-                if (is_callable($method->invoke($instance)->get)) {
-                    return true;
+                if ($returnType instanceof ReflectionNamedType &&
+                    $returnType->getName() === Attribute::class) {
+                    if (is_callable($method->invoke($instance)->get)) {
+                        return true;
+                    }
                 }
-            }
 
-            return false;
-        })->map->name->values()->all();
+                return false;
+            })->map->name->values()->all();
     }
 }

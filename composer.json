@@ -44,7 +44,7 @@
     "files": [
       "src/Core/helpers.php",
       "src/Core/Support/helpers.php",
-      "src/WPWhales/Collections/helpers.php",
+      "src/Core/Collections/helpers.php",
       "src/Core/Filesystem/functions.php"
     ]
   },

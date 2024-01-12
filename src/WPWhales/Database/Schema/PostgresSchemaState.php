@@ -15,10 +15,11 @@ class PostgresSchemaState extends SchemaState
      */
     public function dump(Connection $connection, $path)
     {
-        $commands = collect([
-            $this->baseDumpCommand().' --schema-only > '.$path,
-            $this->baseDumpCommand().' -t '.$this->migrationTable.' --data-only >> '.$path,
-        ]);
+        $commands = \WPWCore\Collections\collect([
+            $this->baseDumpCommand() . ' --schema-only > ' . $path,
+            $this->baseDumpCommand() . ' -t ' . $this->migrationTable . ' --data-only >> ' . $path,
+        ])
+;
 
         $commands->map(function ($command, $path) {
             $this->makeProcess($command)->mustRun($this->output, array_merge($this->baseVariables($this->connection->getConfig()), [

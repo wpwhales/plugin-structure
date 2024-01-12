@@ -212,7 +212,8 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     {
         $path = $this->decodedPath();
 
-        return collect($patterns)->contains(fn ($pattern) => Str::is($pattern, $path));
+        return \WPWCore\Collections\collect($patterns)
+            ->contains(fn($pattern) => Str::is($pattern, $path));
     }
 
     /**
@@ -236,7 +237,8 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     {
         $url = $this->fullUrl();
 
-        return collect($patterns)->contains(fn ($pattern) => Str::is($pattern, $url));
+        return \WPWCore\Collections\collect($patterns)
+            ->contains(fn($pattern) => Str::is($pattern, $url));
     }
 
     /**
@@ -362,9 +364,10 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
      */
     public function mergeIfMissing(array $input)
     {
-        return $this->merge(collect($input)->filter(function ($value, $key) {
-            return $this->missing($key);
-        })->toArray());
+        return $this->merge(\WPWCore\Collections\collect($input)
+            ->filter(function ($value, $key) {
+                return $this->missing($key);
+            })->toArray());
     }
 
     /**
@@ -411,7 +414,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
             return $this->json;
         }
 
-        return data_get($this->json->all(), $key, $default);
+        return \WPWCore\Collections\data_get($this->json->all(), $key, $default);
     }
 
     /**

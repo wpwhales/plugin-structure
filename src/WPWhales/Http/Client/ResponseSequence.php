@@ -148,7 +148,7 @@ class ResponseSequence
         }
 
         if (! $this->failWhenEmpty && $this->isEmpty()) {
-            return value($this->emptyResponse ?? Factory::response());
+            return \WPWCore\Collections\value($this->emptyResponse ?? Factory::response());
         }
 
         return array_shift($this->responses);

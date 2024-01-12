@@ -590,7 +590,8 @@ class Validator implements ValidatorContract
                 continue;
             }
 
-            $value = data_get($this->getData(), $key, $missingValue);
+            $value = \WPWCore\Collections\data_get($this->getData(), $key, $missingValue)
+;
 
             if ($value !== $missingValue) {
                 Arr::set($results, $key, $value);
@@ -996,9 +997,10 @@ class Validator implements ValidatorContract
      */
     protected function attributesThatHaveMessages()
     {
-        return collect($this->messages()->toArray())->map(function ($message, $key) {
-            return explode('.', $key)[0];
-        })->unique()->flip()->all();
+        return \WPWCore\Collections\collect($this->messages()->toArray())
+            ->map(function ($message, $key) {
+                return explode('.', $key)[0];
+            })->unique()->flip()->all();
     }
 
     /**
@@ -1156,8 +1158,8 @@ class Validator implements ValidatorContract
      */
     public function getRulesWithoutPlaceholders()
     {
-        return collect($this->rules)
-            ->mapWithKeys(fn ($value, $key) => [
+        return \WPWCore\Collections\collect($this->rules)
+            ->mapWithKeys(fn($value, $key) => [
                 str_replace($this->dotPlaceholder, '\\.', $key) => $value,
             ])
             ->all();
@@ -1171,9 +1173,10 @@ class Validator implements ValidatorContract
      */
     public function setRules(array $rules)
     {
-        $rules = collect($rules)->mapWithKeys(function ($value, $key) {
-            return [str_replace('\.', $this->dotPlaceholder, $key) => $value];
-        })->toArray();
+        $rules = \WPWCore\Collections\collect($rules)
+            ->mapWithKeys(function ($value, $key) {
+                return [str_replace('\.', $this->dotPlaceholder, $key) => $value];
+            })->toArray();
 
         $this->initialRules = $rules;
 
@@ -1248,7 +1251,8 @@ class Validator implements ValidatorContract
                     ? Str::replaceLast($lastSegmentOfAttribute, '', $attribute)
                     : $attribute;
 
-        return is_array($data = data_get($this->data, $attribute))
+        return is_array($data = \WPWCore\Collections\data_get($this->data, $attribute)
+)
             ? new Fluent($data)
             : $data;
     }

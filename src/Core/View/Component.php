@@ -119,7 +119,8 @@ abstract class Component
             $constructor = $class->getConstructor();
 
             static::$constructorParametersCache[static::class] = $constructor
-                ? collect($constructor->getParameters())->map->getName()->all()
+                ? \WPWCore\Collections\collect($constructor->getParameters())
+                    ->map->getName()->all()
                 : [];
         }
 
@@ -230,7 +231,7 @@ abstract class Component
         if (! isset(static::$propertyCache[$class])) {
             $reflection = new ReflectionClass($this);
 
-            static::$propertyCache[$class] = collect($reflection->getProperties(ReflectionProperty::IS_PUBLIC))
+            static::$propertyCache[$class] = \WPWCore\Collections\collect($reflection->getProperties(ReflectionProperty::IS_PUBLIC))
                 ->reject(function (ReflectionProperty $property) {
                     return $property->isStatic();
                 })
@@ -263,7 +264,7 @@ abstract class Component
         if (! isset(static::$methodCache[$class])) {
             $reflection = new ReflectionClass($this);
 
-            static::$methodCache[$class] = collect($reflection->getMethods(ReflectionMethod::IS_PUBLIC))
+            static::$methodCache[$class] = \WPWCore\Collections\collect($reflection->getMethods(ReflectionMethod::IS_PUBLIC))
                 ->reject(function (ReflectionMethod $method) {
                     return $this->shouldIgnore($method->getName());
                 })

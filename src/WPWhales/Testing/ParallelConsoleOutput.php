@@ -51,9 +51,10 @@ class ParallelConsoleOutput extends ConsoleOutput
      */
     public function write($messages, bool $newline = false, int $options = 0)
     {
-        $messages = collect($messages)->filter(function ($message) {
-            return ! Str::contains($message, $this->ignore);
-        });
+        $messages = \WPWCore\Collections\collect($messages)
+            ->filter(function ($message) {
+                return !Str::contains($message, $this->ignore);
+            });
 
         $this->output->write($messages->toArray(), $newline, $options);
     }

@@ -94,9 +94,10 @@ EOF;
             return '';
         }
 
-        return '@props('.'[\''.implode('\',\'', collect($bindings)->map(function ($dataKey) {
-            return Str::camel($dataKey);
-        })->all()).'\']'.')';
+        return '@props('.'[\''.implode('\',\'', \WPWCore\Collections\collect($bindings)
+                ->map(function ($dataKey) {
+                    return Str::camel($dataKey);
+                })->all()).'\']'.')';
     }
 
     /**
@@ -107,9 +108,10 @@ EOF;
      */
     protected function compileBindings(array $bindings)
     {
-        return collect($bindings)->map(function ($key) {
-            return ':'.$key.'="$'.Str::camel(str_replace([':', '.'], ' ', $key)).'"';
-        })->implode(' ');
+        return \WPWCore\Collections\collect($bindings)
+            ->map(function ($key) {
+                return ':' . $key . '="$' . Str::camel(str_replace([':', '.'], ' ', $key)) . '"';
+            })->implode(' ');
     }
 
     /**
@@ -120,9 +122,10 @@ EOF;
      */
     protected function compileSlots(array $slots)
     {
-        return collect($slots)->map(function ($slot, $name) {
-            return $name === '__default' ? null : '<x-slot name="'.$name.'" '.((string) $slot->attributes).'>{{ $'.$name.' }}</x-slot>';
-        })->filter()->implode(PHP_EOL);
+        return \WPWCore\Collections\collect($slots)
+            ->map(function ($slot, $name) {
+                return $name === '__default' ? null : '<x-slot name="' . $name . '" ' . ((string)$slot->attributes) . '>{{ $' . $name . ' }}</x-slot>';
+            })->filter()->implode(PHP_EOL);
     }
 
     /**

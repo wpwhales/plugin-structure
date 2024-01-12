@@ -247,7 +247,8 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
     public function containsStrict($key, $value = null)
     {
         if (func_num_args() === 2) {
-            return $this->contains(fn ($item) => data_get($item, $key) === $value);
+            return $this->contains(fn ($item) => \WPWCore\Collections\data_get($item, $key)
+                === $value);
         }
 
         if ($this->useAsCallable($key)) {
@@ -458,7 +459,7 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
 
         if (is_null($callback)) {
             if (! $iterator->valid()) {
-                return value($default);
+                return \WPWCore\Collections\value($default);
             }
 
             return $iterator->current();
@@ -470,7 +471,7 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
             }
         }
 
-        return value($default);
+        return \WPWCore\Collections\value($default);
     }
 
     /**
@@ -531,7 +532,7 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
             }
         }
 
-        return value($default);
+        return \WPWCore\Collections\value($default);
     }
 
     /**
@@ -742,7 +743,8 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
             }
         }
 
-        return $needle === $placeholder ? value($default) : $needle;
+        return $needle === $placeholder ? \WPWCore\Collections\value($default)
+            : $needle;
     }
 
     /**
@@ -758,12 +760,14 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
             [$value, $key] = $this->explodePluckParameters($value, $key);
 
             foreach ($this as $item) {
-                $itemValue = data_get($item, $value);
+                $itemValue = \WPWCore\Collections\data_get($item, $value)
+;
 
                 if (is_null($key)) {
                     yield $itemValue;
                 } else {
-                    $itemKey = data_get($item, $key);
+                    $itemKey = \WPWCore\Collections\data_get($item, $key)
+;
 
                     if (is_object($itemKey) && method_exists($itemKey, '__toString')) {
                         $itemKey = (string) $itemKey;

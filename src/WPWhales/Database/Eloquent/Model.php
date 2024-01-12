@@ -583,9 +583,10 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      */
     public function qualifyColumns($columns)
     {
-        return collect($columns)->map(function ($column) {
-            return $this->qualifyColumn($column);
-        })->all();
+        return \WPWCore\Collections\collect($columns)
+            ->map(function ($column) {
+                return $this->qualifyColumn($column);
+            })->all();
     }
 
     /**
@@ -1703,11 +1704,12 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
                 ->attributes
         );
 
-        $this->load(collect($this->relations)->reject(function ($relation) {
-            return $relation instanceof Pivot
-                || (is_object($relation) && in_array(AsPivot::class, \WPWCore\Support\class_uses_recursive($relation)
-                        , true));
-        })->keys()->all());
+        $this->load(\WPWCore\Collections\collect($this->relations)
+            ->reject(function ($relation) {
+                return $relation instanceof Pivot
+                    || (is_object($relation) && in_array(AsPivot::class, \WPWCore\Support\class_uses_recursive($relation)
+                            , true));
+            })->keys()->all());
 
         $this->syncOriginal();
 

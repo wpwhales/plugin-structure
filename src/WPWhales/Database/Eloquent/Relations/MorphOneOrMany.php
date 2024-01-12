@@ -126,7 +126,7 @@ abstract class MorphOneOrMany extends HasOneOrMany
      */
     public function getMorphType()
     {
-        return last(explode('.', $this->morphType));
+        return \WPWCore\Collections\last(explode('.', $this->morphType));
     }
 
     /**

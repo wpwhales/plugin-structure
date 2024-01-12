@@ -195,7 +195,7 @@ class NotificationFake implements Fake, NotificationDispatcher, NotificationFact
      */
     public function assertSentTimes($notification, $expectedCount)
     {
-        $actualCount = collect($this->notifications)
+        $actualCount = \WPWCore\Collections\collect($this->notifications)
             ->flatten(1)
             ->reduce(fn ($count, $sent) => $count + count($sent[$notification] ?? []), 0);
 
@@ -213,7 +213,8 @@ class NotificationFake implements Fake, NotificationDispatcher, NotificationFact
      */
     public function assertCount($expectedCount)
     {
-        $actualCount = collect($this->notifications)->flatten(3)->count();
+        $actualCount = \WPWCore\Collections\collect($this->notifications)
+            ->flatten(3)->count();
 
         PHPUnit::assertSame(
             $expectedCount, $actualCount,
@@ -237,7 +238,8 @@ class NotificationFake implements Fake, NotificationDispatcher, NotificationFact
 
         $callback = $callback ?: fn () => true;
 
-        $notifications = collect($this->notificationsFor($notifiable, $notification));
+        $notifications = \WPWCore\Collections\collect($this->notificationsFor($notifiable, $notification))
+;
 
         return $notifications->filter(
             fn ($arguments) => $callback(...array_values($arguments))
@@ -316,11 +318,12 @@ class NotificationFake implements Fake, NotificationDispatcher, NotificationFact
                 'notification' => $notification,
                 'channels' => $notifiableChannels,
                 'notifiable' => $notifiable,
-                'locale' => $notification->locale ?? $this->locale ?? value(function () use ($notifiable) {
-                    if ($notifiable instanceof HasLocalePreference) {
-                        return $notifiable->preferredLocale();
-                    }
-                }),
+                'locale' => $notification->locale ?? $this->locale ?? \WPWCore\Collections\value(function () use ($notifiable) {
+                        if ($notifiable instanceof HasLocalePreference) {
+                            return $notifiable->preferredLocale();
+                        }
+                    })
+,
             ];
         }
     }

@@ -117,9 +117,10 @@ class QueuedClosure
             dispatch(new CallQueuedListener(InvokeQueuedClosure::class, 'handle', [
                 'closure' => new SerializableClosure($this->closure),
                 'arguments' => $arguments,
-                'catch' => collect($this->catchCallbacks)->map(function ($callback) {
-                    return new SerializableClosure($callback);
-                })->all(),
+                'catch' => \WPWCore\Collections\collect($this->catchCallbacks)
+                    ->map(function ($callback) {
+                        return new SerializableClosure($callback);
+                    })->all(),
             ]))->onConnection($this->connection)->onQueue($this->queue)->delay($this->delay);
         };
     }

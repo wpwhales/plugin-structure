@@ -51,7 +51,7 @@ class Fluent implements Arrayable, ArrayAccess, Jsonable, JsonSerializable
             return $this->attributes[$key];
         }
 
-        return value($default);
+        return \WPWCore\Collections\value($default);
     }
 
     /**

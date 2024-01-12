@@ -211,13 +211,14 @@ class MySqlGrammar extends Grammar
      */
     protected function compileUpdateColumns(Builder $query, array $values)
     {
-        return collect($values)->map(function ($value, $key) {
-            if ($this->isJsonSelector($key)) {
-                return $this->compileJsonUpdateColumn($key, $value);
-            }
+        return \WPWCore\Collections\collect($values)
+            ->map(function ($value, $key) {
+                if ($this->isJsonSelector($key)) {
+                    return $this->compileJsonUpdateColumn($key, $value);
+                }
 
-            return $this->wrap($key).' = '.$this->parameter($value);
-        })->implode(', ');
+                return $this->wrap($key) . ' = ' . $this->parameter($value);
+            })->implode(', ');
     }
 
     /**
@@ -241,15 +242,16 @@ class MySqlGrammar extends Grammar
 
         $sql .= ' on duplicate key update ';
 
-        $columns = collect($update)->map(function ($value, $key) use ($useUpsertAlias) {
-            if (! is_numeric($key)) {
-                return $this->wrap($key).' = '.$this->parameter($value);
-            }
+        $columns = \WPWCore\Collections\collect($update)
+            ->map(function ($value, $key) use ($useUpsertAlias) {
+                if (!is_numeric($key)) {
+                    return $this->wrap($key) . ' = ' . $this->parameter($value);
+                }
 
-            return $useUpsertAlias
-                ? $this->wrap($value).' = '.$this->wrap('laravel_upsert_alias').'.'.$this->wrap($value)
-                : $this->wrap($value).' = values('.$this->wrap($value).')';
-        })->implode(', ');
+                return $useUpsertAlias
+                    ? $this->wrap($value) . ' = ' . $this->wrap('laravel_upsert_alias') . '.' . $this->wrap($value)
+                    : $this->wrap($value) . ' = values(' . $this->wrap($value) . ')';
+            })->implode(', ');
 
         return $sql.$columns;
     }
@@ -311,9 +313,10 @@ class MySqlGrammar extends Grammar
      */
     public function prepareBindingsForUpdate(array $bindings, array $values)
     {
-        $values = collect($values)->reject(function ($value, $column) {
-            return $this->isJsonSelector($column) && is_bool($value);
-        })->map(function ($value) {
+        $values = \WPWCore\Collections\collect($values)
+            ->reject(function ($value, $column) {
+                return $this->isJsonSelector($column) && is_bool($value);
+            })->map(function ($value) {
             return is_array($value) ? json_encode($value) : $value;
         })->all();
 

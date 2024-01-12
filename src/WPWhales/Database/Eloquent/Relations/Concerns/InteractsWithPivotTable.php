@@ -136,9 +136,10 @@ trait InteractsWithPivotTable
      */
     public function syncWithPivotValues($ids, array $values, bool $detaching = true)
     {
-        return $this->sync(collect($this->parseIds($ids))->mapWithKeys(function ($id) use ($values) {
-            return [$id => $values];
-        }), $detaching);
+        return $this->sync(\WPWCore\Collections\collect($this->parseIds($ids))
+            ->mapWithKeys(function ($id) use ($values) {
+                return [$id => $values];
+            }), $detaching);
     }
 
     /**
@@ -149,13 +150,14 @@ trait InteractsWithPivotTable
      */
     protected function formatRecordsList(array $records)
     {
-        return collect($records)->mapWithKeys(function ($attributes, $id) {
-            if (! is_array($attributes)) {
-                [$id, $attributes] = [$attributes, []];
-            }
+        return \WPWCore\Collections\collect($records)
+            ->mapWithKeys(function ($attributes, $id) {
+                if (!is_array($attributes)) {
+                    [$id, $attributes] = [$attributes, []];
+                }
 
-            return [$id => $attributes];
-        })->all();
+                return [$id => $attributes];
+            })->all();
     }
 
     /**

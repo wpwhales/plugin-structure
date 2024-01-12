@@ -59,9 +59,10 @@ class Cursor implements Arrayable
      */
     public function parameters(array $parameterNames)
     {
-        return collect($parameterNames)->map(function ($parameterName) {
-            return $this->parameter($parameterName);
-        })->toArray();
+        return \WPWCore\Collections\collect($parameterNames)
+            ->map(function ($parameterName) {
+                return $this->parameter($parameterName);
+            })->toArray();
     }
 
     /**

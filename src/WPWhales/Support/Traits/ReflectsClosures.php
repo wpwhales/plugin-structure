@@ -46,13 +46,14 @@ trait ReflectsClosures
     {
         $reflection = new ReflectionFunction($closure);
 
-        $types = collect($reflection->getParameters())->mapWithKeys(function ($parameter) {
-            if ($parameter->isVariadic()) {
-                return [$parameter->getName() => null];
-            }
+        $types = \WPWCore\Collections\collect($reflection->getParameters())
+            ->mapWithKeys(function ($parameter) {
+                if ($parameter->isVariadic()) {
+                    return [$parameter->getName() => null];
+                }
 
-            return [$parameter->getName() => Reflector::getParameterClassNames($parameter)];
-        })->filter()->values()->all();
+                return [$parameter->getName() => Reflector::getParameterClassNames($parameter)];
+            })->filter()->values()->all();
 
         if (empty($types)) {
             throw new RuntimeException('The given Closure has no parameters.');
@@ -77,12 +78,13 @@ trait ReflectsClosures
     {
         $reflection = new ReflectionFunction($closure);
 
-        return collect($reflection->getParameters())->mapWithKeys(function ($parameter) {
-            if ($parameter->isVariadic()) {
-                return [$parameter->getName() => null];
-            }
+        return \WPWCore\Collections\collect($reflection->getParameters())
+            ->mapWithKeys(function ($parameter) {
+                if ($parameter->isVariadic()) {
+                    return [$parameter->getName() => null];
+                }
 
-            return [$parameter->getName() => Reflector::getParameterClassName($parameter)];
-        })->all();
+                return [$parameter->getName() => Reflector::getParameterClassName($parameter)];
+            })->all();
     }
 }

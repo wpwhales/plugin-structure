@@ -159,7 +159,8 @@ class QueueFake extends QueueManager implements Fake, Queue
         );
 
         PHPUnit::assertTrue(
-            collect($expectedChain)->isNotEmpty(),
+            \WPWCore\Collections\collect($expectedChain)
+                ->isNotEmpty(),
             'The expected chain can not be empty.'
         );
 
@@ -195,7 +196,8 @@ class QueueFake extends QueueManager implements Fake, Queue
      */
     protected function assertPushedWithChainOfObjects($job, $expectedChain, $callback)
     {
-        $chain = collect($expectedChain)->map(fn ($job) => serialize($job))->all();
+        $chain = \WPWCore\Collections\collect($expectedChain)
+            ->map(fn($job) => serialize($job))->all();
 
         PHPUnit::assertTrue(
             $this->pushed($job, $callback)->filter(fn ($job) => $job->chained == $chain)->isNotEmpty(),
@@ -214,9 +216,10 @@ class QueueFake extends QueueManager implements Fake, Queue
     protected function assertPushedWithChainOfClasses($job, $expectedChain, $callback)
     {
         $matching = $this->pushed($job, $callback)->map->chained->map(function ($chain) {
-            return collect($chain)->map(function ($job) {
-                return get_class(unserialize($job));
-            });
+            return \WPWCore\Collections\collect($chain)
+                ->map(function ($job) {
+                    return get_class(unserialize($job));
+                });
         })->filter(function ($chain) use ($expectedChain) {
             return $chain->all() === $expectedChain;
         });
@@ -256,7 +259,8 @@ class QueueFake extends QueueManager implements Fake, Queue
      */
     protected function isChainOfObjects($chain)
     {
-        return ! collect($chain)->contains(fn ($job) => ! is_object($job));
+        return !\WPWCore\Collections\collect($chain)
+            ->contains(fn($job) => !is_object($job));
     }
 
     /**
@@ -303,9 +307,10 @@ class QueueFake extends QueueManager implements Fake, Queue
 
         $callback = $callback ?: fn () => true;
 
-        return collect($this->jobs[$job])->filter(
-            fn ($data) => $callback($data['job'], $data['queue'], $data['data'])
-        )->pluck('job');
+        return \WPWCore\Collections\collect($this->jobs[$job])
+            ->filter(
+                fn($data) => $callback($data['job'], $data['queue'], $data['data'])
+            )->pluck('job');
     }
 
     /**
@@ -338,7 +343,8 @@ class QueueFake extends QueueManager implements Fake, Queue
      */
     public function size($queue = null)
     {
-        return collect($this->jobs)->flatten(1)->filter(
+        return \WPWCore\Collections\collect($this->jobs)
+            ->flatten(1)->filter(
             fn ($job) => $job['queue'] === $queue
         )->count();
     }

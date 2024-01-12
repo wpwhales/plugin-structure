@@ -30,6 +30,7 @@ class InvokeQueuedClosure
     {
         $arguments[] = $exception;
 
-        collect($catchCallbacks)->each->__invoke(...$arguments);
+        \WPWCore\Collections\collect($catchCallbacks)
+            ->each->__invoke(...$arguments);
     }
 }

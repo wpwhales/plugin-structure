@@ -180,9 +180,10 @@ class Blueprint
      */
     protected function commandsNamed(array $names)
     {
-        return collect($this->commands)->filter(function ($command) use ($names) {
-            return in_array($command->name, $names);
-        });
+        return \WPWCore\Collections\collect($this->commands)
+            ->filter(function ($command) use ($names) {
+                return in_array($command->name, $names);
+            });
     }
 
     /**
@@ -276,9 +277,10 @@ class Blueprint
      */
     public function creating()
     {
-        return collect($this->commands)->contains(function ($command) {
-            return $command->name === 'create';
-        });
+        return \WPWCore\Collections\collect($this->commands)
+            ->contains(function ($command) {
+                return $command->name === 'create';
+            });
     }
 
     /**

@@ -224,7 +224,7 @@ abstract class DatabaseInspectionCommand extends Command
      */
     protected function installDependencies()
     {
-        $command = collect($this->composer->findComposer())
+        $command = \WPWCore\Collections\collect($this->composer->findComposer())
             ->push('require doctrine/dbal:^3.5.1')
             ->implode(' ');
 

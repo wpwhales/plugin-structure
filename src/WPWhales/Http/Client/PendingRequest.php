@@ -235,12 +235,15 @@ class PendingRequest
             'timeout' => 30,
         ];
 
-        $this->beforeSendingCallbacks = collect([function (Request $request, array $options, PendingRequest $pendingRequest) {
-            $pendingRequest->request = $request;
-            $pendingRequest->cookies = $options['cookies'];
+        $this->beforeSendingCallbacks = \WPWCore\Collections\collect([
+            function (Request $request, array $options, PendingRequest $pendingRequest) {
+                $pendingRequest->request = $request;
+                $pendingRequest->cookies = $options['cookies'];
 
-            $pendingRequest->dispatchRequestSendingEvent();
-        }]);
+                $pendingRequest->dispatchRequestSendingEvent();
+            }
+        ])
+;
     }
 
     /**
@@ -970,13 +973,14 @@ class PendingRequest
             $options[$this->bodyFormat] = $this->pendingBody;
         }
 
-        return collect($options)->map(function ($value, $key) {
-            if ($key === 'json' && $value instanceof JsonSerializable) {
-                return $value;
-            }
+        return \WPWCore\Collections\collect($options)
+            ->map(function ($value, $key) {
+                if ($key === 'json' && $value instanceof JsonSerializable) {
+                    return $value;
+                }
 
-            return $value instanceof Arrayable ? $value->toArray() : $value;
-        })->all();
+                return $value instanceof Arrayable ? $value->toArray() : $value;
+            })->all();
     }
 
     /**
@@ -987,9 +991,10 @@ class PendingRequest
      */
     protected function parseMultipartBodyFormat(array $data)
     {
-        return collect($data)->map(function ($value, $key) {
-            return is_array($value) ? $value : ['name' => $key, 'contents' => $value];
-        })->values()->all();
+        return \WPWCore\Collections\collect($data)
+            ->map(function ($value, $key) {
+                return is_array($value) ? $value : ['name' => $key, 'contents' => $value];
+            })->values()->all();
     }
 
     /**
@@ -1345,7 +1350,8 @@ class PendingRequest
      */
     public function stub($callback)
     {
-        $this->stubCallbacks = collect($callback);
+        $this->stubCallbacks = \WPWCore\Collections\collect($callback)
+;
 
         return $this;
     }

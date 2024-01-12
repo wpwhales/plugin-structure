@@ -150,14 +150,15 @@ trait RunsInParallel
             ? $this->options->processes
             : $this->options->processes();
 
-        collect(range(1, $processes))->each(function ($token) use ($callback) {
-            \WPWCore\Support\tap($this->createApplication(), function ($app) use ($callback, $token) {
-                ParallelTesting::resolveTokenUsing(fn() => $token);
+        \WPWCore\Collections\collect(range(1, $processes))
+            ->each(function ($token) use ($callback) {
+                \WPWCore\Support\tap($this->createApplication(), function ($app) use ($callback, $token) {
+                    ParallelTesting::resolveTokenUsing(fn() => $token);
 
-                $callback($app);
-            })
-                ->flush();
-        });
+                    $callback($app);
+                })
+                    ->flush();
+            });
     }
 
     /**

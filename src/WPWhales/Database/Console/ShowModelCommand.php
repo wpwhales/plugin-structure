@@ -127,7 +127,7 @@ class ShowModelCommand extends DatabaseInspectionCommand
         $columns = $schema->listTableColumns($table);
         $indexes = $schema->listTableIndexes($table);
 
-        return collect($columns)
+        return \WPWCore\Collections\collect($columns)
             ->values()
             ->map(fn (Column $column) => [
                 'name' => $column->getName(),
@@ -155,9 +155,9 @@ class ShowModelCommand extends DatabaseInspectionCommand
     {
         $class = new ReflectionClass($model);
 
-        return collect($class->getMethods())
+        return \WPWCore\Collections\collect($class->getMethods())
             ->reject(
-                fn (ReflectionMethod $method) => $method->isStatic()
+                fn(ReflectionMethod $method) => $method->isStatic()
                     || $method->isAbstract()
                     || $method->getDeclaringClass()->getName() === Model::class
             )
@@ -170,7 +170,8 @@ class ShowModelCommand extends DatabaseInspectionCommand
                     return [];
                 }
             })
-            ->reject(fn ($cast, $name) => collect($columns)->has($name))
+            ->reject(fn ($cast, $name) => \WPWCore\Collections\collect($columns)
+                ->has($name))
             ->map(fn ($cast, $name) => [
                 'name' => $name,
                 'type' => null,
@@ -194,8 +195,8 @@ class ShowModelCommand extends DatabaseInspectionCommand
      */
     protected function getRelations($model)
     {
-        return collect(get_class_methods($model))
-            ->map(fn ($method) => new ReflectionMethod($model, $method))
+        return \WPWCore\Collections\collect(get_class_methods($model))
+            ->map(fn($method) => new ReflectionMethod($model, $method))
             ->reject(
                 fn (ReflectionMethod $method) => $method->isStatic()
                     || $method->isAbstract()
@@ -210,8 +211,8 @@ class ShowModelCommand extends DatabaseInspectionCommand
                     $file->next();
                 }
 
-                return collect($this->relationMethods)
-                    ->contains(fn ($relationMethod) => str_contains($code, '$this->'.$relationMethod.'('));
+                return \WPWCore\Collections\collect($this->relationMethods)
+                    ->contains(fn($relationMethod) => str_contains($code, '$this->' . $relationMethod . '('));
             })
             ->map(function (ReflectionMethod $method) use ($model) {
                 $relation = $method->invoke($model);
@@ -261,7 +262,7 @@ class ShowModelCommand extends DatabaseInspectionCommand
             ];
         }
 
-        return collect($formatted);
+        return \WPWCore\Collections\collect($formatted);
     }
 
     /**
@@ -298,15 +299,16 @@ class ShowModelCommand extends DatabaseInspectionCommand
     protected function displayJson($class, $database, $table, $policy, $attributes, $relations, $observers)
     {
         $this->output->writeln(
-            collect([
-                'class' => $class,
-                'database' => $database,
-                'table' => $table,
-                'policy' => $policy,
+            \WPWCore\Collections\collect([
+                'class'      => $class,
+                'database'   => $database,
+                'table'      => $table,
+                'policy'     => $policy,
                 'attributes' => $attributes,
-                'relations' => $relations,
-                'observers' => $observers,
-            ])->toJson()
+                'relations'  => $relations,
+                'observers'  => $observers,
+            ])
+                ->toJson()
         );
     }
 
@@ -345,16 +347,17 @@ class ShowModelCommand extends DatabaseInspectionCommand
             $first = trim(sprintf(
                 '%s %s',
                 $attribute['name'],
-                collect(['increments', 'unique', 'nullable', 'fillable', 'hidden', 'appended'])
-                    ->filter(fn ($property) => $attribute[$property])
+                \WPWCore\Collections\collect(['increments', 'unique', 'nullable', 'fillable', 'hidden', 'appended'])
+                    ->filter(fn($property) => $attribute[$property])
                     ->map(fn ($property) => sprintf('<fg=gray>%s</>', $property))
                     ->implode('<fg=gray>,</> ')
             ));
 
-            $second = collect([
+            $second = \WPWCore\Collections\collect([
                 $attribute['type'],
-                $attribute['cast'] ? '<fg=yellow;options=bold>'.$attribute['cast'].'</>' : null,
-            ])->filter()->implode(' <fg=gray>/</> ');
+                $attribute['cast'] ? '<fg=yellow;options=bold>' . $attribute['cast'] . '</>' : null,
+            ])
+                ->filter()->implode(' <fg=gray>/</> ');
 
             $this->components->twoColumnDetail($first, $second);
 
@@ -421,7 +424,7 @@ class ShowModelCommand extends DatabaseInspectionCommand
      */
     protected function getCastsWithDates($model)
     {
-        return collect($model->getDates())
+        return \WPWCore\Collections\collect($model->getDates())
             ->filter()
             ->flip()
             ->map(fn () => 'datetime')
@@ -499,8 +502,8 @@ class ShowModelCommand extends DatabaseInspectionCommand
      */
     protected function columnIsUnique($column, $indexes)
     {
-        return collect($indexes)
-            ->filter(fn (Index $index) => count($index->getColumns()) === 1 && $index->getColumns()[0] === $column)
+        return \WPWCore\Collections\collect($indexes)
+            ->filter(fn(Index $index) => count($index->getColumns()) === 1 && $index->getColumns()[0] === $column)
             ->contains(fn (Index $index) => $index->isUnique());
     }
 

@@ -352,9 +352,10 @@ class Gate implements GateContract
      */
     public function check($abilities, $arguments = [])
     {
-        return collect($abilities)->every(
-            fn ($ability) => $this->inspect($ability, $arguments)->allowed()
-        );
+        return \WPWCore\Collections\collect($abilities)
+            ->every(
+                fn($ability) => $this->inspect($ability, $arguments)->allowed()
+            );
     }
 
     /**
@@ -366,7 +367,8 @@ class Gate implements GateContract
      */
     public function any($abilities, $arguments = [])
     {
-        return collect($abilities)->contains(fn ($ability) => $this->check($ability, $arguments));
+        return \WPWCore\Collections\collect($abilities)
+            ->contains(fn($ability) => $this->check($ability, $arguments));
     }
 
     /**

@@ -146,11 +146,12 @@ class Request implements ArrayAccess
             return false;
         }
 
-        return collect($this->data)->reject(function ($file) use ($name, $value, $filename) {
-            return $file['name'] != $name ||
-                ($value && $file['contents'] != $value) ||
-                ($filename && $file['filename'] != $filename);
-        })->count() > 0;
+        return \WPWCore\Collections\collect($this->data)
+                ->reject(function ($file) use ($name, $value, $filename) {
+                    return $file['name'] != $name ||
+                        ($value && $file['contents'] != $value) ||
+                        ($filename && $file['filename'] != $filename);
+                })->count() > 0;
     }
 
     /**

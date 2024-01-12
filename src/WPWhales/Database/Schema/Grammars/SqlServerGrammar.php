@@ -448,7 +448,8 @@ class SqlServerGrammar extends Grammar
     public function compileDropDefaultConstraint(Blueprint $blueprint, Fluent $command)
     {
         $columns = $command->name === 'change'
-            ? "'".collect($blueprint->getChangedColumns())->pluck('name')->implode("','")."'"
+            ? "'". \WPWCore\Collections\collect($blueprint->getChangedColumns())
+                ->pluck('name')->implode("','")."'"
             : "'".implode("','", $command->columns)."'";
 
         $tableName = $this->getTablePrefix().$blueprint->getTable();

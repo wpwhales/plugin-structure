@@ -34,8 +34,8 @@ trait CompilesJsonPaths
     {
         $value = preg_replace("/([\\\\]+)?\\'/", "''", $value);
 
-        $jsonPath = collect(explode($delimiter, $value))
-            ->map(fn ($segment) => $this->wrapJsonPathSegment($segment))
+        $jsonPath = \WPWCore\Collections\collect(explode($delimiter, $value))
+            ->map(fn($segment) => $this->wrapJsonPathSegment($segment))
             ->join('.');
 
         return "'$".(str_starts_with($jsonPath, '[') ? '' : '.').$jsonPath."'";

@@ -103,10 +103,11 @@ trait ConditionallyLoadsAttributes
     protected function when($condition, $value, $default = null)
     {
         if ($condition) {
-            return value($value);
+            return \WPWCore\Collections\value($value);
         }
 
-        return func_num_args() === 3 ? value($default) : new MissingValue;
+        return func_num_args() === 3 ? \WPWCore\Collections\value($default)
+            : new MissingValue;
     }
 
     /**
@@ -146,10 +147,12 @@ trait ConditionallyLoadsAttributes
     protected function mergeWhen($condition, $value, $default = null)
     {
         if ($condition) {
-            return new MergeValue(value($value));
+            return new MergeValue(\WPWCore\Collections\value($value)
+);
         }
 
-        return func_num_args() === 3 ? new MergeValue(value($default)) : new MissingValue();
+        return func_num_args() === 3 ? new MergeValue(\WPWCore\Collections\value($default)
+) : new MissingValue();
     }
 
     /**
@@ -195,12 +198,13 @@ trait ConditionallyLoadsAttributes
         }
 
         if (! array_key_exists($attribute, $this->resource->getAttributes())) {
-            return value($default);
+            return \WPWCore\Collections\value($default);
         }
 
         return func_num_args() === 1
-                ? $this->resource->{$attribute}
-                : value($value, $this->resource->{$attribute});
+            ? $this->resource->{$attribute}
+            : \WPWCore\Collections\value($value, $this->resource->{$attribute})
+;
     }
 
     /**
@@ -242,10 +246,12 @@ trait ConditionallyLoadsAttributes
     protected function whenAppended($attribute, $value = null, $default = null)
     {
         if ($this->resource->hasAppended($attribute)) {
-            return func_num_args() >= 2 ? value($value) : $this->resource->$attribute;
+            return func_num_args() >= 2 ? \WPWCore\Collections\value($value)
+                : $this->resource->$attribute;
         }
 
-        return func_num_args() === 3 ? value($default) : new MissingValue;
+        return func_num_args() === 3 ? \WPWCore\Collections\value($default)
+            : new MissingValue;
     }
 
     /**
@@ -263,7 +269,7 @@ trait ConditionallyLoadsAttributes
         }
 
         if (! $this->resource->relationLoaded($relationship)) {
-            return value($default);
+            return \WPWCore\Collections\value($default);
         }
 
         if (func_num_args() === 1) {
@@ -274,7 +280,7 @@ trait ConditionallyLoadsAttributes
             return;
         }
 
-        return value($value);
+        return \WPWCore\Collections\value($value);
     }
 
     /**
@@ -294,7 +300,7 @@ trait ConditionallyLoadsAttributes
         $attribute = (string) Str::of($relationship)->snake()->finish('_count');
 
         if (! isset($this->resource->getAttributes()[$attribute])) {
-            return value($default);
+            return \WPWCore\Collections\value($default);
         }
 
         if (func_num_args() === 1) {
@@ -305,7 +311,7 @@ trait ConditionallyLoadsAttributes
             return;
         }
 
-        return value($value, $this->resource->{$attribute});
+        return \WPWCore\Collections\value($value, $this->resource->{$attribute});
     }
 
     /**
@@ -327,7 +333,7 @@ trait ConditionallyLoadsAttributes
         $attribute = (string) Str::of($relationship)->snake()->append('_')->append($aggregate)->append('_')->finish($column);
 
         if (! isset($this->resource->getAttributes()[$attribute])) {
-            return value($default);
+            return \WPWCore\Collections\value($default);
         }
 
         if (func_num_args() === 3) {
@@ -338,7 +344,7 @@ trait ConditionallyLoadsAttributes
             return;
         }
 
-        return value($value, $this->resource->{$attribute});
+        return \WPWCore\Collections\value($value, $this->resource->{$attribute});
     }
 
     /**

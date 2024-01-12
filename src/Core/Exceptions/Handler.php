@@ -183,9 +183,10 @@ class Handler implements ExceptionHandler
                 'exception' => get_class($e),
                 'file'      => $e->getFile(),
                 'line'      => $e->getLine(),
-                'trace'     => collect($e->getTrace())->map(function ($trace) {
-                    return Arr::except($trace, ['args']);
-                })->all(),
+                'trace'     => \WPWCore\Collections\collect($e->getTrace())
+                    ->map(function ($trace) {
+                        return Arr::except($trace, ['args']);
+                    })->all(),
             ];
         }
 

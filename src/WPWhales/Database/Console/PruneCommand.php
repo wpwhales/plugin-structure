@@ -114,9 +114,10 @@ class PruneCommand extends Command
     protected function models()
     {
         if (! empty($models = $this->option('model'))) {
-            return collect($models)->filter(function ($model) {
-                return class_exists($model);
-            })->values();
+            return \WPWCore\Collections\collect($models)
+                ->filter(function ($model) {
+                    return class_exists($model);
+                })->values();
         }
 
         $except = $this->option('except');
@@ -125,15 +126,15 @@ class PruneCommand extends Command
             throw new InvalidArgumentException('The --models and --except options cannot be combined.');
         }
 
-        return collect((new Finder)->in($this->getDefaultPath())->files()->name('*.php'))
+        return \WPWCore\Collections\collect((new Finder)->in($this->getDefaultPath())->files()->name('*.php'))
             ->map(function ($model) {
                 $namespace = $this->laravel->getNamespace();
 
-                return $namespace.str_replace(
-                    ['/', '.php'],
-                    ['\\', ''],
-                    Str::after($model->getRealPath(), realpath(app_path()).DIRECTORY_SEPARATOR)
-                );
+                return $namespace . str_replace(
+                        ['/', '.php'],
+                        ['\\', ''],
+                        Str::after($model->getRealPath(), realpath(app_path()) . DIRECTORY_SEPARATOR)
+                    );
             })->when(! empty($except), function ($models) use ($except) {
                 return $models->reject(function ($model) use ($except) {
                     return in_array($model, $except);

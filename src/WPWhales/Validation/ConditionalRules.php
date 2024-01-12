@@ -64,8 +64,9 @@ class ConditionalRules
     public function rules(array $data = [])
     {
         return is_string($this->rules)
-                    ? explode('|', $this->rules)
-                    : value($this->rules, new Fluent($data));
+            ? explode('|', $this->rules)
+            : \WPWCore\Collections\value($this->rules, new Fluent($data))
+;
     }
 
     /**
@@ -77,7 +78,8 @@ class ConditionalRules
     public function defaultRules(array $data = [])
     {
         return is_string($this->defaultRules)
-                    ? explode('|', $this->defaultRules)
-                    : value($this->defaultRules, new Fluent($data));
+            ? explode('|', $this->defaultRules)
+            : \WPWCore\Collections\value($this->defaultRules, new Fluent($data))
+;
     }
 }

@@ -156,9 +156,10 @@ abstract class AbstractPaginator implements Htmlable
      */
     public function getUrlRange($start, $end)
     {
-        return collect(range($start, $end))->mapWithKeys(function ($page) {
-            return [$page => $this->url($page)];
-        })->all();
+        return \WPWCore\Collections\collect(range($start, $end))
+            ->mapWithKeys(function ($page) {
+                return [$page => $this->url($page)];
+            })->all();
     }
 
     /**

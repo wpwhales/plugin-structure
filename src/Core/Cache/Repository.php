@@ -107,7 +107,8 @@ class Repository implements ArrayAccess, CacheContract
         if (is_null($value)) {
             $this->event(new CacheMissed($key));
 
-            $value = value($default);
+            $value = \WPWCore\Collections\value($default)
+;
         } else {
             $this->event(new CacheHit($key, $value));
         }
@@ -125,13 +126,15 @@ class Repository implements ArrayAccess, CacheContract
      */
     public function many(array $keys)
     {
-        $values = $this->store->many(collect($keys)->map(function ($value, $key) {
-            return is_string($key) ? $key : $value;
-        })->values()->all());
+        $values = $this->store->many(\WPWCore\Collections\collect($keys)
+            ->map(function ($value, $key) {
+                return is_string($key) ? $key : $value;
+            })->values()->all());
 
-        return collect($values)->map(function ($value, $key) use ($keys) {
-            return $this->handleManyResult($keys, $key, $value);
-        })->all();
+        return \WPWCore\Collections\collect($values)
+            ->map(function ($value, $key) use ($keys) {
+                return $this->handleManyResult($keys, $key, $value);
+            })->all();
     }
 
     /**
@@ -166,7 +169,8 @@ class Repository implements ArrayAccess, CacheContract
         if (is_null($value)) {
             $this->event(new CacheMissed($key));
 
-            return (isset($keys[$key]) && ! array_is_list($keys)) ? value($keys[$key]) : null;
+            return (isset($keys[$key]) && !array_is_list($keys)) ? \WPWCore\Collections\value($keys[$key])
+                : null;
         }
 
         // If we found a valid value we will fire the "hit" event and return the value
@@ -399,7 +403,8 @@ class Repository implements ArrayAccess, CacheContract
 
         $value = $callback();
 
-        $this->put($key, $value, value($ttl, $value));
+        $this->put($key, $value, \WPWCore\Collections\value($ttl, $value)
+);
 
         return $value;
     }

@@ -80,7 +80,8 @@ trait ProvidesConvenienceMethods
      */
     protected function extractInputFromRules(Request $request, array $rules)
     {
-        return $request->only(collect($rules)->keys()->map(function ($rule) {
+        return $request->only(\WPWCore\Collections\collect($rules)
+            ->keys()->map(function ($rule) {
             return Str::contains($rule, '.') ? explode('.', $rule)[0] : $rule;
         })->unique()->toArray());
     }

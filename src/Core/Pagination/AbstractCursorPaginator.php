@@ -206,7 +206,7 @@ abstract class AbstractCursorPaginator implements Htmlable
      */
     public function getParametersForItem($item)
     {
-        return collect($this->parameters)
+        return \WPWCore\Collections\collect($this->parameters)
             ->flip()
             ->map(function ($_, $parameterName) use ($item) {
                 if ($item instanceof JsonResource) {
