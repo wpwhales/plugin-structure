@@ -151,11 +151,12 @@ trait RunsInParallel
             : $this->options->processes();
 
         collect(range(1, $processes))->each(function ($token) use ($callback) {
-            tap($this->createApplication(), function ($app) use ($callback, $token) {
-                ParallelTesting::resolveTokenUsing(fn () => $token);
+            \WPWCore\Support\tap($this->createApplication(), function ($app) use ($callback, $token) {
+                ParallelTesting::resolveTokenUsing(fn() => $token);
 
                 $callback($app);
-            })->flush();
+            })
+                ->flush();
         });
     }
 

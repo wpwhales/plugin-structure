@@ -234,7 +234,7 @@ class Number
 
         static::useLocale($locale);
 
-        return tap($callback(), fn () => static::useLocale($previousLocale));
+        return \WPWCore\Support\tap($callback(), fn() => static::useLocale($previousLocale));
     }
 
     /**

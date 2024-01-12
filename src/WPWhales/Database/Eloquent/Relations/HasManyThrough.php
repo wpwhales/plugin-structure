@@ -154,7 +154,8 @@ class HasManyThrough extends Relation
      */
     public function throughParentSoftDeletes()
     {
-        return in_array(SoftDeletes::class, class_uses_recursive($this->throughParent));
+        return in_array(SoftDeletes::class, \WPWCore\Support\class_uses_recursive($this->throughParent)
+);
     }
 
     /**
@@ -305,8 +306,8 @@ class HasManyThrough extends Relation
      */
     public function updateOrCreate(array $attributes, array $values = [])
     {
-        return tap($this->firstOrCreate($attributes, $values), function ($instance) use ($values) {
-            if (! $instance->wasRecentlyCreated) {
+        return \WPWCore\Support\tap($this->firstOrCreate($attributes, $values), function ($instance) use ($values) {
+            if (!$instance->wasRecentlyCreated) {
                 $instance->fill($values)->save();
             }
         });

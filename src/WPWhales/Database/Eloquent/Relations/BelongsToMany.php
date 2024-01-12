@@ -175,7 +175,8 @@ class BelongsToMany extends Relation
             return $table;
         }
 
-        if (in_array(AsPivot::class, class_uses_recursive($model))) {
+        if (in_array(AsPivot::class, \WPWCore\Support\class_uses_recursive($model)
+)) {
             $this->using($table);
         }
 
@@ -965,7 +966,7 @@ class BelongsToMany extends Relation
     {
         $this->query->addSelect($this->shouldSelect($columns));
 
-        return tap($this->query->cursorPaginate($perPage, $columns, $cursorName, $cursor), function ($paginator) {
+        return \WPWCore\Support\tap($this->query->cursorPaginate($perPage, $columns, $cursorName, $cursor), function ($paginator) {
             $this->hydratePivotRelation($paginator->items());
         });
     }
@@ -1167,7 +1168,8 @@ class BelongsToMany extends Relation
      */
     protected function guessInverseRelation()
     {
-        return Str::camel(Str::pluralStudly(class_basename($this->getParent())));
+        return Str::camel(Str::pluralStudly(\WPWCore\Support\class_basename($this->getParent())
+));
     }
 
     /**

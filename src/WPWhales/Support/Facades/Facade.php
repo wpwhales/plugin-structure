@@ -65,7 +65,7 @@ abstract class Facade
         if (! static::isMock()) {
             $class = static::getMockableClass();
 
-            return tap($class ? Mockery::spy($class) : Mockery::spy(), function ($spy) {
+            return \WPWCore\Support\tap($class ? Mockery::spy($class) : Mockery::spy(), function ($spy) {
                 static::swap($spy);
             });
         }
@@ -126,7 +126,7 @@ abstract class Facade
      */
     protected static function createFreshMockInstance()
     {
-        return tap(static::createMock(), function ($mock) {
+        return \WPWCore\Support\tap(static::createMock(), function ($mock) {
             static::swap($mock);
 
             $mock->shouldAllowMockingProtectedMethods();

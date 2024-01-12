@@ -190,9 +190,9 @@ class DatabaseSessionHandler implements ExistenceAwareInterface, SessionHandlerI
             return $payload;
         }
 
-        return tap($payload, function (&$payload) {
+        return \WPWCore\Support\tap($payload, function (&$payload) {
             $this->addUserInformation($payload)
-                 ->addRequestInformation($payload);
+                ->addRequestInformation($payload);
         });
     }
 

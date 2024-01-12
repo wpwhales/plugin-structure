@@ -92,7 +92,8 @@ if (! function_exists('class_uses_recursive')) {
         $results = [];
 
         foreach (array_reverse(class_parents($class) ?: []) + [$class => $class] as $class) {
-            $results += trait_uses_recursive($class);
+            $results += \WPWCore\Support\trait_uses_recursive($class)
+;
         }
 
         return array_unique($results);
@@ -148,7 +149,8 @@ if (! function_exists('filled')) {
      */
     function filled($value)
     {
-        return ! blank($value);
+        return !\WPWCore\Support\blank($value)
+;
     }
 }
 
@@ -352,7 +354,7 @@ if (! function_exists('throw_unless')) {
      */
     function throw_unless($condition, $exception = 'RuntimeException', ...$parameters)
     {
-        throw_if(! $condition, $exception, ...$parameters);
+        \WPWCore\Support\throw_if(!$condition, $exception, $parameters);
 
         return $condition;
     }
@@ -370,7 +372,8 @@ if (! function_exists('trait_uses_recursive')) {
         $traits = class_uses($trait) ?: [];
 
         foreach ($traits as $trait) {
-            $traits += trait_uses_recursive($trait);
+            $traits += \WPWCore\Support\trait_uses_recursive($trait)
+;
         }
 
         return $traits;
@@ -392,7 +395,8 @@ if (! function_exists('transform')) {
      */
     function transform($value, callable $callback, $default = null)
     {
-        if (filled($value)) {
+        if (\WPWCore\Support\filled($value)
+        ) {
             return $callback($value);
         }
 

@@ -82,7 +82,7 @@ class Queue extends Facade
                 ? static::getFacadeRoot()->queue
                 : static::getFacadeRoot();
 
-        return tap(new QueueFake(static::getFacadeApplication(), $jobsToFake, $actualQueueManager), function ($fake) {
+        return \WPWCore\Support\tap(new QueueFake(static::getFacadeApplication(), $jobsToFake, $actualQueueManager), function ($fake) {
             static::swap($fake);
         });
     }

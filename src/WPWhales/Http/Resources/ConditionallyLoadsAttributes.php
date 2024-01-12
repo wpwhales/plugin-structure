@@ -410,8 +410,6 @@ trait ConditionallyLoadsAttributes
      */
     protected function transform($value, callable $callback, $default = null)
     {
-        return transform(
-            $value, $callback, func_num_args() === 3 ? $default : new MissingValue
-        );
+        return \WPWCore\Support\transform($value, $callback, func_num_args() === 3 ? $default : new MissingValue);
     }
 }

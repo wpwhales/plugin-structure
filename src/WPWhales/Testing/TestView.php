@@ -115,7 +115,8 @@ class TestView
      */
     public function assertSee($value, $escape = true)
     {
-        $value = $escape ? e($value) : $value;
+        $value = $escape ? \WPWCore\Support\e($value)
+            : $value;
 
         PHPUnit::assertStringContainsString((string) $value, $this->rendered);
 
@@ -147,7 +148,8 @@ class TestView
      */
     public function assertSeeText($value, $escape = true)
     {
-        $value = $escape ? e($value) : $value;
+        $value = $escape ? \WPWCore\Support\e($value)
+            : $value;
 
         PHPUnit::assertStringContainsString((string) $value, strip_tags($this->rendered));
 
@@ -179,7 +181,8 @@ class TestView
      */
     public function assertDontSee($value, $escape = true)
     {
-        $value = $escape ? e($value) : $value;
+        $value = $escape ? \WPWCore\Support\e($value)
+            : $value;
 
         PHPUnit::assertStringNotContainsString((string) $value, $this->rendered);
 
@@ -195,7 +198,8 @@ class TestView
      */
     public function assertDontSeeText($value, $escape = true)
     {
-        $value = $escape ? e($value) : $value;
+        $value = $escape ? \WPWCore\Support\e($value)
+            : $value;
 
         PHPUnit::assertStringNotContainsString((string) $value, strip_tags($this->rendered));
 

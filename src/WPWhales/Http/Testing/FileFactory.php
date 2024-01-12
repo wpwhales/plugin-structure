@@ -20,7 +20,7 @@ class FileFactory
             return $this->createWithContent($name, $kilobytes);
         }
 
-        return tap(new File($name, tmpfile()), function ($file) use ($kilobytes, $mimeType) {
+        return \WPWCore\Support\tap(new File($name, tmpfile()), function ($file) use ($kilobytes, $mimeType) {
             $file->sizeToReport = $kilobytes * 1024;
             $file->mimeTypeToReport = $mimeType;
         });
@@ -39,7 +39,7 @@ class FileFactory
 
         fwrite($tmpfile, $content);
 
-        return tap(new File($name, $tmpfile), function ($file) use ($tmpfile) {
+        return \WPWCore\Support\tap(new File($name, $tmpfile), function ($file) use ($tmpfile) {
             $file->sizeToReport = fstat($tmpfile)['size'];
         });
     }
@@ -77,7 +77,7 @@ class FileFactory
             throw new LogicException('GD extension is not installed.');
         }
 
-        return tap(tmpfile(), function ($temp) use ($width, $height, $extension) {
+        return \WPWCore\Support\tap(tmpfile(), function ($temp) use ($width, $height, $extension) {
             ob_start();
 
             $extension = in_array($extension, ['jpeg', 'png', 'gif', 'webp', 'wbmp', 'bmp'])
@@ -86,7 +86,7 @@ class FileFactory
 
             $image = imagecreatetruecolor($width, $height);
 
-            if (! function_exists($functionName = "image{$extension}")) {
+            if (!function_exists($functionName = "image{$extension}")) {
                 ob_get_clean();
 
                 throw new LogicException("{$functionName} function is not defined and image cannot be generated.");

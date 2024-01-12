@@ -114,7 +114,7 @@ trait ManagesStacks
             throw new InvalidArgumentException('Cannot end a prepend operation without first starting one.');
         }
 
-        return \WPWCore\tap(array_pop($this->pushStack), function ($last) {
+        return \WPWCore\Support\tap(array_pop($this->pushStack), function ($last) {
             $this->extendPrepend($last, ob_get_clean());
         });
     }

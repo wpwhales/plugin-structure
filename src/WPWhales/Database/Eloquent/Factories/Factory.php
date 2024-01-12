@@ -414,7 +414,7 @@ abstract class Factory
     protected function makeInstance(?Model $parent)
     {
         return Model::unguarded(function () use ($parent) {
-            return tap($this->newModel($this->getExpandedAttributes($parent)), function ($instance) {
+            return \WPWCore\Support\tap($this->newModel($this->getExpandedAttributes($parent)), function ($instance) {
                 if (isset($this->connection)) {
                     $instance->setConnection($this->connection);
                 }
@@ -587,7 +587,8 @@ abstract class Factory
      */
     protected function guessRelationship(string $related)
     {
-        $guess = Str::camel(Str::plural(class_basename($related)));
+        $guess = Str::camel(Str::plural(\WPWCore\Support\class_basename($related)
+));
 
         return method_exists($this->modelName(), $guess) ? $guess : Str::singular($guess);
     }
@@ -606,11 +607,10 @@ abstract class Factory
             'has' => $this->has->concat([new BelongsToManyRelationship(
                 $factory,
                 $pivot,
-                $relationship ?? Str::camel(Str::plural(class_basename(
-                    $factory instanceof Factory
-                        ? $factory->modelName()
-                        : Collection::wrap($factory)->first()
-                )))
+                $relationship ?? Str::camel(Str::plural(\WPWCore\Support\class_basename($factory instanceof Factory
+                    ? $factory->modelName()
+                    : Collection::wrap($factory)->first())
+))
             )]),
         ]);
     }
@@ -626,9 +626,8 @@ abstract class Factory
     {
         return $this->newInstance(['for' => $this->for->concat([new BelongsToRelationship(
             $factory,
-            $relationship ?? Str::camel(class_basename(
-                $factory instanceof Factory ? $factory->modelName() : $factory
-            ))
+            $relationship ?? Str::camel(\WPWCore\Support\class_basename($factory instanceof Factory ? $factory->modelName() : $factory)
+)
         )])]);
     }
 
@@ -782,7 +781,8 @@ abstract class Factory
                 'Factory', '', Str::replaceFirst(static::$namespace, '', get_class($factory))
             );
 
-            $factoryBasename = Str::replaceLast('Factory', '', class_basename($factory));
+            $factoryBasename = Str::replaceLast('Factory', '', \WPWCore\Support\class_basename($factory)
+);
 
             $appNamespace = static::appNamespace();
 
@@ -900,7 +900,8 @@ abstract class Factory
             return $this->macroCall($method, $parameters);
         }
 
-        if ($method === 'trashed' && in_array(SoftDeletes::class, class_uses_recursive($this->modelName()))) {
+        if ($method === 'trashed' && in_array(SoftDeletes::class, \WPWCore\Support\class_uses_recursive($this->modelName())
+)) {
             return $this->state([
                 $this->newModel()->getDeletedAtColumn() => $parameters[0] ?? Carbon::now()->subDay(),
             ]);

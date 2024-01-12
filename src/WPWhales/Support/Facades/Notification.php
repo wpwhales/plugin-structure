@@ -49,7 +49,7 @@ class Notification extends Facade
      */
     public static function fake()
     {
-        return tap(new NotificationFake, function ($fake) {
+        return \WPWCore\Support\tap(new NotificationFake, function ($fake) {
             static::swap($fake);
         });
     }

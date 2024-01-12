@@ -559,7 +559,8 @@ trait QueriesRelationships
         }
 
         if ($relationshipName === null) {
-            $relationshipName = Str::camel(class_basename($related));
+            $relationshipName = Str::camel(\WPWCore\Support\class_basename($related)
+);
         }
 
         try {

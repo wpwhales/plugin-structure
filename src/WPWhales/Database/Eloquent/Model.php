@@ -294,16 +294,18 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
 
         static::$traitInitializers[$class] = [];
 
-        foreach (class_uses_recursive($class) as $trait) {
-            $method = 'boot'.class_basename($trait);
+        foreach (\WPWCore\Support\class_uses_recursive($class)
+                 as $trait) {
+            $method = 'boot' . \WPWCore\Support\class_basename($trait);
 
-            if (method_exists($class, $method) && ! in_array($method, $booted)) {
+            if (method_exists($class, $method) && !in_array($method, $booted)) {
                 forward_static_call([$class, $method]);
 
                 $booted[] = $method;
             }
 
-            if (method_exists($class, $method = 'initialize'.class_basename($trait))) {
+            if (method_exists($class, $method = 'initialize' . \WPWCore\Support\class_basename($trait)
+            )) {
                 static::$traitInitializers[$class][] = $method;
 
                 static::$traitInitializers[$class] = array_unique(
@@ -965,7 +967,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
             return false;
         }
 
-        return tap($this->setKeysForSaveQuery($this->newQueryWithoutScopes())->{$method}($column, $amount, $extra), function () use ($column) {
+        return \WPWCore\Support\tap($this->setKeysForSaveQuery($this->newQueryWithoutScopes())->{$method}($column, $amount, $extra), function () use ($column) {
             $this->syncChanges();
 
             $this->fireModelEvent('updated', false);
@@ -1703,7 +1705,8 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
 
         $this->load(collect($this->relations)->reject(function ($relation) {
             return $relation instanceof Pivot
-                || (is_object($relation) && in_array(AsPivot::class, class_uses_recursive($relation), true));
+                || (is_object($relation) && in_array(AsPivot::class, \WPWCore\Support\class_uses_recursive($relation)
+                        , true));
         })->keys()->all());
 
         $this->syncOriginal();
@@ -1730,7 +1733,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
             $this->getAttributes(), $except ? array_unique(array_merge($except, $defaults)) : $defaults
         );
 
-        return tap(new static, function ($instance) use ($attributes) {
+        return \WPWCore\Support\tap(new static, function ($instance) use ($attributes) {
             $instance->setRawAttributes($attributes);
 
             $instance->setRelations($this->relations);
@@ -1857,7 +1860,8 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      */
     public function getTable()
     {
-        return $this->table ?? Str::snake(Str::pluralStudly(class_basename($this)));
+        return $this->table ?? Str::snake(Str::pluralStudly(\WPWCore\Support\class_basename($this)
+));
     }
 
     /**
@@ -2139,7 +2143,8 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      */
     public function getForeignKey()
     {
-        return Str::snake(class_basename($this)).'_'.$this->getKeyName();
+        return Str::snake(\WPWCore\Support\class_basename($this)
+).'_'.$this->getKeyName();
     }
 
     /**
@@ -2202,7 +2207,8 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      */
     public function broadcastChannelRoute()
     {
-        return str_replace('\\', '.', get_class($this)).'.{'.Str::camel(class_basename($this)).'}';
+        return str_replace('\\', '.', get_class($this)).'.{'.Str::camel(\WPWCore\Support\class_basename($this)
+).'}';
     }
 
     /**
@@ -2354,7 +2360,8 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
     public function __toString()
     {
         return $this->escapeWhenCastingToString
-            ? e($this->toJson())
+            ? \WPWCore\Support\e($this->toJson())
+
             : $this->toJson();
     }
 

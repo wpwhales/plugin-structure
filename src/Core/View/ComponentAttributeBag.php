@@ -279,8 +279,9 @@ class ComponentAttributeBag implements Arrayable, ArrayAccess, IteratorAggregate
     {
         $attributeDefaults = array_map(function ($value) use ($escape) {
             return $this->shouldEscapeAttributeValue($escape, $value)
-                        ? e($value)
-                        : $value;
+                ? \WPWCore\Support\e($value)
+
+                : $value;
         }, $attributeDefaults);
 
         [$appendableAttributes, $nonAppendableAttributes] = collect($this->attributes)
@@ -346,7 +347,8 @@ class ComponentAttributeBag implements Arrayable, ArrayAccess, IteratorAggregate
     protected function resolveAppendableAttributeDefault($attributeDefaults, $key, $escape)
     {
         if ($this->shouldEscapeAttributeValue($escape, $value = $attributeDefaults[$key]->value)) {
-            $value = e($value);
+            $value = \WPWCore\Support\e($value)
+;
         }
 
         return $value;

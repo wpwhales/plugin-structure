@@ -96,8 +96,7 @@ class ViewServiceProvider extends ServiceProvider
         $this->app->singleton('blade.compiler', function ($app) {
 
 
-
-            return \WPWCore\tap(new BladeCompiler(
+            return \WPWCore\Support\tap(new BladeCompiler(
                 $app['files'],
                 $app['config']['view.compiled'],
                 $app['config']->get('view.relative_hash', false) ? $app->basePath() : '',

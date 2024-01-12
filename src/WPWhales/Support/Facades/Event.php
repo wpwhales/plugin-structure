@@ -52,7 +52,7 @@ class Event extends Facade
                 ? static::getFacadeRoot()->dispatcher
                 : static::getFacadeRoot();
 
-        return tap(new EventFake($actualDispatcher, $eventsToFake), function ($fake) {
+        return \WPWCore\Support\tap(new EventFake($actualDispatcher, $eventsToFake), function ($fake) {
             static::swap($fake);
 
             Model::setEventDispatcher($fake);
@@ -88,7 +88,7 @@ class Event extends Facade
 
         static::fake($eventsToFake);
 
-        return tap($callable(), function () use ($originalDispatcher) {
+        return \WPWCore\Support\tap($callable(), function () use ($originalDispatcher) {
             static::swap($originalDispatcher);
 
             Model::setEventDispatcher($originalDispatcher);
@@ -109,7 +109,7 @@ class Event extends Facade
 
         static::fakeExcept($eventsToAllow);
 
-        return tap($callable(), function () use ($originalDispatcher) {
+        return \WPWCore\Support\tap($callable(), function () use ($originalDispatcher) {
             static::swap($originalDispatcher);
 
             Model::setEventDispatcher($originalDispatcher);

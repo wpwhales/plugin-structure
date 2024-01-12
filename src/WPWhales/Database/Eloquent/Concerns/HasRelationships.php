@@ -692,7 +692,8 @@ trait HasRelationships
         // just sort the models and join them together to get the table name.
         $segments = [
             $instance ? $instance->joiningTableSegment()
-                      : Str::snake(class_basename($related)),
+                      : Str::snake(\WPWCore\Support\class_basename($related)
+),
             $this->joiningTableSegment(),
         ];
 
@@ -711,7 +712,8 @@ trait HasRelationships
      */
     public function joiningTableSegment()
     {
-        return Str::snake(class_basename($this));
+        return Str::snake(\WPWCore\Support\class_basename($this)
+);
     }
 
     /**
@@ -790,8 +792,8 @@ trait HasRelationships
      */
     protected function newRelatedInstance($class)
     {
-        return tap(new $class, function ($instance) {
-            if (! $instance->getConnectionName()) {
+        return \WPWCore\Support\tap(new $class, function ($instance) {
+            if (!$instance->getConnectionName()) {
                 $instance->setConnection($this->connection);
             }
         });

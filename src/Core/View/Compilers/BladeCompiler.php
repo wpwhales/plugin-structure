@@ -346,7 +346,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
                     ->make(ViewFactory::class)
                     ->make($component->resolveView(), $data);
 
-        return tap($view->render(), function () use ($view, $deleteCachedView) {
+        return \WPWCore\Support\tap($view->render(), function () use ($view, $deleteCachedView) {
             if ($deleteCachedView) {
                 @unlink($view->getPath());
             }
@@ -777,7 +777,8 @@ class BladeCompiler extends Compiler implements CompilerInterface
                             ? collect(explode('\\', Str::after($class, '\\View\\Components\\')))->map(function ($segment) {
                                 return Str::kebab($segment);
                             })->implode(':')
-                            : Str::kebab(class_basename($class));
+                            : Str::kebab(\WPWCore\Support\class_basename($class)
+);
         }
 
         if (! empty($prefix)) {

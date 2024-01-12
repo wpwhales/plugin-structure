@@ -403,11 +403,12 @@ class Builder
      */
     public function create($table, Closure $callback)
     {
-        $this->build(tap($this->createBlueprint($table), function ($blueprint) use ($callback) {
-            $blueprint->create();
+        $this->build(\WPWCore\Support\tap($this->createBlueprint($table), function ($blueprint) use ($callback) {
+                $blueprint->create();
 
-            $callback($blueprint);
-        }));
+                $callback($blueprint);
+            })
+);
     }
 
     /**
@@ -418,9 +419,10 @@ class Builder
      */
     public function drop($table)
     {
-        $this->build(tap($this->createBlueprint($table), function ($blueprint) {
-            $blueprint->drop();
-        }));
+        $this->build(\WPWCore\Support\tap($this->createBlueprint($table), function ($blueprint) {
+                $blueprint->drop();
+            })
+);
     }
 
     /**
@@ -431,9 +433,10 @@ class Builder
      */
     public function dropIfExists($table)
     {
-        $this->build(tap($this->createBlueprint($table), function ($blueprint) {
-            $blueprint->dropIfExists();
-        }));
+        $this->build(\WPWCore\Support\tap($this->createBlueprint($table), function ($blueprint) {
+                $blueprint->dropIfExists();
+            })
+);
     }
 
     /**
@@ -495,9 +498,10 @@ class Builder
      */
     public function rename($from, $to)
     {
-        $this->build(tap($this->createBlueprint($from), function ($blueprint) use ($to) {
-            $blueprint->rename($to);
-        }));
+        $this->build(\WPWCore\Support\tap($this->createBlueprint($from), function ($blueprint) use ($to) {
+                $blueprint->rename($to);
+            })
+);
     }
 
     /**

@@ -328,7 +328,7 @@ class DatabaseManager implements ConnectionResolverInterface
 
         $this->setDefaultConnection($name);
 
-        return tap($callback(), function () use ($previousName) {
+        return \WPWCore\Support\tap($callback(), function () use ($previousName) {
             $this->setDefaultConnection($previousName);
         });
     }

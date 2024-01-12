@@ -4,7 +4,8 @@ namespace WPWCore\Cache;
 
 use WPWhales\Database\Connection;
 use WPWhales\Database\QueryException;
-use function WPWhales\Cache\optional;
+use function \WPWCore\Support\optional()
+;
 
 class DatabaseLock extends Lock
 {
@@ -142,7 +143,8 @@ class DatabaseLock extends Lock
      */
     protected function getCurrentOwner()
     {
-        return optional($this->connection->table($this->table)->where('key', $this->name)->first())->owner;
+        return \WPWCore\Support\optional($this->connection->table($this->table)->where('key', $this->name)->first())
+            ->owner;
     }
 
     /**

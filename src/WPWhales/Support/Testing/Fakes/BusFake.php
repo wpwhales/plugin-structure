@@ -367,7 +367,7 @@ class BusFake implements Fake, QueueingDispatcher
      */
     protected function resetChainPropertiesToDefaults($job)
     {
-        return tap(clone $job, function ($job) {
+        return \WPWCore\Support\tap(clone $job, function ($job) {
             $job->chainConnection = null;
             $job->chainQueue = null;
             $job->chainCatchCallbacks = null;

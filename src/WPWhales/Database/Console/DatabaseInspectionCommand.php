@@ -83,7 +83,8 @@ abstract class DatabaseInspectionCommand extends Command
      */
     protected function getPlatformName(AbstractPlatform $platform, $database)
     {
-        return match (class_basename($platform)) {
+        return match (\WPWCore\Support\class_basename($platform)
+        ) {
             'MySQLPlatform' => 'MySQL <= 5',
             'MySQL57Platform' => 'MySQL 5.7',
             'MySQL80Platform' => 'MySQL 8',
@@ -207,8 +208,8 @@ abstract class DatabaseInspectionCommand extends Command
      */
     protected function ensureDependenciesExist()
     {
-        return tap(interface_exists('Doctrine\DBAL\Driver'), function ($dependenciesExist) {
-            if (! $dependenciesExist && confirm('Inspecting database information requires the Doctrine DBAL (doctrine/dbal) package. Would you like to install it?', default: false)) {
+        return \WPWCore\Support\tap(interface_exists('Doctrine\DBAL\Driver'), function ($dependenciesExist) {
+            if (!$dependenciesExist && confirm('Inspecting database information requires the Doctrine DBAL (doctrine/dbal) package. Would you like to install it?', default: false)) {
                 $this->installDependencies();
             }
         });

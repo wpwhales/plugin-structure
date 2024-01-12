@@ -72,7 +72,7 @@ class Mail extends Facade
                 ? static::getFacadeRoot()->manager
                 : static::getFacadeRoot();
 
-        return tap(new MailFake($actualMailManager), function ($fake) {
+        return \WPWCore\Support\tap(new MailFake($actualMailManager), function ($fake) {
             static::swap($fake);
         });
     }

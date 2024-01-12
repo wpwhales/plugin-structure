@@ -179,7 +179,7 @@ class FileStore implements Store, LockProvider
     {
         $raw = $this->getPayload($key);
 
-        return tap(((int) $raw['data']) + $value, function ($newValue) use ($key, $raw) {
+        return \WPWCore\Support\tap(((int)$raw['data']) + $value, function ($newValue) use ($key, $raw) {
             $this->put($key, $newValue, $raw['time'] ?? 0);
         });
     }

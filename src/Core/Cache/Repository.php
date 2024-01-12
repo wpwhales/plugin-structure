@@ -188,7 +188,7 @@ class Repository implements ArrayAccess, CacheContract
      */
     public function pull($key, $default = null)
     {
-        return tap($this->get($key, $default), function () use ($key) {
+        return \WPWCore\Support\tap($this->get($key, $default), function () use ($key) {
             $this->forget($key);
         });
     }
@@ -451,7 +451,7 @@ class Repository implements ArrayAccess, CacheContract
      */
     public function forget($key)
     {
-        return tap($this->store->forget($this->itemKey($key)), function ($result) use ($key) {
+        return \WPWCore\Support\tap($this->store->forget($this->itemKey($key)), function ($result) use ($key) {
             if ($result) {
                 $this->event(new KeyForgotten($key));
             }

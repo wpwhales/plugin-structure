@@ -77,7 +77,7 @@ class StartSession
      */
     protected function startSession(Request $request, $session)
     {
-        return \WPWCore\tap($session, function ($session) use ($request) {
+        return \WPWCore\Support\tap($session, function ($session) use ($request) {
             $session->setRequestOnHandler($request);
 
             $session->start();
@@ -92,7 +92,7 @@ class StartSession
      */
     public function getSession(Request $request)
     {
-        return \WPWCore\tap($this->manager->driver(), function ($session) use ($request) {
+        return \WPWCore\Support\tap($this->manager->driver(), function ($session) use ($request) {
             $session->setId($request->cookies->get($session->getName()));
         });
     }

@@ -695,9 +695,10 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
             throw new InvalidArgumentException('The given password does not match the current password.');
         }
 
-        return tap($this->user()->forceFill([
+        return \WPWCore\Support\tap($this->user()->forceFill([
             $attribute => Hash::make($password),
-        ]))->save();
+        ]))
+            ->save();
     }
 
     /**

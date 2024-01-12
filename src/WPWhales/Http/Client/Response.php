@@ -286,11 +286,12 @@ class Response implements ArrayAccess
         $callback = func_get_args()[0] ?? null;
 
         if ($this->failed()) {
-            throw tap($this->toException(), function ($exception) use ($callback) {
+            throw \WPWCore\Support\tap($this->toException(), function ($exception) use ($callback) {
                 if ($callback && is_callable($callback)) {
                     $callback($this, $exception);
                 }
-            });
+            })
+;
         }
 
         return $this;

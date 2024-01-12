@@ -137,7 +137,7 @@ class MigrateCommand extends BaseCommand implements Isolatable
      */
     protected function repositoryExists()
     {
-        return retry(2, fn () => $this->migrator->repositoryExists(), 0, function ($e) {
+        return \WPWCore\Support\retry(2, fn() => $this->migrator->repositoryExists(), 0, function ($e) {
             try {
                 if ($e->getPrevious() instanceof SQLiteDatabaseDoesNotExistException) {
                     return $this->createMissingSqliteDatabase($e->getPrevious()->path);
@@ -214,7 +214,7 @@ class MigrateCommand extends BaseCommand implements Isolatable
 
             $freshConnection = $this->migrator->resolveConnection($this->option('database'));
 
-            return tap($freshConnection->unprepared("CREATE DATABASE IF NOT EXISTS `{$connection->getDatabaseName()}`"), function () {
+            return \WPWCore\Support\tap($freshConnection->unprepared("CREATE DATABASE IF NOT EXISTS `{$connection->getDatabaseName()}`"), function () {
                 $this->laravel['db']->purge();
             });
         } finally {

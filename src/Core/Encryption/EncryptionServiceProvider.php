@@ -59,7 +59,7 @@ class EncryptionServiceProvider extends ServiceProvider
      */
     protected function key(array $config)
     {
-        return \WPWCore\tap($config['key'], function ($key) {
+        return \WPWCore\Support\tap($config['key'], function ($key) {
             if (empty($key)) {
                 throw new MissingAppKeyException;
             }

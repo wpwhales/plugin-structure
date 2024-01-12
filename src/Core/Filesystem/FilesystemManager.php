@@ -288,16 +288,14 @@ class FilesystemManager implements FactoryContract
             throw new InvalidArgumentException('Scoped disk is missing "prefix" configuration option.');
         }
 
-        return $this->build(tap(
-            is_string($config['disk']) ? $this->getConfig($config['disk']) : $config['disk'],
-            function (&$parent) use ($config) {
+        return $this->build(\WPWCore\Support\tap(is_string($config['disk']) ? $this->getConfig($config['disk']) : $config['disk'], function (&$parent) use ($config) {
                 $parent['prefix'] = $config['prefix'];
 
                 if (isset($config['visibility'])) {
                     $parent['visibility'] = $config['visibility'];
                 }
-            }
-        ));
+            })
+);
     }
 
     /**

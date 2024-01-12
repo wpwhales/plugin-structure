@@ -300,7 +300,7 @@ class Sleep
             $this->pending = 0;
         }
 
-        return tap($this->pending, function () {
+        return \WPWCore\Support\tap($this->pending, function () {
             $this->pending = null;
         });
     }

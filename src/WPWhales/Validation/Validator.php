@@ -531,7 +531,7 @@ class Validator implements ValidatorContract
      */
     public function validate()
     {
-        throw_if($this->fails(), $this->exception, $this);
+        \WPWCore\Support\throw_if($this->fails(), $this->exception, $this);
 
         return $this->validated();
     }
@@ -577,7 +577,7 @@ class Validator implements ValidatorContract
      */
     public function validated()
     {
-        throw_if($this->invalid(), $this->exception, $this);
+        \WPWCore\Support\throw_if($this->invalid(), $this->exception, $this);
 
         $results = [];
 

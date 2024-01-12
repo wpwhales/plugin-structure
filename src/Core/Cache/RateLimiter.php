@@ -80,7 +80,7 @@ class RateLimiter
             $result = true;
         }
 
-        return tap($result, function () use ($key, $decaySeconds) {
+        return \WPWCore\Support\tap($result, function () use ($key, $decaySeconds) {
             $this->hit($key, $decaySeconds);
         });
     }

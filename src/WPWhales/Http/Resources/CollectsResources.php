@@ -51,7 +51,8 @@ trait CollectsResources
 
         if ($this->collects) {
             $collects = $this->collects;
-        } elseif (str_ends_with(class_basename($this), 'Collection') &&
+        } elseif (str_ends_with(\WPWCore\Support\class_basename($this)
+                , 'Collection') &&
             (class_exists($class = Str::replaceLast('Collection', '', get_class($this))) ||
              class_exists($class = Str::replaceLast('Collection', 'Resource', get_class($this))))) {
             $collects = $class;

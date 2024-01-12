@@ -117,7 +117,8 @@ class Stringable implements JsonSerializable, ArrayAccess
      */
     public function classBasename()
     {
-        return new static(class_basename($this->value));
+        return new static(\WPWCore\Support\class_basename($this->value)
+);
     }
 
     /**

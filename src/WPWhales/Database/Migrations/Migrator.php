@@ -243,7 +243,7 @@ class Migrator
             return [];
         }
 
-        return tap($this->rollbackMigrations($migrations, $paths, $options), function () {
+        return \WPWCore\Support\tap($this->rollbackMigrations($migrations, $paths, $options), function () {
             if ($this->output) {
                 $this->output->writeln('');
             }
@@ -332,7 +332,7 @@ class Migrator
             return [];
         }
 
-        return tap($this->resetMigrations($migrations, Arr::wrap($paths), $pretend), function () {
+        return \WPWCore\Support\tap($this->resetMigrations($migrations, Arr::wrap($paths), $pretend), function () {
             if ($this->output) {
                 $this->output->writeln('');
             }
@@ -630,7 +630,7 @@ class Migrator
 
         $this->setConnection($name);
 
-        return tap($callback(), function () use ($previousConnection) {
+        return \WPWCore\Support\tap($callback(), function () use ($previousConnection) {
             $this->setConnection($previousConnection);
         });
     }

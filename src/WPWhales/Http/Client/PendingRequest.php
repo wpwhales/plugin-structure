@@ -343,7 +343,7 @@ class PendingRequest
      */
     public function bodyFormat(string $format)
     {
-        return tap($this, function () use ($format) {
+        return \WPWCore\Support\tap($this, function () use ($format) {
             $this->bodyFormat = $format;
         });
     }
@@ -356,7 +356,7 @@ class PendingRequest
      */
     public function withQueryParameters(array $parameters)
     {
-        return tap($this, function () use ($parameters) {
+        return \WPWCore\Support\tap($this, function () use ($parameters) {
             $this->options = array_merge_recursive($this->options, [
                 'query' => $parameters,
             ]);
@@ -405,7 +405,7 @@ class PendingRequest
      */
     public function withHeaders(array $headers)
     {
-        return tap($this, function () use ($headers) {
+        return \WPWCore\Support\tap($this, function () use ($headers) {
             $this->options = array_merge_recursive($this->options, [
                 'headers' => $headers,
             ]);
@@ -446,7 +446,7 @@ class PendingRequest
      */
     public function withBasicAuth(string $username, string $password)
     {
-        return tap($this, function () use ($username, $password) {
+        return \WPWCore\Support\tap($this, function () use ($username, $password) {
             $this->options['auth'] = [$username, $password];
         });
     }
@@ -460,7 +460,7 @@ class PendingRequest
      */
     public function withDigestAuth($username, $password)
     {
-        return tap($this, function () use ($username, $password) {
+        return \WPWCore\Support\tap($this, function () use ($username, $password) {
             $this->options['auth'] = [$username, $password, 'digest'];
         });
     }
@@ -474,8 +474,8 @@ class PendingRequest
      */
     public function withToken($token, $type = 'Bearer')
     {
-        return tap($this, function () use ($token, $type) {
-            $this->options['headers']['Authorization'] = trim($type.' '.$token);
+        return \WPWCore\Support\tap($this, function () use ($token, $type) {
+            $this->options['headers']['Authorization'] = trim($type . ' ' . $token);
         });
     }
 
@@ -487,7 +487,7 @@ class PendingRequest
      */
     public function withUserAgent($userAgent)
     {
-        return tap($this, function () use ($userAgent) {
+        return \WPWCore\Support\tap($this, function () use ($userAgent) {
             $this->options['headers']['User-Agent'] = trim($userAgent);
         });
     }
@@ -500,7 +500,7 @@ class PendingRequest
      */
     public function withUrlParameters(array $parameters = [])
     {
-        return tap($this, function () use ($parameters) {
+        return \WPWCore\Support\tap($this, function () use ($parameters) {
             $this->urlParameters = $parameters;
         });
     }
@@ -514,7 +514,7 @@ class PendingRequest
      */
     public function withCookies(array $cookies, string $domain)
     {
-        return tap($this, function () use ($cookies, $domain) {
+        return \WPWCore\Support\tap($this, function () use ($cookies, $domain) {
             $this->options = array_merge_recursive($this->options, [
                 'cookies' => CookieJar::fromArray($cookies, $domain),
             ]);
@@ -529,7 +529,7 @@ class PendingRequest
      */
     public function maxRedirects(int $max)
     {
-        return tap($this, function () use ($max) {
+        return \WPWCore\Support\tap($this, function () use ($max) {
             $this->options['allow_redirects']['max'] = $max;
         });
     }
@@ -541,7 +541,7 @@ class PendingRequest
      */
     public function withoutRedirecting()
     {
-        return tap($this, function () {
+        return \WPWCore\Support\tap($this, function () {
             $this->options['allow_redirects'] = false;
         });
     }
@@ -553,7 +553,7 @@ class PendingRequest
      */
     public function withoutVerifying()
     {
-        return tap($this, function () {
+        return \WPWCore\Support\tap($this, function () {
             $this->options['verify'] = false;
         });
     }
@@ -566,7 +566,7 @@ class PendingRequest
      */
     public function sink($to)
     {
-        return tap($this, function () use ($to) {
+        return \WPWCore\Support\tap($this, function () use ($to) {
             $this->options['sink'] = $to;
         });
     }
@@ -579,7 +579,7 @@ class PendingRequest
      */
     public function timeout(int $seconds)
     {
-        return tap($this, function () use ($seconds) {
+        return \WPWCore\Support\tap($this, function () use ($seconds) {
             $this->options['timeout'] = $seconds;
         });
     }
@@ -592,7 +592,7 @@ class PendingRequest
      */
     public function connectTimeout(int $seconds)
     {
-        return tap($this, function () use ($seconds) {
+        return \WPWCore\Support\tap($this, function () use ($seconds) {
             $this->options['connect_timeout'] = $seconds;
         });
     }
@@ -624,7 +624,7 @@ class PendingRequest
      */
     public function withOptions(array $options)
     {
-        return tap($this, function () use ($options) {
+        return \WPWCore\Support\tap($this, function () use ($options) {
             $this->options = array_replace_recursive(
                 array_merge_recursive($this->options, Arr::only($options, $this->mergableOptions)),
                 $options
@@ -679,7 +679,7 @@ class PendingRequest
      */
     public function beforeSending($callback)
     {
-        return tap($this, function () use ($callback) {
+        return \WPWCore\Support\tap($this, function () use ($callback) {
             $this->beforeSendingCallbacks[] = $callback;
         });
     }
@@ -852,7 +852,8 @@ class PendingRequest
     {
         $results = [];
 
-        $requests = tap(new Pool($this->factory), $callback)->getRequests();
+        $requests = \WPWCore\Support\tap(new Pool($this->factory), $callback)
+            ->getRequests();
 
         foreach ($requests as $key => $item) {
             $results[$key] = $item instanceof static ? $item->getPromise()->wait() : $item->wait();
@@ -889,14 +890,14 @@ class PendingRequest
 
         $shouldRetry = null;
 
-        return retry($this->tries ?? 1, function ($attempt) use ($method, $url, $options, &$shouldRetry) {
+        return \WPWCore\Support\retry($this->tries ?? 1, function ($attempt) use ($method, $url, $options, &$shouldRetry) {
             try {
-                return tap($this->newResponse($this->sendRequest($method, $url, $options)), function ($response) use ($attempt, &$shouldRetry) {
+                return \WPWCore\Support\tap($this->newResponse($this->sendRequest($method, $url, $options)), function ($response) use ($attempt, &$shouldRetry) {
                     $this->populateResponse($response);
 
                     $this->dispatchResponseReceivedEvent($response);
 
-                    if (! $response->successful()) {
+                    if (!$response->successful()) {
                         try {
                             $shouldRetry = $this->retryWhenCallback ? call_user_func($this->retryWhenCallback, $response->toException(), $this) : true;
                         } catch (Exception $exception) {
@@ -907,7 +908,7 @@ class PendingRequest
 
                         if ($this->throwCallback &&
                             ($this->throwIfCallback === null ||
-                             call_user_func($this->throwIfCallback, $response))) {
+                                call_user_func($this->throwIfCallback, $response))) {
                             $response->throw($this->throwCallback);
                         }
 
@@ -1003,7 +1004,7 @@ class PendingRequest
     {
         return $this->promise = $this->sendRequest($method, $url, $options)
             ->then(function (MessageInterface $message) {
-                return tap($this->newResponse($message), function ($response) {
+                return \WPWCore\Support\tap($this->newResponse($message), function ($response) {
                     $this->populateResponse($response);
                     $this->dispatchResponseReceivedEvent($response);
                 });
@@ -1180,7 +1181,7 @@ class PendingRequest
      */
     public function pushHandlers($handlerStack)
     {
-        return tap($handlerStack, function ($stack) {
+        return \WPWCore\Support\tap($handlerStack, function ($stack) {
             $stack->push($this->buildBeforeSendingHandler());
 
             $this->middleware->each(function ($middleware) use ($stack) {
@@ -1296,7 +1297,7 @@ class PendingRequest
      */
     public function runBeforeSendingCallbacks($request, array $options)
     {
-        return tap($request, function (&$request) use ($options) {
+        return \WPWCore\Support\tap($request, function (&$request) use ($options) {
             $this->beforeSendingCallbacks->each(function ($callback) use (&$request, $options) {
                 $callbackResult = call_user_func(
                     $callback, (new Request($request))->withData($options['laravel_data']), $options, $this

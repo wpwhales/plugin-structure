@@ -16,10 +16,10 @@ class AddLinkHeadersForPreloadedAssets
      */
     public function handle($request, $next)
     {
-        return tap($next($request), function ($response) {
+        return \WPWCore\Support\tap($next($request), function ($response) {
             if (Vite::preloadedAssets() !== []) {
                 $response->header('Link', Collection::make(Vite::preloadedAssets())
-                    ->map(fn ($attributes, $url) => "<{$url}>; ".implode('; ', $attributes))
+                    ->map(fn($attributes, $url) => "<{$url}>; " . implode('; ', $attributes))
                     ->join(', '));
             }
         });

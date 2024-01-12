@@ -1207,7 +1207,7 @@ trait HasAttributes
      */
     protected function getArrayAttributeWithValue($path, $key, $value)
     {
-        return tap($this->getArrayAttributeByKey($key), function (&$array) use ($path, $value) {
+        return \WPWCore\Support\tap($this->getArrayAttributeByKey($key), function (&$array) use ($path, $value) {
             Arr::set($array, str_replace('->', '.', $path), $value);
         });
     }

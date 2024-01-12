@@ -62,7 +62,8 @@ class StatusCommand extends BaseCommand
 
             $migrations = $this->getStatusFor($ran, $batches)
                 ->when($this->option('pending'), fn ($collection) => $collection->filter(function ($migration) {
-                    return str($migration[1])->contains('Pending');
+                    return \WPWCore\Support\str($migration[1])
+                        ->contains('Pending');
                 }));
 
             if (count($migrations) > 0) {

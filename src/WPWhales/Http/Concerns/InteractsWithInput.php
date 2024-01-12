@@ -326,7 +326,7 @@ trait InteractsWithInput
      */
     public function string($key, $default = null)
     {
-        return str($this->input($key, $default));
+        return \WPWCore\Support\str($this->input($key, $default));
     }
 
     /**

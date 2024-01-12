@@ -95,7 +95,7 @@ class ShowCommand extends DatabaseInspectionCommand
     protected function collectViews(ConnectionInterface $connection, AbstractSchemaManager $schema)
     {
         return collect($schema->listViews())
-            ->reject(fn (View $view) => str($view->getName())
+            ->reject(fn (View $view) => \WPWCore\Support\str($view->getName())
                 ->startsWith(['pg_catalog', 'information_schema', 'spt_']))
             ->map(fn (View $view) => [
                 'view' => $view->getName(),

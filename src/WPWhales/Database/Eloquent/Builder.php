@@ -595,8 +595,8 @@ class Builder implements BuilderContract
      */
     public function updateOrCreate(array $attributes, array $values = [])
     {
-        return tap($this->firstOrCreate($attributes, $values), function ($instance) use ($values) {
-            if (! $instance->wasRecentlyCreated) {
+        return \WPWCore\Support\tap($this->firstOrCreate($attributes, $values), function ($instance) use ($values) {
+            if (!$instance->wasRecentlyCreated) {
                 $instance->fill($values)->save();
             }
         });
@@ -1019,7 +1019,7 @@ class Builder implements BuilderContract
      */
     public function create(array $attributes = [])
     {
-        return tap($this->newModelInstance($attributes), function ($instance) {
+        return \WPWCore\Support\tap($this->newModelInstance($attributes), function ($instance) {
             $instance->save();
         });
     }

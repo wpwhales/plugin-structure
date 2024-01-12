@@ -184,9 +184,10 @@ class Gate implements GateContract
             $response = $condition;
         }
 
-        return with($response instanceof Response ? $response : new Response(
-            (bool) $response === $allowWhenResponseIs, $message, $code
-        ))->authorize();
+        return \WPWCore\Support\with($response instanceof Response ? $response : new Response(
+            (bool)$response === $allowWhenResponseIs, $message, $code
+        ))
+            ->authorize();
     }
 
     /**
@@ -447,7 +448,7 @@ class Gate implements GateContract
         // After calling the authorization callback, we will call the "after" callbacks
         // that are registered with the Gate, which allows a developer to do logging
         // if that is required for this application. Then we'll return the result.
-        return tap($this->callAfterCallbacks(
+        return \WPWCore\Support\tap($this->callAfterCallbacks(
             $user, $ability, $arguments, $result
         ), function ($result) use ($user, $ability, $arguments) {
             $this->dispatchGateEvaluatedEvent($user, $ability, $arguments, $result);
@@ -698,10 +699,13 @@ class Gate implements GateContract
         return Arr::wrap(Collection::times(count($classDirnameSegments), function ($index) use ($class, $classDirnameSegments) {
             $classDirname = implode('\\', array_slice($classDirnameSegments, 0, $index));
 
-            return $classDirname.'\\Policies\\'.class_basename($class).'Policy';
+            return $classDirname . '\\Policies\\' . \WPWCore\Support\class_basename($class)
+.'Policy';
         })->reverse()->values()->first(function ($class) {
             return class_exists($class);
-        }) ?: [$classDirname.'\\Policies\\'.class_basename($class).'Policy']);
+        }) ?: [
+            $classDirname . '\\Policies\\' . \WPWCore\Support\class_basename($class)
+.'Policy']);
     }
 
     /**

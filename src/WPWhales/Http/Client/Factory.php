@@ -209,7 +209,7 @@ class Factory
      */
     public function fakeSequence($url = '*')
     {
-        return tap($this->sequence(), function ($sequence) use ($url) {
+        return \WPWCore\Support\tap($this->sequence(), function ($sequence) use ($url) {
             $this->fake([$url => $sequence]);
         });
     }
@@ -436,8 +436,9 @@ class Factory
             return $this->macroCall($method, $parameters);
         }
 
-        return tap($this->newPendingRequest(), function ($request) {
+        return \WPWCore\Support\tap($this->newPendingRequest(), function ($request) {
             $request->stub($this->stubCallbacks)->preventStrayRequests($this->preventStrayRequests);
-        })->{$method}(...$parameters);
+        })
+            ->{$method}(...$parameters);
     }
 }

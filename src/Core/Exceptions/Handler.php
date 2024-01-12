@@ -240,17 +240,21 @@ class Handler implements ExceptionHandler
     public function renderForConsole($output, Throwable $e)
     {
         if ($e instanceof CommandNotFoundException) {
-            $message = str($e->getMessage())->explode('.')->first();
+            $message = \WPWCore\Support\str($e->getMessage())
+                ->explode('.')->first();
 
             if (!empty($alternatives = $e->getAlternatives())) {
                 $message .= '. Did you mean one of these?';
 
-                with(new Error($output))->render($message);
-                with(new BulletList($output))->render($e->getAlternatives());
+                \WPWCore\Support\with(new Error($output))
+                    ->render($message);
+                \WPWCore\Support\with(new BulletList($output))
+                    ->render($e->getAlternatives());
 
                 $output->writeln('');
             } else {
-                with(new Error($output))->render($message);
+                \WPWCore\Support\with(new Error($output))
+                    ->render($message);
             }
 
             return;

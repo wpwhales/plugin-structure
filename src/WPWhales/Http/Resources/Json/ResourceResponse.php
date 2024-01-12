@@ -34,7 +34,7 @@ class ResourceResponse implements Responsable
      */
     public function toResponse($request)
     {
-        return tap(response()->json(
+        return \WPWCore\Support\tap(response()->json(
             $this->wrap(
                 $this->resource->resolve($request),
                 $this->resource->with($request),

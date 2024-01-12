@@ -280,7 +280,7 @@ class CacheManager implements FactoryContract
      */
     public function repository(Store $store)
     {
-        return tap(new Repository($store), function ($repository) {
+        return \WPWCore\Support\tap(new Repository($store), function ($repository) {
             $this->setEventDispatcher($repository);
         });
     }

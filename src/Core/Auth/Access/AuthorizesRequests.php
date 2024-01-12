@@ -86,7 +86,8 @@ trait AuthorizesRequests
 
         $parameter = is_array($parameter) ? implode(',', $parameter) : $parameter;
 
-        $parameter = $parameter ?: Str::snake(class_basename($model));
+        $parameter = $parameter ?: Str::snake(\WPWCore\Support\class_basename($model)
+);
 
         $middleware = [];
 

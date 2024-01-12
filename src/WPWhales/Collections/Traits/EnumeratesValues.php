@@ -813,7 +813,8 @@ trait EnumeratesValues
             if (! is_array($result)) {
                 throw new UnexpectedValueException(sprintf(
                     "%s::reduceSpread expects reducer to return an array, but got a '%s' instead.",
-                    class_basename(static::class), gettype($result)
+                    \WPWCore\Support\class_basename(static::class)
+                    , gettype($result)
                 ));
             }
         }
@@ -969,8 +970,9 @@ trait EnumeratesValues
     public function __toString()
     {
         return $this->escapeWhenCastingToString
-                    ? e($this->toJson())
-                    : $this->toJson();
+            ? \WPWCore\Support\e($this->toJson())
+
+            : $this->toJson();
     }
 
     /**

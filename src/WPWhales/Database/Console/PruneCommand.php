@@ -163,7 +163,8 @@ class PruneCommand extends Command
      */
     protected function isPrunable($model)
     {
-        $uses = class_uses_recursive($model);
+        $uses = \WPWCore\Support\class_uses_recursive($model)
+;
 
         return in_array(Prunable::class, $uses) || in_array(MassPrunable::class, $uses);
     }
@@ -179,7 +180,8 @@ class PruneCommand extends Command
         $instance = new $model;
 
         $count = $instance->prunable()
-            ->when(in_array(SoftDeletes::class, class_uses_recursive(get_class($instance))), function ($query) {
+            ->when(in_array(SoftDeletes::class, \WPWCore\Support\class_uses_recursive(get_class($instance))
+), function ($query) {
                 $query->withTrashed();
             })->count();
 
