@@ -3,14 +3,14 @@
 namespace WPWCore\Routing\Middleware;
 
 use Closure;
-use WPWhales\Cache\RateLimiter;
-use WPWhales\Cache\RateLimiting\Unlimited;
+use RuntimeException;
+use Symfony\Component\HttpFoundation\Response;
+use WPWCore\Cache\RateLimiter;
+use WPWCore\Cache\RateLimiting\Unlimited;
 use WPWhales\Http\Exceptions\HttpResponseException;
 use WPWhales\Http\Exceptions\ThrottleRequestsException;
 use WPWhales\Support\Arr;
 use WPWhales\Support\InteractsWithTime;
-use RuntimeException;
-use Symfony\Component\HttpFoundation\Response;
 use function WPWhales\Routing\Middleware\collect;
 use function WPWhales\Routing\Middleware\str_contains;
 
@@ -21,7 +21,7 @@ class ThrottleRequests
     /**
      * The rate limiter instance.
      *
-     * @var \WPWhales\Cache\RateLimiter
+     * @var \WPWCore\Cache\RateLimiter
      */
     protected $limiter;
 
@@ -35,7 +35,7 @@ class ThrottleRequests
     /**
      * Create a new request throttler.
      *
-     * @param  \WPWhales\Cache\RateLimiter  $limiter
+     * @param  \WPWCore\Cache\RateLimiter  $limiter
      * @return void
      */
     public function __construct(RateLimiter $limiter)

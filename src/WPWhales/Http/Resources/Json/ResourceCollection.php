@@ -3,11 +3,11 @@
 namespace WPWhales\Http\Resources\Json;
 
 use Countable;
+use IteratorAggregate;
+use WPWCore\Pagination\AbstractCursorPaginator;
+use WPWCore\Pagination\AbstractPaginator;
 use WPWhales\Http\Request;
 use WPWhales\Http\Resources\CollectsResources;
-use WPWhales\Pagination\AbstractCursorPaginator;
-use WPWhales\Pagination\AbstractPaginator;
-use IteratorAggregate;
 
 class ResourceCollection extends JsonResource implements Countable, IteratorAggregate
 {

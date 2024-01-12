@@ -11,10 +11,7 @@ use WPWCore\Http\Request;
 use WPWCore\Session\SessionManager;
 use WPWCore\Session\StartSession;
 use WPWhales\Database\Schema\Blueprint;
-use WPWhales\Support\Facades\Config;
-use WPWhales\Support\Facades\Date;
-use WPWhales\Support\Facades\DB;
-use WPWhales\Support\Facades\Schema;
+
 use Mockery as m;
 use WPWhales\Testing\TestResponse;
 
@@ -30,7 +27,7 @@ class DatabaseSessionTest extends \WP_UnitTestCase
         $this->app["session"];
 
 
-        $schema = DB::getSchemaBuilder();
+        $schema = $this->app["db"]->getSchemaBuilder();
         if(!$schema->hasTable(\WPWCore\config("session.table"))){
             $schema->create(\WPWCore\config("session.table"), function (Blueprint $table) {
                 $table->string('id')->primary();
@@ -69,7 +66,7 @@ class DatabaseSessionTest extends \WP_UnitTestCase
     public function test_session_is_saved_in_database(){
 
         $session = $this->app->make('session');
-        Config::set("session.driver","database");
+        $this->app["config"]->set("session.driver","database");
         $config = $this->app["config"];
 
         $session = $this->createSession();
@@ -85,7 +82,7 @@ class DatabaseSessionTest extends \WP_UnitTestCase
     public function test_session_is_saved_with_user_id_for_logged_in_user_in_database(){
 
         $session = $this->app->make('session');
-        Config::set("session.driver","database");
+        $this->app["config"]->set("session.driver","database");
         $config = $this->app["config"];
 
         $session = $this->createSession();

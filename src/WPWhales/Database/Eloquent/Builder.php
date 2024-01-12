@@ -5,6 +5,9 @@ namespace WPWhales\Database\Eloquent;
 use BadMethodCallException;
 use Closure;
 use Exception;
+use ReflectionClass;
+use ReflectionMethod;
+use WPWCore\Pagination\Paginator;
 use WPWhales\Contracts\Database\Eloquent\Builder as BuilderContract;
 use WPWhales\Contracts\Database\Query\Expression;
 use WPWhales\Contracts\Support\Arrayable;
@@ -15,12 +18,9 @@ use WPWhales\Database\Eloquent\Relations\Relation;
 use WPWhales\Database\Query\Builder as QueryBuilder;
 use WPWhales\Database\RecordsNotFoundException;
 use WPWhales\Database\UniqueConstraintViolationException;
-use WPWhales\Pagination\Paginator;
 use WPWhales\Support\Arr;
 use WPWhales\Support\Str;
 use WPWhales\Support\Traits\ForwardsCalls;
-use ReflectionClass;
-use ReflectionMethod;
 
 /**
  * @property-read HigherOrderBuilderProxy $orWhere
@@ -967,7 +967,7 @@ class Builder implements BuilderContract
      * @param  int|null  $perPage
      * @param  array|string  $columns
      * @param  string  $cursorName
-     * @param  \WPWhales\Pagination\Cursor|string|null  $cursor
+     * @param  \WPWCore\Pagination\Cursor|string|null  $cursor
      * @return \WPWhales\Contracts\Pagination\CursorPaginator
      */
     public function cursorPaginate($perPage = null, $columns = ['*'], $cursorName = 'cursor', $cursor = null)

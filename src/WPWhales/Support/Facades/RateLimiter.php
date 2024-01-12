@@ -3,7 +3,7 @@
 namespace WPWhales\Support\Facades;
 
 /**
- * @method static \WPWhales\Cache\RateLimiter for(string $name, \Closure $callback)
+ * @method static \WPWCore\Cache\RateLimiter for(string $name, \Closure $callback)
  * @method static \Closure|null limiter(string $name)
  * @method static mixed attempt(string $key, int $maxAttempts, \Closure $callback, int $decaySeconds = 60)
  * @method static bool tooManyAttempts(string $key, int $maxAttempts)
@@ -16,7 +16,7 @@ namespace WPWhales\Support\Facades;
  * @method static int availableIn(string $key)
  * @method static string cleanRateLimiterKey(string $key)
  *
- * @see \WPWhales\Cache\RateLimiter
+ * @see \WPWCore\Cache\RateLimiter
  */
 class RateLimiter extends Facade
 {
@@ -27,6 +27,6 @@ class RateLimiter extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return \WPWhales\Cache\RateLimiter::class;
+        return \WPWCore\Cache\RateLimiter::class;
     }
 }

@@ -2,11 +2,12 @@
 
 namespace WPWCore\Auth\Events;
 
-use WPWhales\Queue\SerializesModels;
+//TODO integrate it later after integrating Queue Job system with WP CRON
+//use WPWhales\Queue\SerializesModels;
 
 class Validated
 {
-    use SerializesModels;
+//    use SerializesModels;
 
     /**
      * The authentication guard name.

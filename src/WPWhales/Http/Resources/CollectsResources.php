@@ -2,14 +2,14 @@
 
 namespace WPWhales\Http\Resources;
 
-use WPWhales\Http\Resources\Json\JsonResource;
-use WPWhales\Pagination\AbstractCursorPaginator;
-use WPWhales\Pagination\AbstractPaginator;
-use WPWhales\Support\Collection;
-use WPWhales\Support\Str;
 use LogicException;
 use ReflectionClass;
 use Traversable;
+use WPWCore\Pagination\AbstractCursorPaginator;
+use WPWCore\Pagination\AbstractPaginator;
+use WPWhales\Http\Resources\Json\JsonResource;
+use WPWhales\Support\Collection;
+use WPWhales\Support\Str;
 
 trait CollectsResources
 {

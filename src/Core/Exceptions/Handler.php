@@ -134,7 +134,7 @@ class Handler implements ExceptionHandler
                 $viewBag = new ViewErrorBag();
                 $viewBag->put($e->errorBag,$e->validator->getMessageBag());
 
-                return \WPWCore\redirect()->to(URL::previous())
+                return \WPWCore\redirect()->to(\WPWCore\app("url")->previous())
                     ->withInput($request->input())
                     ->withErrors($viewBag->getBag($e->errorBag), $e->errorBag);
             }

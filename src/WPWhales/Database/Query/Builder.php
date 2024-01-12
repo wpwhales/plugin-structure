@@ -6,6 +6,10 @@ use BackedEnum;
 use Carbon\CarbonPeriod;
 use Closure;
 use DateTimeInterface;
+use InvalidArgumentException;
+use LogicException;
+use RuntimeException;
+use WPWCore\Pagination\Paginator;
 use WPWhales\Contracts\Database\Query\Builder as BuilderContract;
 use WPWhales\Contracts\Database\Query\ConditionExpression;
 use WPWhales\Contracts\Database\Query\Expression as ExpressionContract;
@@ -17,16 +21,12 @@ use WPWhales\Database\Eloquent\Builder as EloquentBuilder;
 use WPWhales\Database\Eloquent\Relations\Relation;
 use WPWhales\Database\Query\Grammars\Grammar;
 use WPWhales\Database\Query\Processors\Processor;
-use WPWhales\Pagination\Paginator;
 use WPWhales\Support\Arr;
 use WPWhales\Support\Collection;
 use WPWhales\Support\LazyCollection;
 use WPWhales\Support\Str;
 use WPWhales\Support\Traits\ForwardsCalls;
 use WPWhales\Support\Traits\Macroable;
-use InvalidArgumentException;
-use LogicException;
-use RuntimeException;
 
 class Builder implements BuilderContract
 {
@@ -2810,7 +2810,7 @@ class Builder implements BuilderContract
      * @param  int|null  $perPage
      * @param  array|string  $columns
      * @param  string  $cursorName
-     * @param  \WPWhales\Pagination\Cursor|string|null  $cursor
+     * @param  \WPWCore\Pagination\Cursor|string|null  $cursor
      * @return \WPWhales\Contracts\Pagination\CursorPaginator
      */
     public function cursorPaginate($perPage = 15, $columns = ['*'], $cursorName = 'cursor', $cursor = null)

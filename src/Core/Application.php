@@ -12,20 +12,22 @@ use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use WPWCore\Auth\AuthManager;
 use WPWCore\Auth\AuthServiceProvider;
+use WPWCore\Cache\CacheServiceProvider;
 use WPWCore\Console\ConsoleServiceProvider;
 use WPWCore\DashboardNotices\Notices;
 use WPWCore\Encryption\EncryptionServiceProvider;
 use WPWCore\Events\EventServiceProvider;
 use WPWCore\Filesystem\Filesystem;
 use WPWCore\Filesystem\FilesystemServiceProvider;
+use WPWCore\Hashing\HashServiceProvider;
 use WPWCore\Http\Request;
+use WPWCore\Pagination\PaginationServiceProvider;
 use WPWCore\Routing\BindingResolver;
 use WPWCore\Routing\Router;
 use WPWCore\Session\StartSession;
 use WPWCore\View\ViewServiceProvider;
 use WPWhales\Broadcasting\BroadcastServiceProvider;
 use WPWhales\Bus\BusServiceProvider;
-use WPWhales\Cache\CacheServiceProvider;
 use WPWhales\Config\Repository as ConfigRepository;
 use WPWhales\Container\Container;
 use WPWhales\Contracts\Auth\Access\Gate;
@@ -35,9 +37,7 @@ use WPWhales\Contracts\Bus\Dispatcher;
 use WPWhales\Contracts\Container\BindingResolutionException;
 use WPWhales\Database\DatabaseServiceProvider;
 use WPWhales\Database\MigrationServiceProvider;
-use WPWhales\Hashing\HashServiceProvider;
 use WPWhales\Log\LogManager;
-use WPWhales\Pagination\PaginationServiceProvider;
 use WPWhales\Queue\QueueServiceProvider;
 use WPWhales\Support\Composer;
 use WPWhales\Support\Facades\Facade;
@@ -149,7 +149,7 @@ class Application extends Container
         $this->bootstrapContainer();
         $this->bootstrapRouter();
         $this->loadBaseConfigs();
-        $this->withFacades();
+
 
 
         $this->sendQueuedCookiesOnTemplateRedirect();

@@ -7,7 +7,7 @@ interface CursorPaginator
     /**
      * Get the URL for a given cursor.
      *
-     * @param  \WPWhales\Pagination\Cursor|null  $cursor
+     * @param  \WPWCore\Pagination\Cursor|null  $cursor
      * @return string
      */
     public function url($cursor);
@@ -60,14 +60,14 @@ interface CursorPaginator
     /**
      * Get the "cursor" of the previous set of items.
      *
-     * @return \WPWhales\Pagination\Cursor|null
+     * @return \WPWCore\Pagination\Cursor|null
      */
     public function previousCursor();
 
     /**
      * Get the "cursor" of the next set of items.
      *
-     * @return \WPWhales\Pagination\Cursor|null
+     * @return \WPWCore\Pagination\Cursor|null
      */
     public function nextCursor();
 
@@ -81,7 +81,7 @@ interface CursorPaginator
     /**
      * Get the current cursor being paginated.
      *
-     * @return \WPWhales\Pagination\Cursor|null
+     * @return \WPWCore\Pagination\Cursor|null
      */
     public function cursor();
 

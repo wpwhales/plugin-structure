@@ -3,9 +3,9 @@
 namespace WPWCore\Console;
 
 use WPWCore\Auth\Console\ClearResetsCommand;
-use WPWhales\Cache\Console\CacheTableCommand;
-use WPWhales\Cache\Console\ClearCommand as CacheClearCommand;
-use WPWhales\Cache\Console\ForgetCommand as CacheForgetCommand;
+use WPWCore\Cache\Console\CacheTableCommand;
+use WPWCore\Cache\Console\ClearCommand as CacheClearCommand;
+use WPWCore\Cache\Console\ForgetCommand as CacheForgetCommand;
 use WPWhales\Console\Scheduling\ScheduleFinishCommand;
 use WPWhales\Console\Scheduling\ScheduleRunCommand;
 use WPWhales\Console\Scheduling\ScheduleWorkCommand;

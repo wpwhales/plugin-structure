@@ -2,21 +2,21 @@
 
 namespace WPWhales\Database\Concerns;
 
+use InvalidArgumentException;
+use RuntimeException;
+use WPWCore\Pagination\Cursor;
+use WPWCore\Pagination\CursorPaginator;
+use WPWCore\Pagination\LengthAwarePaginator;
+use WPWCore\Pagination\Paginator;
 use WPWhales\Container\Container;
 use WPWhales\Database\Eloquent\Builder;
 use WPWhales\Database\MultipleRecordsFoundException;
 use WPWhales\Database\Query\Expression;
 use WPWhales\Database\RecordsNotFoundException;
-use WPWhales\Pagination\Cursor;
-use WPWhales\Pagination\CursorPaginator;
-use WPWhales\Pagination\LengthAwarePaginator;
-use WPWhales\Pagination\Paginator;
 use WPWhales\Support\Collection;
 use WPWhales\Support\LazyCollection;
 use WPWhales\Support\Str;
 use WPWhales\Support\Traits\Conditionable;
-use InvalidArgumentException;
-use RuntimeException;
 
 trait BuildsQueries
 {
@@ -365,7 +365,7 @@ trait BuildsQueries
      * @param  int  $perPage
      * @param  array|string  $columns
      * @param  string  $cursorName
-     * @param  \WPWhales\Pagination\Cursor|string|null  $cursor
+     * @param  \WPWCore\Pagination\Cursor|string|null  $cursor
      * @return \WPWhales\Contracts\Pagination\CursorPaginator
      */
     protected function paginateUsingCursor($perPage, $columns = ['*'], $cursorName = 'cursor', $cursor = null)
@@ -487,7 +487,7 @@ trait BuildsQueries
      * @param  int  $perPage
      * @param  int  $currentPage
      * @param  array  $options
-     * @return \WPWhales\Pagination\LengthAwarePaginator
+     * @return \WPWCore\Pagination\LengthAwarePaginator
      */
     protected function paginator($items, $total, $perPage, $currentPage, $options)
     {
@@ -503,7 +503,7 @@ trait BuildsQueries
      * @param  int  $perPage
      * @param  int  $currentPage
      * @param  array  $options
-     * @return \WPWhales\Pagination\Paginator
+     * @return \WPWCore\Pagination\Paginator
      */
     protected function simplePaginator($items, $perPage, $currentPage, $options)
     {
@@ -517,9 +517,9 @@ trait BuildsQueries
      *
      * @param  \WPWhales\Support\Collection  $items
      * @param  int  $perPage
-     * @param  \WPWhales\Pagination\Cursor  $cursor
+     * @param  \WPWCore\Pagination\Cursor  $cursor
      * @param  array  $options
-     * @return \WPWhales\Pagination\CursorPaginator
+     * @return \WPWCore\Pagination\CursorPaginator
      */
     protected function cursorPaginator($items, $perPage, $cursor, $options)
     {
