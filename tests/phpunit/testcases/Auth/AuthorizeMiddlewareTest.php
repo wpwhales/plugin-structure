@@ -146,11 +146,11 @@ class AuthorizeMiddlewareTest extends \WP_UnitTestCase
         $response = $this->call("GET","dashboard");
     }
 
-    private function testSimpleAbilityWithOptionalParameter()
+    public  function testSimpleAbilityWithOptionalParameter()
     {
         $post = new stdClass;
 
-        $this->router->bind('post', function () use ($post) {
+        $this->app["bindingResolver"]->bind('post', function () use ($post) {
             return $post;
         });
 
@@ -158,47 +158,45 @@ class AuthorizeMiddlewareTest extends \WP_UnitTestCase
             return true;
         });
 
-        $middleware = [SubstituteBindings::class, Authorize::class . ':view-comments,post'];
+        $middleware = [ Authorize::class . ':view-comments,post'];
 
         $this->router->get('comments', [
-            'middleware' => $middleware,
-            'uses'       => function () {
+            'middleware' => $middleware,function () {
                 return 'success';
             },
         ]);
         $this->router->get('posts/{post}/comments', [
-            'middleware' => $middleware,
-            'uses'       => function () {
+            'middleware' => $middleware,function () {
                 return 'success';
             },
         ]);
 
-        $response = $this->router->dispatch(Request::create('posts/1/comments', 'GET'));
-        $this->assertSame('success', $response->content());
+        $response = $this->call("GET",'posts/1/comments');
+        $this->assertSame('success', $response->getContent());
 
-        $response = $this->router->dispatch(Request::create('comments', 'GET'));
-        $this->assertSame('success', $response->content());
+        $response = $this->call("GET",'comments');
+        $this->assertSame('success', $response->getContent());
+
     }
 
-    private function testSimpleAbilityWithStringParameterFromRouteParameter()
+    public function testSimpleAbilityWithStringParameterFromRouteParameter()
     {
         $this->gate()->define('view-dashboard', function ($user, $param) {
             return $param === 'true';
         });
 
         $this->router->get('dashboard/{route_parameter}', [
-            'middleware' => Authorize::class . ':view-dashboard,route_parameter',
-            'uses'       => function () {
+            'middleware' => [Authorize::class . ':view-dashboard,route_parameter'],function () {
                 return 'success';
             },
         ]);
 
-        $response = $this->router->dispatch(Request::create('dashboard/true', 'GET'));
 
-        $this->assertSame('success', $response->content());
+        $response = $this->call("GET",'dashboard/true');
+        $this->assertSame('success', $response->getContent());
     }
 
-    private function testSimpleAbilityWithStringParameter0FromRouteParameter()
+    public function testSimpleAbilityWithStringParameter0FromRouteParameter()
     {
         $this->gate()->define('view-dashboard', function ($user, $param) {
             return $param === '0';
@@ -206,20 +204,17 @@ class AuthorizeMiddlewareTest extends \WP_UnitTestCase
 
         $this->router->get('dashboard/{route_parameter}', [
             'middleware' => Authorize::class . ':view-dashboard,route_parameter',
-            'uses'       => function () {
+           function () {
                 return 'success';
             },
         ]);
 
-        $response = $this->router->dispatch(Request::create('dashboard/0', 'GET'));
-
-        $this->assertSame('success', $response->content());
+        $response = $this->call("GET",'dashboard/0');
+        $this->assertSame('success', $response->getContent());
     }
 
-    private function testModelTypeUnauthorized()
+    public function testModelTypeUnauthorized()
     {
-        $this->expectException(AuthorizationException::class);
-        $this->expectExceptionMessage('This action is unauthorized.');
 
         $this->gate()->define('create', function ($user, $model) {
             $this->assertSame('App\User', $model);
@@ -228,16 +223,19 @@ class AuthorizeMiddlewareTest extends \WP_UnitTestCase
         });
 
         $this->router->get('users/create', [
-            'middleware' => [SubstituteBindings::class, Authorize::class . ':create,App\User'],
+            'middleware' => [ Authorize::class . ':create,App\User'],
             'uses'       => function () {
                 return 'success';
             },
         ]);
 
-        $this->router->dispatch(Request::create('users/create', 'GET'));
+        $response = $this->call("GET",'users/create');
+        $exception = $response->exception->getPrevious();
+        $this->assertEquals($exception->getMessage(),"This action is unauthorized.");
+        $this->assertEquals($exception::class,AuthorizationException::class);
     }
 
-    private function testModelTypeAuthorized()
+    public function testModelTypeAuthorized()
     {
         $this->gate()->define('create', function ($user, $model) {
             $this->assertSame('App\User', $model);
@@ -246,25 +244,25 @@ class AuthorizeMiddlewareTest extends \WP_UnitTestCase
         });
 
         $this->router->get('users/create', [
-            'middleware' => Authorize::class . ':create,App\User',
-            'uses'       => function () {
+            'middleware' => [Authorize::class . ':create,App\User'],
+           function () {
                 return 'success';
             },
         ]);
 
-        $response = $this->router->dispatch(Request::create('users/create', 'GET'));
 
-        $this->assertSame('success', $response->content());
+        $response = $this->call("GET",'users/create');
+
+        $this->assertSame('success', $response->getContent());
     }
 
-    private function testModelUnauthorized()
+    public function testModelUnauthorized()
     {
-        $this->expectException(AuthorizationException::class);
-        $this->expectExceptionMessage('This action is unauthorized.');
+
 
         $post = new stdClass;
 
-        $this->router->bind('post', function () use ($post) {
+        $this->app["bindingResolver"]->bind('post', function () use ($post) {
             return $post;
         });
 
@@ -275,20 +273,24 @@ class AuthorizeMiddlewareTest extends \WP_UnitTestCase
         });
 
         $this->router->get('posts/{post}/edit', [
-            'middleware' => [SubstituteBindings::class, Authorize::class . ':edit,post'],
-            'uses'       => function () {
+            'middleware' => [Authorize::class . ':edit,post'],
+            function () {
                 return 'success';
             },
         ]);
 
-        $this->router->dispatch(Request::create('posts/1/edit', 'GET'));
+
+        $response = $this->call("GET",'posts/1/edit');
+        $exception = $response->exception->getPrevious();
+        $this->assertEquals($exception->getMessage(),"This action is unauthorized.");
+        $this->assertEquals($exception::class,AuthorizationException::class);
     }
 
-    private function testModelAuthorized()
+    public function testModelAuthorized()
     {
         $post = new stdClass;
 
-        $this->router->bind('post', function () use ($post) {
+        $this->app["bindingResolver"]->bind('post', function () use ($post) {
             return $post;
         });
 
@@ -299,18 +301,19 @@ class AuthorizeMiddlewareTest extends \WP_UnitTestCase
         });
 
         $this->router->get('posts/{post}/edit', [
-            'middleware' => [SubstituteBindings::class, Authorize::class . ':edit,post'],
-            'uses'       => function () {
+            'middleware' => [Authorize::class . ':edit,post'],
+            function () {
                 return 'success';
             },
         ]);
 
-        $response = $this->router->dispatch(Request::create('posts/1/edit', 'GET'));
 
-        $this->assertSame('success', $response->content());
+        $response = $this->call("GET",'posts/1/edit');
+
+        $this->assertSame('success', $response->getContent());
     }
 
-    private function testModelInstanceAsParameter()
+    public function testModelInstanceAsParameter()
     {
         $instance = m::mock(Model::class);
 
