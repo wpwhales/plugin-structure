@@ -117,7 +117,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
      *
      * @var string
      */
-    protected $echoFormat = 'e(%s)';
+    protected $echoFormat = '\WPWCore\Support\e(%s)';
 
     /**
      * Array of footer lines to be added to the template.

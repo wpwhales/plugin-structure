@@ -6,11 +6,12 @@ use WPWCore\Auth\AuthenticationException;
 use WPWCore\Auth\AuthManager;
 use WPWCore\Auth\EloquentUserProvider;
 use WPWCore\Auth\Middleware\Authenticate;
-use WPWCore\Auth\Middleware\AuthenticateWithBasicAuth;
-use WPWCore\Auth\RequestGuard;
+
+use WPWCore\Auth\WordpressGuard;
+use WPWCore\Models\User;
 use WPWhales\Config\Repository as Config;
 use WPWhales\Container\Container;
-use WPWhales\Http\Request;
+use WPWCore\Http\Request;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -39,27 +40,16 @@ class AuthenticateMiddlewareTest extends TestCase
 
     public function testItCanGenerateDefinitionViaStaticMethod()
     {
-        $signature = (string) Authenticate::using('foo');
+        $signature = (string)Authenticate::using('foo');
         $this->assertSame('WPWCore\Auth\Middleware\Authenticate:foo', $signature);
 
-        $signature = (string) Authenticate::using('foo', 'bar');
+        $signature = (string)Authenticate::using('foo', 'bar');
         $this->assertSame('WPWCore\Auth\Middleware\Authenticate:foo,bar', $signature);
 
-        $signature = (string) Authenticate::using('foo', 'bar', 'baz');
+        $signature = (string)Authenticate::using('foo', 'bar', 'baz');
         $this->assertSame('WPWCore\Auth\Middleware\Authenticate:foo,bar,baz', $signature);
     }
 
-    public function testItCanGenerateDefinitionViaStaticMethodForBasic()
-    {
-        $signature = (string) AuthenticateWithBasicAuth::using('guard');
-        $this->assertSame('WPWCore\Auth\Middleware\AuthenticateWithBasicAuth:guard', $signature);
-
-        $signature = (string) AuthenticateWithBasicAuth::using('guard', 'field');
-        $this->assertSame('WPWCore\Auth\Middleware\AuthenticateWithBasicAuth:guard,field', $signature);
-
-        $signature = (string) AuthenticateWithBasicAuth::using(field: 'field');
-        $this->assertSame('WPWCore\Auth\Middleware\AuthenticateWithBasicAuth:,field', $signature);
-    }
 
     public function testDefaultUnauthenticatedThrows()
     {
@@ -158,7 +148,7 @@ class AuthenticateMiddlewareTest extends TestCase
         return new Config([
             'auth' => [
                 'defaults' => ['guard' => 'default'],
-                'guards' => [
+                'guards'   => [
                     'default' => ['driver' => 'default'],
                     'secondary' => ['driver' => 'secondary'],
                 ],
@@ -169,8 +159,8 @@ class AuthenticateMiddlewareTest extends TestCase
     /**
      * Create and register a new auth driver with the auth manager.
      *
-     * @param  string  $name
-     * @param  bool  $authenticated
+     * @param string $name
+     * @param bool $authenticated
      * @return \WPWCore\Auth\RequestGuard
      */
     protected function registerAuthDriver($name, $authenticated)
@@ -187,20 +177,32 @@ class AuthenticateMiddlewareTest extends TestCase
     /**
      * Create a new auth driver.
      *
-     * @param  bool  $authenticated
+     * @param bool $authenticated
      * @return \WPWCore\Auth\RequestGuard
      */
     protected function createAuthDriver($authenticated)
     {
-        return new RequestGuard(function () use ($authenticated) {
-            return $authenticated ? new stdClass : null;
-        }, m::mock(Request::class), m::mock(EloquentUserProvider::class));
+
+        $driver = m::mock(WordpressGuard::class, [
+            m::mock(Request::class), m::mock(EloquentUserProvider::class)
+        ])->makePartial();
+
+        $driver->shouldAllowMockingProtectedMethods();
+        if ($authenticated) {
+            $user = new User();
+            $user->ID = 123;
+            $driver->setUser($user);
+            $driver->expects("isLoggedIn")->once()->andReturnTrue();
+
+        }
+
+        return $driver;
     }
 
     /**
      * Call the authenticate middleware with the given guards.
      *
-     * @param  string  ...$guards
+     * @param string ...$guards
      * @return void
      *
      * @throws \WPWCore\Auth\AuthenticationException

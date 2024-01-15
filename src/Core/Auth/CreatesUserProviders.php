@@ -3,6 +3,7 @@
 namespace WPWCore\Auth;
 
 use InvalidArgumentException;
+use Laravel\Lumen\Providers\Guards\AuthenticationGuard;
 
 trait CreatesUserProviders
 {
@@ -16,7 +17,7 @@ trait CreatesUserProviders
     /**
      * Create the user provider implementation for the driver.
      *
-     * @param  string|null  $provider
+     * @param string|null $provider
      * @return \WPWhales\Contracts\Auth\UserProvider|null
      *
      * @throws \InvalidArgumentException
@@ -45,20 +46,20 @@ trait CreatesUserProviders
     /**
      * Get the user provider configuration.
      *
-     * @param  string|null  $provider
+     * @param string|null $provider
      * @return array|null
      */
     protected function getProviderConfiguration($provider)
     {
         if ($provider = $provider ?: $this->getDefaultUserProvider()) {
-            return $this->app['config']['auth.providers.'.$provider];
+            return $this->app['config']['auth.providers.' . $provider];
         }
     }
 
     /**
      * Create an instance of the database user provider.
      *
-     * @param  array  $config
+     * @param array $config
      * @return \WPWCore\Auth\DatabaseUserProvider
      */
     protected function createDatabaseProvider($config)
@@ -71,12 +72,19 @@ trait CreatesUserProviders
     /**
      * Create an instance of the Eloquent user provider.
      *
-     * @param  array  $config
+     * @param array $config
      * @return \WPWCore\Auth\EloquentUserProvider
      */
     protected function createEloquentProvider($config)
     {
         return new EloquentUserProvider($this->app['hash'], $config['model']);
+    }
+
+    protected function createWordpressDriver($name, $config)
+    {
+
+        return new WordpressGuard($this->app->request, $this->app['auth']->createUserProvider($config["provider"]));
+
     }
 
     /**

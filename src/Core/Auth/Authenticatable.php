@@ -48,7 +48,7 @@ trait Authenticatable
      */
     public function getAuthPassword()
     {
-        return $this->password;
+        return $this->user_pass;
     }
 
     /**

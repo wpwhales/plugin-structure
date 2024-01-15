@@ -41,11 +41,17 @@ class LengthAwarePaginator extends AbstractPaginator implements Arrayable, Array
      */
     public function __construct($items, $total, $perPage, $currentPage = null, array $options = [])
     {
+        if($options["pageName"]==="page"){
+            $options["pageName"] = "wpw_page";
+        }
+
         $this->options = $options;
 
         foreach ($options as $key => $value) {
             $this->{$key} = $value;
         }
+
+
 
         $this->total = $total;
         $this->perPage = (int) $perPage;
@@ -119,11 +125,11 @@ class LengthAwarePaginator extends AbstractPaginator implements Arrayable, Array
                     });
             })->prepend([
             'url' => $this->previousPageUrl(),
-            'label' => function_exists('__') ? __('pagination.previous') : 'Previous',
+            'label' => function_exists('__') ? \__('pagination.previous') : 'Previous',
             'active' => false,
         ])->push([
             'url' => $this->nextPageUrl(),
-            'label' => function_exists('__') ? __('pagination.next') : 'Next',
+            'label' => function_exists('__') ? \__('pagination.next') : 'Next',
             'active' => false,
         ]);
     }

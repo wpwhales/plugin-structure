@@ -9,8 +9,6 @@ use WPWhales\Support\Arr;
 use WPWhales\Support\Collection;
 use WPWhales\Support\Traits\ForwardsCalls;
 use WPWhales\Support\Traits\Tappable;
-use function WPWhales\Pagination\collect;
-use function WPWhales\Pagination\str_contains;
 
 /**
  * @mixin \WPWhales\Support\Collection
@@ -66,7 +64,7 @@ abstract class AbstractPaginator implements Htmlable
      *
      * @var string
      */
-    protected $pageName = 'page';
+    protected $pageName = 'wpw_page';
 
     /**
      * The number of links to display on each side of current page link.
@@ -505,7 +503,7 @@ abstract class AbstractPaginator implements Htmlable
      * @param  int  $default
      * @return int
      */
-    public static function resolveCurrentPage($pageName = 'page', $default = 1)
+    public static function resolveCurrentPage($pageName = 'wpw_page', $default = 1)
     {
         if (isset(static::$currentPageResolver)) {
             return (int) call_user_func(static::$currentPageResolver, $pageName);

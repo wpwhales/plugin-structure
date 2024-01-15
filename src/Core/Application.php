@@ -65,6 +65,15 @@ class Application extends Container
      */
     protected $basePath;
 
+
+    /**
+     * The domain of the plugin (used for translations).
+     *
+     * @var string
+     */
+    protected $pluginDomain;
+
+
     /**
      * All of the loaded configuration files.
      *
@@ -151,7 +160,6 @@ class Application extends Container
         $this->loadBaseConfigs();
 
 
-
         $this->sendQueuedCookiesOnTemplateRedirect();
 
 
@@ -162,7 +170,6 @@ class Application extends Container
 
 
     }
-
 
 
     protected function loadDashboardNotices()
@@ -177,6 +184,20 @@ class Application extends Container
 
     }
 
+
+    public function getPluginDomain()
+    {
+
+        return $this->pluginDomain;
+    }
+
+    public function setPluginDomain($domain)
+    {
+
+        $this->pluginDomain = $domain;
+
+        return $this;
+    }
 
     protected function loadShutDownMethodWithWordpress()
     {
@@ -260,6 +281,7 @@ class Application extends Container
 
         $this->configure("app");
         $this->configure("view");
+
     }
 
     protected function createRoutesFromFile($path, $attributes = [], $routerInstance = null)
@@ -369,8 +391,7 @@ class Application extends Container
      */
     public function environment()
     {
-        $env = \WPWCore\Support\env('APP_ENV', config('app.env', 'production'))
-;
+        $env = \WPWCore\Support\env('APP_ENV', config('app.env', 'production'));
 
         if (func_num_args() > 0) {
             $patterns = is_array(func_get_arg(0)) ? func_get_arg(0) : func_get_args();
@@ -1153,7 +1174,7 @@ class Application extends Container
         $composer = json_decode(file_get_contents(base_path('composer.json')), true);
 
         foreach ((array)\WPWCore\Collections\data_get($composer, 'autoload.psr-4')
- as $namespace => $path) {
+                 as $namespace => $path) {
             foreach ((array)$path as $pathChoice) {
                 if (realpath(app()->path()) == realpath(base_path() . '/' . $pathChoice)) {
                     return $this->namespace = $namespace;
@@ -1341,44 +1362,48 @@ class Application extends Container
      * @var array
      */
     public $availableBindings = [
-
-        'cache'                                             => 'registerCacheBindings',
-        'cache.store'                                       => 'registerCacheBindings',
-        \WPWhales\Contracts\Cache\Factory::class            => 'registerCacheBindings',
-        \WPWhales\Contracts\Cache\Repository::class         => 'registerCacheBindings',
-        'composer'                                          => 'registerComposerBindings',
-        'config'                                            => 'registerConfigBindings',
-        'db'                                                => 'registerDatabaseBindings',
-        \WPWhales\Database\Eloquent\Factory::class          => 'registerDatabaseBindings',
-        'filesystem'                                        => 'registerFilesystemBindings',
-        'filesystem.cloud'                                  => 'registerFilesystemBindings',
-        'filesystem.disk'                                   => 'registerFilesystemBindings',
-        \WPWhales\Contracts\Filesystem\Cloud::class         => 'registerFilesystemBindings',
-        \WPWhales\Contracts\Filesystem\Filesystem::class    => 'registerFilesystemBindings',
-        \WPWhales\Contracts\Filesystem\Factory::class       => 'registerFilesystemBindings',
-        'encrypter'                                         => 'registerEncrypterBindings',
-        \WPWhales\Contracts\Encryption\Encrypter::class     => 'registerEncrypterBindings',
-        'events'                                            => 'registerEventBindings',
-        \WPWhales\Contracts\Events\Dispatcher::class        => 'registerEventBindings',
-        'files'                                             => 'registerFilesBindings',
-        'hash'                                              => 'registerHashBindings',
-        \WPWhales\Contracts\Hashing\Hasher::class           => 'registerHashBindings',
-        'log'                                               => 'registerLogBindings',
-        \Psr\Log\LoggerInterface::class                     => 'registerLogBindings',
-        'router'                                            => 'registerRouterBindings',
-        \Psr\Http\Message\ServerRequestInterface::class     => 'registerPsrRequestBindings',
-        \Psr\Http\Message\ResponseInterface::class          => 'registerPsrResponseBindings',
-        'translator'                                        => 'registerTranslationBindings',
-        'url'                                               => 'registerUrlGeneratorBindings',
-        'validator'                                         => 'registerValidatorBindings',
-        \WPWhales\Contracts\Validation\Factory::class       => 'registerValidatorBindings',
-        'view'                                              => 'registerViewBindings',
-        \WPWhales\Contracts\View\Factory::class             => 'registerViewBindings',
-        'session'                                           => 'registerSessionBindings',
-        'session.store'                                     => 'registerSessionBindings',
-        'WPWhales\Session\SessionManager'                   => 'registerSessionBindings',
-        'cookie'                                            => 'registerCookieBindings',
-        'WPWhales\Contracts\Cookie\Factory'                 => 'registerCookieBindings',
-        'WPWhales\Contracts\Cookie\QueueingFactory'         => 'registerCookieBindings',
+        'auth'                                           => 'registerAuthBindings',
+        'auth.driver'                                    => 'registerAuthBindings',
+        \Illuminate\Auth\AuthManager::class              => 'registerAuthBindings',
+        \Illuminate\Contracts\Auth\Guard::class          => 'registerAuthBindings',
+        \Illuminate\Contracts\Auth\Access\Gate::class    => 'registerAuthBindings',
+        'cache'                                          => 'registerCacheBindings',
+        'cache.store'                                    => 'registerCacheBindings',
+        \WPWhales\Contracts\Cache\Factory::class         => 'registerCacheBindings',
+        \WPWhales\Contracts\Cache\Repository::class      => 'registerCacheBindings',
+        'composer'                                       => 'registerComposerBindings',
+        'config'                                         => 'registerConfigBindings',
+        'db'                                             => 'registerDatabaseBindings',
+        \WPWhales\Database\Eloquent\Factory::class       => 'registerDatabaseBindings',
+        'filesystem'                                     => 'registerFilesystemBindings',
+        'filesystem.cloud'                               => 'registerFilesystemBindings',
+        'filesystem.disk'                                => 'registerFilesystemBindings',
+        \WPWhales\Contracts\Filesystem\Cloud::class      => 'registerFilesystemBindings',
+        \WPWhales\Contracts\Filesystem\Filesystem::class => 'registerFilesystemBindings',
+        \WPWhales\Contracts\Filesystem\Factory::class    => 'registerFilesystemBindings',
+        'encrypter'                                      => 'registerEncrypterBindings',
+        \WPWhales\Contracts\Encryption\Encrypter::class  => 'registerEncrypterBindings',
+        'events'                                         => 'registerEventBindings',
+        \WPWhales\Contracts\Events\Dispatcher::class     => 'registerEventBindings',
+        'files'                                          => 'registerFilesBindings',
+        'hash'                                           => 'registerHashBindings',
+        \WPWhales\Contracts\Hashing\Hasher::class        => 'registerHashBindings',
+        'log'                                            => 'registerLogBindings',
+        \Psr\Log\LoggerInterface::class                  => 'registerLogBindings',
+        'router'                                         => 'registerRouterBindings',
+        \Psr\Http\Message\ServerRequestInterface::class  => 'registerPsrRequestBindings',
+        \Psr\Http\Message\ResponseInterface::class       => 'registerPsrResponseBindings',
+        'translator'                                     => 'registerTranslationBindings',
+        'url'                                            => 'registerUrlGeneratorBindings',
+        'validator'                                      => 'registerValidatorBindings',
+        \WPWhales\Contracts\Validation\Factory::class    => 'registerValidatorBindings',
+        'view'                                           => 'registerViewBindings',
+        \WPWhales\Contracts\View\Factory::class          => 'registerViewBindings',
+        'session'                                        => 'registerSessionBindings',
+        'session.store'                                  => 'registerSessionBindings',
+        'WPWhales\Session\SessionManager'                => 'registerSessionBindings',
+        'cookie'                                         => 'registerCookieBindings',
+        'WPWhales\Contracts\Cookie\Factory'              => 'registerCookieBindings',
+        'WPWhales\Contracts\Cookie\QueueingFactory'      => 'registerCookieBindings',
     ];
 }
