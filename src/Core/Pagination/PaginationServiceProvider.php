@@ -25,6 +25,8 @@ class PaginationServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        LengthAwarePaginator::defaultView("pagination::default");
+
         PaginationState::resolveUsing($this->app);
 
         $app = $this->app;

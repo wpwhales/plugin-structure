@@ -31,6 +31,11 @@ class CursorPaginator extends AbstractCursorPaginator implements Arrayable, Arra
      */
     public function __construct($items, $perPage, $cursor = null, array $options = [])
     {
+
+        if(isset($options["pageName"]) && $options["pageName"]==="page"){
+            $options["pageName"] = "wpw_page";
+        }
+
         $this->options = $options;
 
         foreach ($options as $key => $value) {

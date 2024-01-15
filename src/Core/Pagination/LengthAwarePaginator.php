@@ -41,7 +41,7 @@ class LengthAwarePaginator extends AbstractPaginator implements Arrayable, Array
      */
     public function __construct($items, $total, $perPage, $currentPage = null, array $options = [])
     {
-        if($options["pageName"]==="page"){
+        if(isset($options["pageName"]) && $options["pageName"]==="page"){
             $options["pageName"] = "wpw_page";
         }
 

@@ -31,7 +31,7 @@ class Paginator extends AbstractPaginator implements Arrayable, ArrayAccess, Cou
      */
     public function __construct($items, $perPage, $currentPage = null, array $options = [])
     {
-        if($options["pageName"]==="page"){
+        if(isset($options["pageName"]) && $options["pageName"]==="page"){
             $options["pageName"] = "wpw_page";
         }
 

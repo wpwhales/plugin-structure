@@ -15,8 +15,7 @@ use WPWhales\Support\Collection;
 use WPWhales\Support\Str;
 use WPWhales\Support\Traits\ForwardsCalls;
 use WPWhales\Support\Traits\Tappable;
-use function WPWhales\Pagination\collect;
-use function WPWhales\Pagination\str_contains;
+
 
 /**
  * @mixin \WPWhales\Support\Collection
