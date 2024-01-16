@@ -2,7 +2,7 @@
 
 namespace WPWCore\Console;
 
-use WPWhales\Console\Application as Artisan;
+use WPWCore\Console\Application as Artisan;
 use WPWhales\Console\Events\CommandFinished;
 use WPWhales\Console\Events\CommandStarting;
 use WPWhales\Console\Scheduling\Schedule;
@@ -74,7 +74,7 @@ class Kernel implements KernelContract
         }
 
         $this->app->prepareForConsoleCommand($this->aliases);
-        $this->defineConsoleSchedule();
+//        $this->defineConsoleSchedule();
     }
 
     /**
@@ -277,7 +277,7 @@ class Kernel implements KernelContract
     protected function getCommands()
     {
         return array_merge($this->commands, [
-            ScheduleRunCommand::class,
+//            ScheduleRunCommand::class,
         ]);
     }
 

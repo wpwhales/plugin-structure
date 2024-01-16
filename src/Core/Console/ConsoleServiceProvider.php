@@ -6,9 +6,10 @@ use WPWCore\Auth\Console\ClearResetsCommand;
 use WPWCore\Cache\Console\CacheTableCommand;
 use WPWCore\Cache\Console\ClearCommand as CacheClearCommand;
 use WPWCore\Cache\Console\ForgetCommand as CacheForgetCommand;
-use WPWhales\Console\Scheduling\ScheduleFinishCommand;
-use WPWhales\Console\Scheduling\ScheduleRunCommand;
-use WPWhales\Console\Scheduling\ScheduleWorkCommand;
+use WPWCore\Console\Application as Artisan;
+use WPWCore\Console\Scheduling\ScheduleFinishCommand;
+use WPWCore\Console\Scheduling\ScheduleRunCommand;
+use WPWCore\Console\Scheduling\ScheduleWorkCommand;
 use WPWhales\Database\Console\DumpCommand;
 use WPWhales\Database\Console\Migrations\FreshCommand as MigrateFreshCommand;
 use WPWhales\Database\Console\Migrations\InstallCommand as MigrateInstallCommand;
@@ -94,6 +95,20 @@ class ConsoleServiceProvider extends ServiceProvider
         ));
     }
 
+    /**
+     * Register the package's custom Artisan commands.
+     *
+     * @param  array|mixed  $commands
+     * @return void
+     */
+    public function commands($commands)
+    {
+        $commands = is_array($commands) ? $commands : func_get_args();
+
+        Artisan::starting(function ($artisan) use ($commands) {
+            $artisan->resolveCommands($commands);
+        });
+    }
     /**
      * Register the given commands.
      *

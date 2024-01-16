@@ -9,11 +9,15 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\Output;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use WPWCore\Auth\AuthManager;
 use WPWCore\Auth\AuthServiceProvider;
 use WPWCore\Cache\CacheServiceProvider;
 use WPWCore\Console\ConsoleServiceProvider;
+use WPWCore\Console\Kernel;
 use WPWCore\DashboardNotices\Notices;
 use WPWCore\Encryption\EncryptionServiceProvider;
 use WPWCore\Events\EventServiceProvider;
@@ -36,7 +40,7 @@ use WPWhales\Contracts\Broadcasting\Factory;
 use WPWhales\Contracts\Bus\Dispatcher;
 use WPWhales\Contracts\Container\BindingResolutionException;
 use WPWhales\Database\DatabaseServiceProvider;
-use WPWhales\Database\MigrationServiceProvider;
+use WPWCore\Database\MigrationServiceProvider;
 use WPWhales\Log\LogManager;
 use WPWhales\Queue\QueueServiceProvider;
 use WPWhales\Support\Composer;
@@ -168,7 +172,29 @@ class Application extends Container
 
         $this->loadDashboardNotices();
 
+        $this->registerWPCliCommand();
 
+    }
+
+    protected function registerWPCliCommand()
+    {
+
+        if (class_exists('\WP_CLI')) {
+
+            \WP_CLI::add_command('wpwcore', function ($args, $assoc_args) {
+
+
+                //        $app->prepareForConsoleCommand();
+
+
+                $artisan = new Kernel($this);
+
+                $status = $artisan->handle((new \WPWCore\Console\ArgvInput()), new ConsoleOutput());
+                // Bind a command
+                \WP_CLI::halt($status);
+
+            });
+        }
     }
 
 
@@ -370,7 +396,7 @@ class Application extends Container
      */
     public function version()
     {
-        return 'Lumen (10.0.2) (Laravel Components ^10.0)';
+        return 'WPWhales Core 10.0';
     }
 
     /**
@@ -391,7 +417,8 @@ class Application extends Container
      */
     public function environment()
     {
-        $env = \WPWCore\Support\env('APP_ENV', config('app.env', 'production'));
+
+        $env = config('app.env', 'production');
 
         if (func_num_args() > 0) {
             $patterns = is_array(func_get_arg(0)) ? func_get_arg(0) : func_get_args();
@@ -1155,7 +1182,7 @@ class Application extends Container
         $this->configure('database');
 
         $this->register(MigrationServiceProvider::class);
-        $this->register(ConsoleServiceProvider::class);
+//        $this->register(ConsoleServiceProvider::class);
     }
 
     /**

@@ -211,5 +211,6 @@ use WPWhales\Support\Collection;
      */
     function value($value, ...$args)
     {
-        return $value instanceof Closure ? $value(...$args) : $value;
+
+        return $value instanceof \Closure ? $value(...$args) : $value;
     }

@@ -1,0 +1,17 @@
+<?php
+
+namespace {{ namespace }};
+
+use WPWCore\Database\Console\Seeds\WithoutModelEvents;
+use WPWhales\Database\Seeder;
+
+class {{ class }} extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        //
+    }
+}
