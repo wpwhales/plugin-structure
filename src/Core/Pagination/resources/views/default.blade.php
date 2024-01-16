@@ -1,3 +1,4 @@
+<?php if(!defined("ABSPATH")) die();?>
 @if ($paginator->hasPages())
     <nav>
         <ul class="pagination">

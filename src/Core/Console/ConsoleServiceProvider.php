@@ -25,6 +25,7 @@ use WPWCore\Database\Console\WipeCommand;
 use WPWCore\Session\Console\SessionTableCommand;
 use WPWCore\View\Console\ViewCacheCommand;
 use WPWCore\View\Console\ViewClearCommand;
+use WPWCore\View\Console\ViewSecureCommand;
 use WPWhales\Queue\Console\BatchesTableCommand;
 use WPWhales\Queue\Console\ClearCommand as ClearQueueCommand;
 use WPWhales\Queue\Console\FailedTableCommand;
@@ -48,6 +49,7 @@ class ConsoleServiceProvider extends ServiceProvider
     protected $commands = [
         'ViewClear'  => 'command.view.clear',
         'ViewCache' => 'command.view.cache',
+        'ViewSecure' => 'command.view.secure',
         'Seed'        => 'command.seed'
     ];
 
@@ -141,6 +143,18 @@ class ConsoleServiceProvider extends ServiceProvider
     {
         $this->app->singleton('command.view.clear', function ($app) {
             return new ViewClearCommand( $app['files']);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerViewSecureCommand()
+    {
+        $this->app->singleton('command.view.secure', function ($app) {
+            return new ViewSecureCommand();
         });
     }
 

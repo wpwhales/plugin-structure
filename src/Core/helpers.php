@@ -73,6 +73,15 @@ function base_path($path = '')
     return app()->basePath().($path ? '/'.$path : $path);
 }
 
+
+
+function check_content_for_ABSPATH_constant($contents){
+
+    $pattern = '/^\s*<\?php\s+if\s*\(\s*!\s*defined\(\'ABSPATH\'\)\s*\)\s*die\(\)\s*;\s*\?>|^\s*<\?php\s+if\s*\(\s*!\s*defined\("ABSPATH"\)\s*\)\s*die\(\)\s*;\s*\?>/m';
+
+    return preg_match($pattern, $contents, $matches, PREG_OFFSET_CAPTURE, 0);
+
+}
 /**
  * Report an exception.
  *
