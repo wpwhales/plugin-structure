@@ -4,12 +4,12 @@ namespace WPWCore\Database\Console;
 
 use WPWCore\Console\Command;
 use WPWhales\Contracts\Events\Dispatcher;
-use WPWhales\Database\Eloquent\MassPrunable;
-use WPWhales\Database\Eloquent\Prunable;
-use WPWhales\Database\Eloquent\SoftDeletes;
-use WPWhales\Database\Events\ModelPruningFinished;
-use WPWhales\Database\Events\ModelPruningStarting;
-use WPWhales\Database\Events\ModelsPruned;
+use WPWCore\Database\Eloquent\MassPrunable;
+use WPWCore\Database\Eloquent\Prunable;
+use WPWCore\Database\Eloquent\SoftDeletes;
+use WPWCore\Database\Events\ModelPruningFinished;
+use WPWCore\Database\Events\ModelPruningStarting;
+use WPWCore\Database\Events\ModelsPruned;
 use WPWhales\Support\Str;
 use InvalidArgumentException;
 use Symfony\Component\Finder\Finder;

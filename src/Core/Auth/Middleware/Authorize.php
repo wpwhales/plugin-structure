@@ -4,7 +4,7 @@ namespace WPWCore\Auth\Middleware;
 
 use Closure;
 use WPWhales\Contracts\Auth\Access\Gate;
-use WPWhales\Database\Eloquent\Model;
+use WPWCore\Database\Eloquent\Model;
 
 class Authorize
 {
@@ -62,7 +62,7 @@ class Authorize
      *
      * @param  \WPWhales\Http\Request  $request
      * @param  array|null  $models
-     * @return \WPWhales\Database\Eloquent\Model|array|string
+     * @return \WPWCore\Database\Eloquent\Model|array|string
      */
     protected function getGateArguments($request, $models)
     {
@@ -81,7 +81,7 @@ class Authorize
      *
      * @param  \WPWhales\Http\Request  $request
      * @param  string  $model
-     * @return \WPWhales\Database\Eloquent\Model|string
+     * @return \WPWCore\Database\Eloquent\Model|string
      */
     protected function getModel($request, $model)
     {

@@ -5,10 +5,10 @@ namespace WPWCore\Database\Console\Migrations;
 use WPWCore\Console\ConfirmableTrait;
 use WPWhales\Contracts\Console\Isolatable;
 use WPWhales\Contracts\Events\Dispatcher;
-use WPWhales\Database\Events\SchemaLoaded;
-use WPWhales\Database\Migrations\Migrator;
-use WPWhales\Database\SQLiteDatabaseDoesNotExistException;
-use WPWhales\Database\SqlServerConnection;
+use WPWCore\Database\Events\SchemaLoaded;
+use WPWCore\Database\Migrations\Migrator;
+use WPWCore\Database\SQLiteDatabaseDoesNotExistException;
+use WPWCore\Database\SqlServerConnection;
 use PDOException;
 use Throwable;
 
@@ -42,7 +42,7 @@ class MigrateCommand extends BaseCommand implements Isolatable
     /**
      * The migrator instance.
      *
-     * @var \WPWhales\Database\Migrations\Migrator
+     * @var \WPWCore\Database\Migrations\Migrator
      */
     protected $migrator;
 
@@ -56,7 +56,7 @@ class MigrateCommand extends BaseCommand implements Isolatable
     /**
      * Create a new migration command instance.
      *
-     * @param  \WPWhales\Database\Migrations\Migrator  $migrator
+     * @param  \WPWCore\Database\Migrations\Migrator  $migrator
      * @param  \WPWhales\Contracts\Events\Dispatcher  $dispatcher
      * @return void
      */
@@ -265,7 +265,7 @@ class MigrateCommand extends BaseCommand implements Isolatable
     /**
      * Get the path to the stored schema for the given connection.
      *
-     * @param  \WPWhales\Database\Connection  $connection
+     * @param  \WPWCore\Database\Connection  $connection
      * @return string
      */
     protected function schemaPath($connection)
@@ -274,10 +274,11 @@ class MigrateCommand extends BaseCommand implements Isolatable
             return $this->option('schema-path');
         }
 
-        if (file_exists($path = database_path('schema/'.$connection->getName().'-schema.dump'))) {
+        if (file_exists($path = \WPWCore\database_path('schema/' . $connection->getName() . '-schema.dump')
+)) {
             return $path;
         }
 
-        return database_path('schema/'.$connection->getName().'-schema.sql');
+        return \WPWCore\database_path('schema/' . $connection->getName() . '-schema.sql');
     }
 }

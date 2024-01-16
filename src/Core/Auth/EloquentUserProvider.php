@@ -28,7 +28,7 @@ class EloquentUserProvider implements UserProvider
     /**
      * The callback that may modify the user retrieval queries.
      *
-     * @var (\Closure(\WPWhales\Database\Eloquent\Builder):mixed)|null
+     * @var (\Closure(\WPWCore\Database\Eloquent\Builder):mixed)|null
      */
     protected $queryCallback;
 
@@ -159,8 +159,8 @@ class EloquentUserProvider implements UserProvider
     /**
      * Get a new query builder for the model instance.
      *
-     * @param  \WPWhales\Database\Eloquent\Model|null  $model
-     * @return \WPWhales\Database\Eloquent\Builder
+     * @param  \WPWCore\Database\Eloquent\Model|null  $model
+     * @return \WPWCore\Database\Eloquent\Builder
      */
     protected function newModelQuery($model = null)
     {
@@ -176,7 +176,7 @@ class EloquentUserProvider implements UserProvider
     /**
      * Create a new instance of the model.
      *
-     * @return \WPWhales\Database\Eloquent\Model
+     * @return \WPWCore\Database\Eloquent\Model
      */
     public function createModel()
     {
@@ -244,7 +244,7 @@ class EloquentUserProvider implements UserProvider
     /**
      * Sets the callback to modify the query before retrieving users.
      *
-     * @param  (\Closure(\WPWhales\Database\Eloquent\Builder):mixed)|null  $queryCallback
+     * @param  (\Closure(\WPWCore\Database\Eloquent\Builder):mixed)|null  $queryCallback
      * @return $this
      */
     public function withQuery($queryCallback = null)

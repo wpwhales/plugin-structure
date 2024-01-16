@@ -6,7 +6,7 @@ use WPWCore\Auth\Authenticatable;
 use WPWCore\Auth\Authorizable;
 use WPWhales\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use WPWhales\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use WPWhales\Database\Eloquent\Model;
+use WPWCore\Database\Eloquent\Model;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {

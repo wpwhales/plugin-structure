@@ -16,7 +16,7 @@ use WPWCore\Console\View\Components\BulletList;
 use WPWCore\Console\View\Components\Error;
 use WPWhales\Contracts\Debug\ExceptionHandler;
 use WPWhales\Contracts\Support\Responsable;
-use WPWhales\Database\Eloquent\ModelNotFoundException;
+use WPWCore\Database\Eloquent\ModelNotFoundException;
 use WPWhales\Http\Exceptions\HttpResponseException;
 use WPWhales\Http\JsonResponse;
 use WPWhales\Http\Response;

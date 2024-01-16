@@ -3,7 +3,7 @@
 namespace WPWCore\Cache\Console;
 
 use Symfony\Component\Console\Attribute\AsCommand;
-use WPWhales\Console\MigrationGeneratorCommand;
+use WPWCore\Console\MigrationGeneratorCommand;
 
 #[AsCommand(name: 'cache:table')]
 class CacheTableCommand extends MigrationGeneratorCommand

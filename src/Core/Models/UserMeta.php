@@ -3,7 +3,7 @@
 namespace WPWCore\Models;
 
 
-use WPWhales\Database\Eloquent\Model as Eloquent;
+use WPWCore\Database\Eloquent\Model as Eloquent;
 
 class UserMeta extends Eloquent
 {

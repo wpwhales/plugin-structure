@@ -4,12 +4,12 @@ namespace WPWCore\Database\Console;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use WPWCore\Console\Command;
-use WPWhales\Database\ConnectionInterface;
-use WPWhales\Database\MySqlConnection;
-use WPWhales\Database\PostgresConnection;
-use WPWhales\Database\QueryException;
-use WPWhales\Database\SQLiteConnection;
-use WPWhales\Database\SqlServerConnection;
+use WPWCore\Database\ConnectionInterface;
+use WPWCore\Database\MySqlConnection;
+use WPWCore\Database\PostgresConnection;
+use WPWCore\Database\QueryException;
+use WPWCore\Database\SQLiteConnection;
+use WPWCore\Database\SqlServerConnection;
 use WPWhales\Support\Arr;
 use WPWhales\Support\Composer;
 use Symfony\Component\Process\Exception\ProcessSignaledException;
@@ -99,7 +99,7 @@ abstract class DatabaseInspectionCommand extends Command
     /**
      * Get the size of a table in bytes.
      *
-     * @param  \WPWhales\Database\ConnectionInterface  $connection
+     * @param  \WPWCore\Database\ConnectionInterface  $connection
      * @param  string  $table
      * @return int|null
      */
@@ -116,7 +116,7 @@ abstract class DatabaseInspectionCommand extends Command
     /**
      * Get the size of a MySQL table in bytes.
      *
-     * @param  \WPWhales\Database\ConnectionInterface  $connection
+     * @param  \WPWCore\Database\ConnectionInterface  $connection
      * @param  string  $table
      * @return mixed
      */
@@ -133,7 +133,7 @@ abstract class DatabaseInspectionCommand extends Command
     /**
      * Get the size of a Postgres table in bytes.
      *
-     * @param  \WPWhales\Database\ConnectionInterface  $connection
+     * @param  \WPWCore\Database\ConnectionInterface  $connection
      * @param  string  $table
      * @return mixed
      */
@@ -149,7 +149,7 @@ abstract class DatabaseInspectionCommand extends Command
     /**
      * Get the size of a SQLite table in bytes.
      *
-     * @param  \WPWhales\Database\ConnectionInterface  $connection
+     * @param  \WPWCore\Database\ConnectionInterface  $connection
      * @param  string  $table
      * @return mixed
      */
@@ -169,7 +169,7 @@ abstract class DatabaseInspectionCommand extends Command
     /**
      * Get the number of open connections for a database.
      *
-     * @param  \WPWhales\Database\ConnectionInterface  $connection
+     * @param  \WPWCore\Database\ConnectionInterface  $connection
      * @return int|null
      */
     protected function getConnectionCount(ConnectionInterface $connection)
@@ -196,9 +196,9 @@ abstract class DatabaseInspectionCommand extends Command
      */
     protected function getConfigFromDatabase($database)
     {
-        $database ??= config('database.default');
+        $database ??= \WPWCore\config('database.default');
 
-        return Arr::except(config('database.connections.'.$database), ['password']);
+        return Arr::except(\WPWCore\config('database.connections.'.$database), ['password']);
     }
 
     /**

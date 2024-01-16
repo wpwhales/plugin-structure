@@ -1,6 +1,6 @@
 <?php
 
-namespace WPWhales\Filesystem;
+namespace WPWCore\Filesystem;
 
 function join_paths($basePath, ...$paths)
 {

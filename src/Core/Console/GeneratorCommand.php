@@ -125,7 +125,7 @@ abstract class GeneratorCommand extends Command implements PromptsForMissingInpu
     {
         parent::__construct();
 
-        if (in_array(CreatesMatchingTest::class, class_uses_recursive($this))) {
+        if (in_array(CreatesMatchingTest::class, \WPWCore\Support\class_uses_recursive($this))) {
             $this->addTestOptions();
         }
 
@@ -181,7 +181,7 @@ abstract class GeneratorCommand extends Command implements PromptsForMissingInpu
 
         $info = $this->type;
 
-        if (in_array(CreatesMatchingTest::class, class_uses_recursive($this))) {
+        if (in_array(CreatesMatchingTest::class, \WPWCore\Support\class_uses_recursive($this))) {
             if ($this->handleTestCreation($path)) {
                 $info .= ' and test';
             }

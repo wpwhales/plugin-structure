@@ -3,21 +3,25 @@
 namespace WPWCore\Database;
 
 
+use WPWCore\Database\Console\MonitorCommand;
+use WPWCore\Database\Console\ShowCommand;
+use WPWCore\Database\Console\ShowModelCommand;
+use WPWCore\Database\Console\TableCommand;
 use WPWhales\Contracts\Events\Dispatcher;
 use WPWhales\Contracts\Support\DeferrableProvider;
-use WPWhales\Database\Console\Migrations\FreshCommand;
-use WPWhales\Database\Console\Migrations\InstallCommand;
+use WPWCore\Database\Console\Migrations\FreshCommand;
+use WPWCore\Database\Console\Migrations\InstallCommand;
 use WPWCore\Database\Console\Migrations\MigrateCommand;
 use WPWCore\Database\Console\Migrations\MigrateMakeCommand;
-use WPWhales\Database\Console\Migrations\RefreshCommand;
-use WPWhales\Database\Console\Migrations\ResetCommand;
-use WPWhales\Database\Console\Migrations\RollbackCommand;
-use WPWhales\Database\Console\Migrations\StatusCommand;
-use WPWhales\Database\Migrations\DatabaseMigrationRepository;
-use WPWhales\Database\Migrations\MigrationCreator;
-use WPWhales\Database\Migrations\Migrator;
+use WPWCore\Database\Console\Migrations\RefreshCommand;
+use WPWCore\Database\Console\Migrations\ResetCommand;
+use WPWCore\Database\Console\Migrations\RollbackCommand;
+use WPWCore\Database\Console\Migrations\StatusCommand;
+use WPWCore\Database\Migrations\DatabaseMigrationRepository;
+use WPWCore\Database\Migrations\MigrationCreator;
+use WPWCore\Database\Migrations\Migrator;
 use WPWhales\Support\ServiceProvider;
-use WPWhales\Database\MigrationServiceProvider as BaseServiceProvider;
+use WPWCore\Database\MigrationServiceProvider as BaseServiceProvider;
 
 use WPWCore\Console\Application as Artisan;
 
@@ -32,13 +36,20 @@ class MigrationServiceProvider extends ServiceProvider implements DeferrableProv
     protected $commands = [
         'Migrate' => MigrateCommand::class,
 //        'MigrateFresh' => FreshCommand::class,
-//        'MigrateInstall' => InstallCommand::class,
+        'MigrateInstall' => InstallCommand::class,
 //        'MigrateRefresh' => RefreshCommand::class,
 //        'MigrateReset' => ResetCommand::class,
 //        'MigrateRollback' => RollbackCommand::class,
-//        'MigrateStatus' => StatusCommand::class,
+        'MigrateStatus' => StatusCommand::class,
         'MigrateMake' => MigrateMakeCommand::class,
+        'ShowCommand'=>ShowCommand::class,
+        'MonitorCommand'=>MonitorCommand::class,
+        'ShowModelCommand'=>ShowModelCommand::class,
+        'TableCommand'=>TableCommand::class,
+
     ];
+
+
 
     /**
      * Register the service provider.
@@ -113,6 +124,56 @@ class MigrationServiceProvider extends ServiceProvider implements DeferrableProv
 
         $this->commands(array_values($commands));
     }
+
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerShowCommandCommand()
+    {
+        $this->app->singleton(ShowCommand::class, function ($app) {
+            return new ShowCommand($app['composer']);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerShowModelCommandCommand()
+    {
+        $this->app->singleton(ShowModelCommand::class, function ($app) {
+            return new ShowModelCommand($app['composer']);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerTableCommandCommand()
+    {
+        $this->app->singleton(TableCommand::class, function ($app) {
+            return new TableCommand($app['composer']);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerMonitorCommandCommand()
+    {
+        $this->app->singleton(MonitorCommand::class, function ($app) {
+            return new MonitorCommand($app['db'],$app["events"],$app["composer"]);
+        });
+    }
+
 
     /**
      * Register the command.

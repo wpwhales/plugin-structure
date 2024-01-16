@@ -5,8 +5,8 @@ namespace WPWCore\Database\Console;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\View;
-use WPWhales\Database\ConnectionInterface;
-use WPWhales\Database\ConnectionResolverInterface;
+use WPWCore\Database\ConnectionInterface;
+use WPWCore\Database\ConnectionResolverInterface;
 use WPWhales\Support\Arr;
 use Symfony\Component\Console\Attribute\AsCommand;
 
@@ -33,7 +33,7 @@ class ShowCommand extends DatabaseInspectionCommand
     /**
      * Execute the console command.
      *
-     * @param  \WPWhales\Database\ConnectionResolverInterface  $connections
+     * @param  \WPWCore\Database\ConnectionResolverInterface  $connections
      * @return int
      */
     public function handle(ConnectionResolverInterface $connections)
@@ -70,7 +70,7 @@ class ShowCommand extends DatabaseInspectionCommand
     /**
      * Get information regarding the tables within the database.
      *
-     * @param  \WPWhales\Database\ConnectionInterface  $connection
+     * @param  \WPWCore\Database\ConnectionInterface  $connection
      * @param  \Doctrine\DBAL\Schema\AbstractSchemaManager  $schema
      * @return \WPWhales\Support\Collection
      */
@@ -81,7 +81,7 @@ class ShowCommand extends DatabaseInspectionCommand
                 'table'   => $table->getName(),
                 'size'    => $this->getTableSize($connection, $table->getName()),
                 'rows'    => $this->option('counts') ? $connection->table($table->getName())->count() : null,
-                'engine'  => rescue(fn() => $table->getOption('engine'), null, false),
+                'engine'  => \WPWCore\rescue(fn() => $table->getOption('engine'), null, false),
                 'comment' => $table->getComment(),
             ]);
     }
@@ -89,7 +89,7 @@ class ShowCommand extends DatabaseInspectionCommand
     /**
      * Get information regarding the views within the database.
      *
-     * @param  \WPWhales\Database\ConnectionInterface  $connection
+     * @param  \WPWCore\Database\ConnectionInterface  $connection
      * @param  \Doctrine\DBAL\Schema\AbstractSchemaManager  $schema
      * @return \WPWhales\Support\Collection
      */

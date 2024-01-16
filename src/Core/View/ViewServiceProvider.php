@@ -18,6 +18,7 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function register()
     {
+
         $this->registerFactory();
         $this->registerViewFinder();
         $this->registerBladeCompiler();
@@ -26,6 +27,7 @@ class ViewServiceProvider extends ServiceProvider
         $this->app->terminating(static function () {
             Component::flushCache();
         });
+
     }
 
     /**
@@ -115,6 +117,7 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function registerEngineResolver()
     {
+
         $this->app->singleton('view.engine.resolver', function () {
             $resolver = new EngineResolver;
 

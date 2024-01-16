@@ -6,9 +6,9 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use WPWCore\Filesystem\Filesystem;
 use WPWCore\Console\Command;
 use WPWhales\Contracts\Events\Dispatcher;
-use WPWhales\Database\Connection;
-use WPWhales\Database\ConnectionResolverInterface;
-use WPWhales\Database\Events\SchemaDumped;
+use WPWCore\Database\Connection;
+use WPWCore\Database\ConnectionResolverInterface;
+use WPWCore\Database\Events\SchemaDumped;
 use WPWhales\Support\Facades\Config;
 
 #[AsCommand(name: 'schema:dump')]
@@ -34,7 +34,7 @@ class DumpCommand extends Command
     /**
      * Execute the console command.
      *
-     * @param  \WPWhales\Database\ConnectionResolverInterface  $connections
+     * @param  \WPWCore\Database\ConnectionResolverInterface  $connections
      * @param  \WPWhales\Contracts\Events\Dispatcher  $dispatcher
      * @return void
      */
@@ -52,7 +52,8 @@ class DumpCommand extends Command
 
         if ($this->option('prune')) {
             (new Filesystem)->deleteDirectory(
-                database_path('migrations'), $preserve = false
+                \WPWCore\database_path('migrations')
+                , $preserve = false
             );
 
             $info .= ' and pruned';
@@ -64,7 +65,7 @@ class DumpCommand extends Command
     /**
      * Create a schema state instance for the given connection.
      *
-     * @param  \WPWhales\Database\Connection  $connection
+     * @param  \WPWCore\Database\Connection  $connection
      * @return mixed
      */
     protected function schemaState(Connection $connection)
@@ -79,11 +80,12 @@ class DumpCommand extends Command
     /**
      * Get the path that the dump should be written to.
      *
-     * @param  \WPWhales\Database\Connection  $connection
+     * @param  \WPWCore\Database\Connection  $connection
      */
     protected function path(Connection $connection)
     {
-        return \WPWCore\Support\tap($this->option('path') ?: database_path('schema/' . $connection->getName() . '-schema.sql'), function ($path) {
+        return \WPWCore\Support\tap($this->option('path') ?: \WPWCore\database_path('schema/' . $connection->getName() . '-schema.sql')
+, function ($path) {
             (new Filesystem)->ensureDirectoryExists(dirname($path));
         });
     }

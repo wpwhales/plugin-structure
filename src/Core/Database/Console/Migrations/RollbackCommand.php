@@ -3,7 +3,7 @@
 namespace WPWCore\Database\Console\Migrations;
 
 use WPWCore\Console\ConfirmableTrait;
-use WPWhales\Database\Migrations\Migrator;
+use WPWCore\Database\Migrations\Migrator;
 use Symfony\Component\Console\Input\InputOption;
 
 class RollbackCommand extends BaseCommand
@@ -27,14 +27,14 @@ class RollbackCommand extends BaseCommand
     /**
      * The migrator instance.
      *
-     * @var \WPWhales\Database\Migrations\Migrator
+     * @var \WPWCore\Database\Migrations\Migrator
      */
     protected $migrator;
 
     /**
      * Create a new migration rollback command instance.
      *
-     * @param  \WPWhales\Database\Migrations\Migrator  $migrator
+     * @param  \WPWCore\Database\Migrations\Migrator  $migrator
      * @return void
      */
     public function __construct(Migrator $migrator)

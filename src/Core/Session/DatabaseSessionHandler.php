@@ -4,8 +4,8 @@ namespace WPWCore\Session;
 
 use WPWhales\Contracts\Auth\Guard;
 use WPWhales\Contracts\Container\Container;
-use WPWhales\Database\ConnectionInterface;
-use WPWhales\Database\QueryException;
+use WPWCore\Database\ConnectionInterface;
+use WPWCore\Database\QueryException;
 use WPWhales\Support\Arr;
 use WPWhales\Support\Carbon;
 use WPWhales\Support\InteractsWithTime;
@@ -18,7 +18,7 @@ class DatabaseSessionHandler implements ExistenceAwareInterface, SessionHandlerI
     /**
      * The database connection instance.
      *
-     * @var \WPWhales\Database\ConnectionInterface
+     * @var \WPWCore\Database\ConnectionInterface
      */
     protected $connection;
 
@@ -53,7 +53,7 @@ class DatabaseSessionHandler implements ExistenceAwareInterface, SessionHandlerI
     /**
      * Create a new database session handler instance.
      *
-     * @param  \WPWhales\Database\ConnectionInterface  $connection
+     * @param  \WPWCore\Database\ConnectionInterface  $connection
      * @param  string  $table
      * @param  int  $minutes
      * @param  \WPWhales\Contracts\Container\Container|null  $container
@@ -285,7 +285,7 @@ class DatabaseSessionHandler implements ExistenceAwareInterface, SessionHandlerI
     /**
      * Get a fresh query builder instance for the table.
      *
-     * @return \WPWhales\Database\Query\Builder
+     * @return \WPWCore\Database\Query\Builder
      */
     protected function getQuery()
     {

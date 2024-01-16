@@ -10,7 +10,7 @@ use WPWCore\Cookie\CookieJar;
 use WPWCore\Http\Request;
 use WPWCore\Session\SessionManager;
 use WPWCore\Session\StartSession;
-use WPWhales\Database\Schema\Blueprint;
+use WPWCore\Database\Schema\Blueprint;
 
 use Mockery as m;
 use WPWhales\Testing\TestResponse;

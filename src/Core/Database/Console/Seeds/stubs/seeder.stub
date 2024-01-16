@@ -3,7 +3,7 @@
 namespace {{ namespace }};
 
 use WPWCore\Database\Console\Seeds\WithoutModelEvents;
-use WPWhales\Database\Seeder;
+use WPWCore\Database\Seeder;
 
 class {{ class }} extends Seeder
 {

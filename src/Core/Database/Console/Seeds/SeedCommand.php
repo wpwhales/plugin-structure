@@ -4,8 +4,8 @@ namespace WPWCore\Database\Console\Seeds;
 
 use WPWCore\Console\Command;
 use WPWCore\Console\ConfirmableTrait;
-use WPWhales\Database\ConnectionResolverInterface as Resolver;
-use WPWhales\Database\Eloquent\Model;
+use WPWCore\Database\ConnectionResolverInterface as Resolver;
+use WPWCore\Database\Eloquent\Model;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -32,14 +32,14 @@ class SeedCommand extends Command
     /**
      * The connection resolver instance.
      *
-     * @var \WPWhales\Database\ConnectionResolverInterface
+     * @var \WPWCore\Database\ConnectionResolverInterface
      */
     protected $resolver;
 
     /**
      * Create a new database seed command instance.
      *
-     * @param  \WPWhales\Database\ConnectionResolverInterface  $resolver
+     * @param  \WPWCore\Database\ConnectionResolverInterface  $resolver
      * @return void
      */
     public function __construct(Resolver $resolver)
@@ -80,7 +80,7 @@ class SeedCommand extends Command
     /**
      * Get a seeder instance from the container.
      *
-     * @return \WPWhales\Database\Seeder
+     * @return \WPWCore\Database\Seeder
      */
     protected function getSeeder()
     {

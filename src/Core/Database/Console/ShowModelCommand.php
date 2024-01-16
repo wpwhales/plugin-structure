@@ -7,8 +7,8 @@ use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Types\DecimalType;
 use WPWhales\Contracts\Container\BindingResolutionException;
-use WPWhales\Database\Eloquent\Model;
-use WPWhales\Database\Eloquent\Relations\Relation;
+use WPWCore\Database\Eloquent\Model;
+use WPWCore\Database\Eloquent\Relations\Relation;
 use WPWhales\Support\Facades\Gate;
 use WPWhales\Support\Str;
 use ReflectionClass;
@@ -76,6 +76,8 @@ class ShowModelCommand extends DatabaseInspectionCommand
 
         $class = $this->qualifyModel($this->argument('model'));
 
+
+
         try {
             $model = $this->laravel->make($class);
 
@@ -102,11 +104,12 @@ class ShowModelCommand extends DatabaseInspectionCommand
     /**
      * Get the first policy associated with this model.
      *
-     * @param  \WPWhales\Database\Eloquent\Model  $model
+     * @param  \WPWCore\Database\Eloquent\Model  $model
      * @return string
      */
     protected function getPolicy($model)
     {
+
         $policy = Gate::getPolicyFor($model::class);
 
         return $policy ? $policy::class : null;
@@ -115,7 +118,7 @@ class ShowModelCommand extends DatabaseInspectionCommand
     /**
      * Get the column attributes for the given model.
      *
-     * @param  \WPWhales\Database\Eloquent\Model  $model
+     * @param  \WPWCore\Database\Eloquent\Model  $model
      * @return \WPWhales\Support\Collection
      */
     protected function getAttributes($model)
@@ -147,7 +150,7 @@ class ShowModelCommand extends DatabaseInspectionCommand
     /**
      * Get the virtual (non-column) attributes for the given model.
      *
-     * @param  \WPWhales\Database\Eloquent\Model  $model
+     * @param  \WPWCore\Database\Eloquent\Model  $model
      * @param  \Doctrine\DBAL\Schema\Column[]  $columns
      * @return \WPWhales\Support\Collection
      */
@@ -190,7 +193,7 @@ class ShowModelCommand extends DatabaseInspectionCommand
     /**
      * Get the relations from the given model.
      *
-     * @param  \WPWhales\Database\Eloquent\Model  $model
+     * @param  \WPWCore\Database\Eloquent\Model  $model
      * @return \WPWhales\Support\Collection
      */
     protected function getRelations($model)
@@ -234,7 +237,7 @@ class ShowModelCommand extends DatabaseInspectionCommand
     /**
      * Get the Observers watching this model.
      *
-     * @param  \WPWhales\Database\Eloquent\Model  $model
+     * @param  \WPWCore\Database\Eloquent\Model  $model
      * @return \WPWhales\Support\Collection
      */
     protected function getObservers($model)
@@ -400,7 +403,7 @@ class ShowModelCommand extends DatabaseInspectionCommand
      * Get the cast type for the given column.
      *
      * @param  string  $column
-     * @param  \WPWhales\Database\Eloquent\Model  $model
+     * @param  \WPWCore\Database\Eloquent\Model  $model
      * @return string|null
      */
     protected function getCastType($column, $model)
@@ -419,7 +422,7 @@ class ShowModelCommand extends DatabaseInspectionCommand
     /**
      * Get the model casts, including any date casts.
      *
-     * @param  \WPWhales\Database\Eloquent\Model  $model
+     * @param  \WPWCore\Database\Eloquent\Model  $model
      * @return \WPWhales\Support\Collection
      */
     protected function getCastsWithDates($model)
@@ -459,7 +462,7 @@ class ShowModelCommand extends DatabaseInspectionCommand
      * Get the default value for the given column.
      *
      * @param  \Doctrine\DBAL\Schema\Column  $column
-     * @param  \WPWhales\Database\Eloquent\Model  $model
+     * @param  \WPWCore\Database\Eloquent\Model  $model
      * @return mixed|null
      */
     protected function getColumnDefault($column, $model)
@@ -477,7 +480,7 @@ class ShowModelCommand extends DatabaseInspectionCommand
      * Determine if the given attribute is hidden.
      *
      * @param  string  $attribute
-     * @param  \WPWhales\Database\Eloquent\Model  $model
+     * @param  \WPWCore\Database\Eloquent\Model  $model
      * @return bool
      */
     protected function attributeIsHidden($attribute, $model)
@@ -531,7 +534,7 @@ class ShowModelCommand extends DatabaseInspectionCommand
             return $model;
         }
 
-        return is_dir(app_path('Models'))
+        return is_dir(\WPWCore\app_path('Models'))
             ? $rootNamespace.'Models\\'.$model
             : $rootNamespace.$model;
     }

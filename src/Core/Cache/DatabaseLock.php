@@ -2,8 +2,8 @@
 
 namespace WPWCore\Cache;
 
-use WPWhales\Database\Connection;
-use WPWhales\Database\QueryException;
+use WPWCore\Database\Connection;
+use WPWCore\Database\QueryException;
 use function \WPWCore\Support\optional()
 ;
 
@@ -12,7 +12,7 @@ class DatabaseLock extends Lock
     /**
      * The database connection instance.
      *
-     * @var \WPWhales\Database\Connection
+     * @var \WPWCore\Database\Connection
      */
     protected $connection;
 
@@ -40,7 +40,7 @@ class DatabaseLock extends Lock
     /**
      * Create a new lock instance.
      *
-     * @param  \WPWhales\Database\Connection  $connection
+     * @param  \WPWCore\Database\Connection  $connection
      * @param  string  $table
      * @param  string  $name
      * @param  int  $seconds

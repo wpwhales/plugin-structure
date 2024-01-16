@@ -2,7 +2,7 @@
 
 namespace WPWCore\Database\Console\Migrations;
 
-use WPWhales\Database\Migrations\Migrator;
+use WPWCore\Database\Migrations\Migrator;
 use WPWhales\Support\Collection;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -25,14 +25,14 @@ class StatusCommand extends BaseCommand
     /**
      * The migrator instance.
      *
-     * @var \WPWhales\Database\Migrations\Migrator
+     * @var \WPWCore\Database\Migrations\Migrator
      */
     protected $migrator;
 
     /**
      * Create a new migration rollback command instance.
      *
-     * @param  \WPWhales\Database\Migrations\Migrator  $migrator
+     * @param  \WPWCore\Database\Migrations\Migrator  $migrator
      * @return void
      */
     public function __construct(Migrator $migrator)

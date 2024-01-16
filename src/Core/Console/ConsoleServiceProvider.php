@@ -10,18 +10,21 @@ use WPWCore\Console\Application as Artisan;
 use WPWCore\Console\Scheduling\ScheduleFinishCommand;
 use WPWCore\Console\Scheduling\ScheduleRunCommand;
 use WPWCore\Console\Scheduling\ScheduleWorkCommand;
-use WPWhales\Database\Console\DumpCommand;
-use WPWhales\Database\Console\Migrations\FreshCommand as MigrateFreshCommand;
-use WPWhales\Database\Console\Migrations\InstallCommand as MigrateInstallCommand;
-use WPWhales\Database\Console\Migrations\MigrateCommand;
-use WPWhales\Database\Console\Migrations\MigrateMakeCommand;
-use WPWhales\Database\Console\Migrations\RefreshCommand as MigrateRefreshCommand;
-use WPWhales\Database\Console\Migrations\ResetCommand as MigrateResetCommand;
-use WPWhales\Database\Console\Migrations\RollbackCommand as MigrateRollbackCommand;
-use WPWhales\Database\Console\Migrations\StatusCommand as MigrateStatusCommand;
-use WPWhales\Database\Console\Seeds\SeedCommand;
-use WPWhales\Database\Console\Seeds\SeederMakeCommand;
-use WPWhales\Database\Console\WipeCommand;
+use WPWCore\Database\Console\DumpCommand;
+use WPWCore\Database\Console\Migrations\FreshCommand as MigrateFreshCommand;
+use WPWCore\Database\Console\Migrations\InstallCommand as MigrateInstallCommand;
+use WPWCore\Database\Console\Migrations\MigrateCommand;
+use WPWCore\Database\Console\Migrations\MigrateMakeCommand;
+use WPWCore\Database\Console\Migrations\RefreshCommand as MigrateRefreshCommand;
+use WPWCore\Database\Console\Migrations\ResetCommand as MigrateResetCommand;
+use WPWCore\Database\Console\Migrations\RollbackCommand as MigrateRollbackCommand;
+use WPWCore\Database\Console\Migrations\StatusCommand as MigrateStatusCommand;
+use WPWCore\Database\Console\Seeds\SeedCommand;
+use WPWCore\Database\Console\Seeds\SeederMakeCommand;
+use WPWCore\Database\Console\WipeCommand;
+use WPWCore\Session\Console\SessionTableCommand;
+use WPWCore\View\Console\ViewCacheCommand;
+use WPWCore\View\Console\ViewClearCommand;
 use WPWhales\Queue\Console\BatchesTableCommand;
 use WPWhales\Queue\Console\ClearCommand as ClearQueueCommand;
 use WPWhales\Queue\Console\FailedTableCommand;
@@ -43,30 +46,9 @@ class ConsoleServiceProvider extends ServiceProvider
      * @var array
      */
     protected $commands = [
-        'CacheClear' => 'command.cache.clear',
-        'CacheForget' => 'command.cache.forget',
-        'ClearResets' => 'command.auth.resets.clear',
-        'Migrate' => 'command.migrate',
-        'MigrateInstall' => 'command.migrate.install',
-        'MigrateFresh' => 'command.migrate.fresh',
-        'MigrateRefresh' => 'command.migrate.refresh',
-        'MigrateReset' => 'command.migrate.reset',
-        'MigrateRollback' => 'command.migrate.rollback',
-        'MigrateStatus' => 'command.migrate.status',
-        'QueueClear' => 'command.queue.clear',
-        'QueueFailed' => 'command.queue.failed',
-        'QueueFlush' => 'command.queue.flush',
-        'QueueForget' => 'command.queue.forget',
-        'QueueListen' => 'command.queue.listen',
-        'QueueRestart' => 'command.queue.restart',
-        'QueueRetry' => 'command.queue.retry',
-        'QueueWork' => 'command.queue.work',
-        'Seed' => 'command.seed',
-        'Wipe' => 'command.wipe',
-        'ScheduleFinish' => 'command.schedule.finish',
-        'ScheduleRun' => 'command.schedule.run',
-        'ScheduleWork' => 'command.schedule.work',
-        'SchemaDump' => 'command.schema.dump',
+        'ViewClear'  => 'command.view.clear',
+        'ViewCache' => 'command.view.cache',
+        'Seed'        => 'command.seed'
     ];
 
     /**
@@ -75,12 +57,9 @@ class ConsoleServiceProvider extends ServiceProvider
      * @var array
      */
     protected $devCommands = [
-        'CacheTable' => 'command.cache.table',
-        'MigrateMake' => 'command.migrate.make',
-        'QueueFailedTable' => 'command.queue.failed-table',
-        'QueueBatchesTable' => 'command.queue.batches-table',
-        'QueueTable' => 'command.queue.table',
-        'SeederMake' => 'command.seeder.make',
+        'CacheTable'   => 'command.cache.table',
+        'SeederMake'   => 'command.seeder.make',
+        'SessionTable' => 'command.session.table'
     ];
 
     /**
@@ -98,7 +77,7 @@ class ConsoleServiceProvider extends ServiceProvider
     /**
      * Register the package's custom Artisan commands.
      *
-     * @param  array|mixed  $commands
+     * @param array|mixed $commands
      * @return void
      */
     public function commands($commands)
@@ -109,10 +88,11 @@ class ConsoleServiceProvider extends ServiceProvider
             $artisan->resolveCommands($commands);
         });
     }
+
     /**
      * Register the given commands.
      *
-     * @param  array  $commands
+     * @param array $commands
      * @return void
      */
     protected function registerCommands(array $commands)
@@ -129,10 +109,26 @@ class ConsoleServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerCacheClearCommand()
+    protected function registerSeedCommand()
     {
-        $this->app->singleton('command.cache.clear', function ($app) {
-            return new CacheClearCommand($app['cache'], $app['files']);
+        $this->app->singleton('command.seed', function ($app) {
+            return new SeedCommand($app['db']);
+        });
+    }
+
+
+
+
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerSessionTableCommand()
+    {
+        $this->app->singleton('command.session.table', function ($app) {
+            return new SessionTableCommand($app['files'],$app["composer"]);
         });
     }
 
@@ -141,10 +137,22 @@ class ConsoleServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerCacheForgetCommand()
+    protected function registerViewClearCommand()
     {
-        $this->app->singleton('command.cache.forget', function ($app) {
-            return new CacheForgetCommand($app['cache']);
+        $this->app->singleton('command.view.clear', function ($app) {
+            return new ViewClearCommand( $app['files']);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerViewCacheCommand()
+    {
+        $this->app->singleton('command.view.cache', function ($app) {
+            return new ViewCacheCommand($app['cache']);
         });
     }
 
@@ -419,17 +427,6 @@ class ConsoleServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Register the command.
-     *
-     * @return void
-     */
-    protected function registerSeedCommand()
-    {
-        $this->app->singleton('command.seed', function ($app) {
-            return new SeedCommand($app['db']);
-        });
-    }
 
     /**
      * Register the command.

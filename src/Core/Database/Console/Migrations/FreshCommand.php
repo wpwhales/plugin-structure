@@ -5,7 +5,7 @@ namespace WPWCore\Database\Console\Migrations;
 use WPWCore\Console\Command;
 use WPWCore\Console\ConfirmableTrait;
 use WPWhales\Contracts\Events\Dispatcher;
-use WPWhales\Database\Events\DatabaseRefreshed;
+use WPWCore\Database\Events\DatabaseRefreshed;
 use Symfony\Component\Console\Input\InputOption;
 
 class FreshCommand extends Command

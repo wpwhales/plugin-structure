@@ -2,7 +2,7 @@
 
 namespace Tests\Pagination;
 
-use WPWhales\Database\Eloquent\Collection;
+use WPWCore\Database\Eloquent\Collection;
 use WPWCore\Pagination\AbstractCursorPaginator;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;

@@ -8,7 +8,7 @@ use WPWCore\Auth\Middleware\Authorize;
 use WPWhales\Container\Container;
 use WPWhales\Contracts\Auth\Access\Gate as GateContract;
 use WPWhales\Contracts\Routing\Registrar;
-use WPWhales\Database\Eloquent\Model;
+use WPWCore\Database\Eloquent\Model;
 use WPWhales\Events\Dispatcher;
 use WPWhales\Http\Request;
 use WPWhales\Routing\CallableDispatcher;

@@ -3,8 +3,8 @@
 namespace WPWCore\Database\Console;
 
 use WPWhales\Contracts\Events\Dispatcher;
-use WPWhales\Database\ConnectionResolverInterface;
-use WPWhales\Database\Events\DatabaseBusy;
+use WPWCore\Database\ConnectionResolverInterface;
+use WPWCore\Database\Events\DatabaseBusy;
 use WPWhales\Support\Composer;
 use Symfony\Component\Console\Attribute\AsCommand;
 
@@ -30,7 +30,7 @@ class MonitorCommand extends DatabaseInspectionCommand
     /**
      * The connection resolver instance.
      *
-     * @var \WPWhales\Database\ConnectionResolverInterface
+     * @var \WPWCore\Database\ConnectionResolverInterface
      */
     protected $connection;
 
@@ -44,7 +44,7 @@ class MonitorCommand extends DatabaseInspectionCommand
     /**
      * Create a new command instance.
      *
-     * @param  \WPWhales\Database\ConnectionResolverInterface  $connection
+     * @param  \WPWCore\Database\ConnectionResolverInterface  $connection
      * @param  \WPWhales\Contracts\Events\Dispatcher  $events
      * @param  \WPWhales\Support\Composer  $composer
      */

@@ -6,7 +6,7 @@ use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\ForeignKeyConstraint;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\Table;
-use WPWhales\Database\ConnectionResolverInterface;
+use WPWCore\Database\ConnectionResolverInterface;
 use WPWhales\Support\Str;
 use Symfony\Component\Console\Attribute\AsCommand;
 
@@ -127,6 +127,7 @@ class TableCommand extends DatabaseInspectionCommand
             ->map(fn(Index $index) => [
                 'name'       => $index->getName(),
                 'columns'    => \WPWCore\Collections\collect($index->getColumns())
+
                 ,
                 'attributes' => $this->getAttributesForIndex($index),
             ]);
@@ -161,10 +162,12 @@ class TableCommand extends DatabaseInspectionCommand
                 'name'            => $foreignKey->getName(),
                 'local_table'     => $table->getName(),
                 'local_columns'   => \WPWCore\Collections\collect($foreignKey->getLocalColumns())
+
                 ,
                 'foreign_table'   => $foreignKey->getForeignTableName(),
                 'foreign_columns' => \WPWCore\Collections\collect($foreignKey->getForeignColumns())
-,
+
+                ,
                 'on_update'       => Str::lower(rescue(fn() => $foreignKey->getOption('onUpdate'), 'N/A')),
                 'on_delete'       => Str::lower(rescue(fn() => $foreignKey->getOption('onDelete'), 'N/A')),
             ]);

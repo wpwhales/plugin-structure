@@ -745,7 +745,7 @@ class Dispatcher implements DispatcherContract
     /**
      * Get the database transaction manager implementation from the resolver.
      *
-     * @return \WPWhales\Database\DatabaseTransactionsManager|null
+     * @return \WPWCore\Database\DatabaseTransactionsManager|null
      */
     protected function resolveTransactionManager()
     {

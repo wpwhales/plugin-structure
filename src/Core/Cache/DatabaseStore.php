@@ -5,10 +5,10 @@ namespace WPWCore\Cache;
 use Closure;
 use WPWhales\Contracts\Cache\LockProvider;
 use WPWhales\Contracts\Cache\Store;
-use WPWhales\Database\ConnectionInterface;
-use WPWhales\Database\PostgresConnection;
-use WPWhales\Database\QueryException;
-use WPWhales\Database\SqlServerConnection;
+use WPWCore\Database\ConnectionInterface;
+use WPWCore\Database\PostgresConnection;
+use WPWCore\Database\QueryException;
+use WPWCore\Database\SqlServerConnection;
 use WPWhales\Support\InteractsWithTime;
 use WPWhales\Support\Str;
 use function WPWhales\Cache\str_contains;
@@ -20,14 +20,14 @@ class DatabaseStore implements LockProvider, Store
     /**
      * The database connection instance.
      *
-     * @var \WPWhales\Database\ConnectionInterface
+     * @var \WPWCore\Database\ConnectionInterface
      */
     protected $connection;
 
     /**
      * The database connection instance that should be used to manage locks.
      *
-     * @var \WPWhales\Database\ConnectionInterface
+     * @var \WPWCore\Database\ConnectionInterface
      */
     protected $lockConnection;
 
@@ -69,7 +69,7 @@ class DatabaseStore implements LockProvider, Store
     /**
      * Create a new database store.
      *
-     * @param  \WPWhales\Database\ConnectionInterface  $connection
+     * @param  \WPWCore\Database\ConnectionInterface  $connection
      * @param  string  $table
      * @param  string  $prefix
      * @param  string  $lockTable
@@ -348,7 +348,7 @@ class DatabaseStore implements LockProvider, Store
     /**
      * Get a query builder for the cache table.
      *
-     * @return \WPWhales\Database\Query\Builder
+     * @return \WPWCore\Database\Query\Builder
      */
     protected function table()
     {
@@ -358,7 +358,7 @@ class DatabaseStore implements LockProvider, Store
     /**
      * Get the underlying database connection.
      *
-     * @return \WPWhales\Database\ConnectionInterface
+     * @return \WPWCore\Database\ConnectionInterface
      */
     public function getConnection()
     {
@@ -368,7 +368,7 @@ class DatabaseStore implements LockProvider, Store
     /**
      * Specify the name of the connection that should be used to manage locks.
      *
-     * @param  \WPWhales\Database\ConnectionInterface  $connection
+     * @param  \WPWCore\Database\ConnectionInterface  $connection
      * @return $this
      */
     public function setLockConnection($connection)

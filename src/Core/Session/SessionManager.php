@@ -99,7 +99,7 @@ class SessionManager extends Manager
     /**
      * Get the database connection for the database driver.
      *
-     * @return \WPWhales\Database\Connection
+     * @return \WPWCore\Database\Connection
      */
     protected function getDatabaseConnection()
     {

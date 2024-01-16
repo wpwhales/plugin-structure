@@ -2,7 +2,7 @@
 
 namespace WPWCore\Database\Console\Seeds;
 
-use WPWhales\Database\Eloquent\Model;
+use WPWCore\Database\Eloquent\Model;
 
 trait WithoutModelEvents
 {

@@ -39,7 +39,7 @@ use WPWhales\Contracts\Broadcasting\Broadcaster;
 use WPWhales\Contracts\Broadcasting\Factory;
 use WPWhales\Contracts\Bus\Dispatcher;
 use WPWhales\Contracts\Container\BindingResolutionException;
-use WPWhales\Database\DatabaseServiceProvider;
+use WPWCore\Database\DatabaseServiceProvider;
 use WPWCore\Database\MigrationServiceProvider;
 use WPWhales\Log\LogManager;
 use WPWhales\Queue\QueueServiceProvider;
@@ -184,7 +184,7 @@ class Application extends Container
             \WP_CLI::add_command('wpwcore', function ($args, $assoc_args) {
 
 
-                //        $app->prepareForConsoleCommand();
+
 
 
                 $artisan = new Kernel($this);
@@ -551,6 +551,7 @@ class Application extends Container
 
             $this->ranServiceBinders[$method] = true;
         }
+
 
         return parent::make($abstract, $parameters);
     }
@@ -1175,14 +1176,18 @@ class Application extends Container
     public function prepareForConsoleCommand($aliases = true)
     {
         $this->withFacades($aliases);
+        $this->withEloquent();
 
-        $this->make('cache');
-        $this->make('queue');
+
+//        $this->make('cache');
+//        $this->make('queue');
 
         $this->configure('database');
 
+        $this->instance('request',$this[\WPWCore\Http\Request::class]);
+
         $this->register(MigrationServiceProvider::class);
-//        $this->register(ConsoleServiceProvider::class);
+        $this->register(ConsoleServiceProvider::class);
     }
 
     /**
@@ -1197,6 +1202,7 @@ class Application extends Container
         if (!is_null($this->namespace)) {
             return $this->namespace;
         }
+
 
         $composer = json_decode(file_get_contents(base_path('composer.json')), true);
 
@@ -1347,39 +1353,39 @@ class Application extends Container
     protected function registerContainerAliases()
     {
         $this->aliases = [
-            \WPWhales\Contracts\Foundation\Application::class     => 'app',
-            \WPWhales\Contracts\Auth\Factory::class               => 'auth',
-            \WPWhales\Contracts\Auth\Guard::class                 => 'auth.driver',
-            \WPWhales\Contracts\Cache\Factory::class              => 'cache',
-            \WPWhales\Contracts\Cache\Repository::class           => 'cache.store',
-            \WPWhales\Contracts\Config\Repository::class          => 'config',
-            \WPWhales\Config\Repository::class                    => 'config',
-            \WPWhales\Container\Container::class                  => 'app',
-            \WPWhales\Contracts\Container\Container::class        => 'app',
-            \WPWhales\Database\ConnectionResolverInterface::class => 'db',
-            \WPWhales\Database\DatabaseManager::class             => 'db',
-            \WPWhales\Contracts\Encryption\Encrypter::class       => 'encrypter',
-            \WPWhales\Contracts\Events\Dispatcher::class          => 'events',
-            \WPWhales\Contracts\Filesystem\Factory::class         => 'filesystem',
-            \WPWhales\Contracts\Filesystem\Filesystem::class      => 'filesystem.disk',
-            \WPWhales\Contracts\Filesystem\Cloud::class           => 'filesystem.cloud',
-            \WPWhales\Contracts\Hashing\Hasher::class             => 'hash',
-            'log'                                                 => \Psr\Log\LoggerInterface::class,
-            \WPWhales\Contracts\Queue\Factory::class              => 'queue',
-            \WPWhales\Contracts\Queue\Queue::class                => 'queue.connection',
-            \WPWhales\Redis\RedisManager::class                   => 'redis',
-            \WPWhales\Contracts\Redis\Factory::class              => 'redis',
-            \WPWhales\Redis\Connections\Connection::class         => 'redis.connection',
-            \WPWhales\Contracts\Redis\Connection::class           => 'redis.connection',
-            'request'                                             => \WPWCore\Http\Request::class,
-            \WPWCore\Routing\Router::class                        => 'router',
-            \WPWhales\Contracts\Translation\Translator::class     => 'translator',
-            \WPWCore\Routing\UrlGenerator::class                  => 'url',
-            \WPWhales\Contracts\Validation\Factory::class         => 'validator',
-            \WPWhales\Contracts\View\Factory::class               => 'view',
-            \WPWhales\Session\SessionManager::class               => 'session',
-            \WPWhales\Contracts\Cookie\Factory::class             => 'cookie',
-            \WPWhales\Contracts\Cookie\QueueingFactory::class     => 'cookie',
+            \WPWhales\Contracts\Foundation\Application::class    => 'app',
+            \WPWhales\Contracts\Auth\Factory::class              => 'auth',
+            \WPWhales\Contracts\Auth\Guard::class                => 'auth.driver',
+            \WPWhales\Contracts\Cache\Factory::class             => 'cache',
+            \WPWhales\Contracts\Cache\Repository::class          => 'cache.store',
+            \WPWhales\Contracts\Config\Repository::class         => 'config',
+            \WPWhales\Config\Repository::class                   => 'config',
+            \WPWhales\Container\Container::class                 => 'app',
+            \WPWhales\Contracts\Container\Container::class       => 'app',
+            \WPWCore\Database\ConnectionResolverInterface::class => 'db',
+            \WPWCore\Database\DatabaseManager::class             => 'db',
+            \WPWhales\Contracts\Encryption\Encrypter::class      => 'encrypter',
+            \WPWhales\Contracts\Events\Dispatcher::class         => 'events',
+            \WPWhales\Contracts\Filesystem\Factory::class        => 'filesystem',
+            \WPWhales\Contracts\Filesystem\Filesystem::class     => 'filesystem.disk',
+            \WPWhales\Contracts\Filesystem\Cloud::class          => 'filesystem.cloud',
+            \WPWhales\Contracts\Hashing\Hasher::class            => 'hash',
+            'log'                                                => \Psr\Log\LoggerInterface::class,
+            \WPWhales\Contracts\Queue\Factory::class             => 'queue',
+            \WPWhales\Contracts\Queue\Queue::class               => 'queue.connection',
+            \WPWhales\Redis\RedisManager::class                  => 'redis',
+            \WPWhales\Contracts\Redis\Factory::class             => 'redis',
+            \WPWhales\Redis\Connections\Connection::class        => 'redis.connection',
+            \WPWhales\Contracts\Redis\Connection::class          => 'redis.connection',
+            'request'                                            => \WPWCore\Http\Request::class,
+            \WPWCore\Routing\Router::class                       => 'router',
+            \WPWhales\Contracts\Translation\Translator::class    => 'translator',
+            \WPWCore\Routing\UrlGenerator::class                 => 'url',
+            \WPWhales\Contracts\Validation\Factory::class        => 'validator',
+            \WPWhales\Contracts\View\Factory::class              => 'view',
+            \WPWhales\Session\SessionManager::class              => 'session',
+            \WPWhales\Contracts\Cookie\Factory::class            => 'cookie',
+            \WPWhales\Contracts\Cookie\QueueingFactory::class    => 'cookie',
         ];
     }
 
@@ -1391,9 +1397,9 @@ class Application extends Container
     public $availableBindings = [
         'auth'                                           => 'registerAuthBindings',
         'auth.driver'                                    => 'registerAuthBindings',
-        \Illuminate\Auth\AuthManager::class              => 'registerAuthBindings',
-        \Illuminate\Contracts\Auth\Guard::class          => 'registerAuthBindings',
-        \Illuminate\Contracts\Auth\Access\Gate::class    => 'registerAuthBindings',
+        \WPWhales\Auth\AuthManager::class                => 'registerAuthBindings',
+        \WPWhales\Contracts\Auth\Guard::class            => 'registerAuthBindings',
+        \WPWhales\Contracts\Auth\Access\Gate::class      => 'registerAuthBindings',
         'cache'                                          => 'registerCacheBindings',
         'cache.store'                                    => 'registerCacheBindings',
         \WPWhales\Contracts\Cache\Factory::class         => 'registerCacheBindings',
@@ -1401,7 +1407,7 @@ class Application extends Container
         'composer'                                       => 'registerComposerBindings',
         'config'                                         => 'registerConfigBindings',
         'db'                                             => 'registerDatabaseBindings',
-        \WPWhales\Database\Eloquent\Factory::class       => 'registerDatabaseBindings',
+        \WPWCore\Database\Eloquent\Factory::class        => 'registerDatabaseBindings',
         'filesystem'                                     => 'registerFilesystemBindings',
         'filesystem.cloud'                               => 'registerFilesystemBindings',
         'filesystem.disk'                                => 'registerFilesystemBindings',
@@ -1426,6 +1432,8 @@ class Application extends Container
         \WPWhales\Contracts\Validation\Factory::class    => 'registerValidatorBindings',
         'view'                                           => 'registerViewBindings',
         \WPWhales\Contracts\View\Factory::class          => 'registerViewBindings',
+        'view.engine'                                    => 'registerViewBindings',
+        'view.engine.resolver'                           => 'registerViewBindings',
         'session'                                        => 'registerSessionBindings',
         'session.store'                                  => 'registerSessionBindings',
         'WPWhales\Session\SessionManager'                => 'registerSessionBindings',

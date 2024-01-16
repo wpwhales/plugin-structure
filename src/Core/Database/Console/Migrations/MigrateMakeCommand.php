@@ -3,7 +3,7 @@
 namespace WPWCore\Database\Console\Migrations;
 
 use WPWhales\Contracts\Console\PromptsForMissingInput;
-use WPWhales\Database\Migrations\MigrationCreator;
+use WPWCore\Database\Migrations\MigrationCreator;
 use WPWhales\Support\Composer;
 use WPWhales\Support\Str;
 
@@ -31,7 +31,7 @@ class MigrateMakeCommand extends BaseCommand implements PromptsForMissingInput
     /**
      * The migration creator instance.
      *
-     * @var \WPWhales\Database\Migrations\MigrationCreator
+     * @var \WPWCore\Database\Migrations\MigrationCreator
      */
     protected $creator;
 
@@ -47,7 +47,7 @@ class MigrateMakeCommand extends BaseCommand implements PromptsForMissingInput
     /**
      * Create a new migration install command instance.
      *
-     * @param  \WPWhales\Database\Migrations\MigrationCreator  $creator
+     * @param  \WPWCore\Database\Migrations\MigrationCreator  $creator
      * @param  \WPWhales\Support\Composer  $composer
      * @return void
      */

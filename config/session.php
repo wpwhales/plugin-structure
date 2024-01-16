@@ -85,7 +85,7 @@ return [
     |
     */
 
-    'table' => 'wpwhales_users_sessions',
+    'table' => 'wpwcore_users_sessions',
 
     /*
     |--------------------------------------------------------------------------

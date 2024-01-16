@@ -66,7 +66,7 @@ return [
     |
     */
 
-    'migrations' => 'migrations',
+    'migrations' => 'wpwcore_migrations',
 
     /*
     |--------------------------------------------------------------------------

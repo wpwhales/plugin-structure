@@ -1,7 +1,7 @@
 <?php
 
-use WPWhales\Database\Migrations\Migration;
-use WPWhales\Database\Schema\Blueprint;
+use WPWCore\Database\Migrations\Migration;
+use WPWCore\Database\Schema\Blueprint;
 use WPWhales\Support\Facades\Schema;
 
 return new class extends Migration

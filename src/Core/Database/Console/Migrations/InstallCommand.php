@@ -3,7 +3,7 @@
 namespace WPWCore\Database\Console\Migrations;
 
 use WPWCore\Console\Command;
-use WPWhales\Database\Migrations\MigrationRepositoryInterface;
+use WPWCore\Database\Migrations\MigrationRepositoryInterface;
 use Symfony\Component\Console\Input\InputOption;
 
 class InstallCommand extends Command
@@ -25,14 +25,14 @@ class InstallCommand extends Command
     /**
      * The repository instance.
      *
-     * @var \WPWhales\Database\Migrations\MigrationRepositoryInterface
+     * @var \WPWCore\Database\Migrations\MigrationRepositoryInterface
      */
     protected $repository;
 
     /**
      * Create a new migration install command instance.
      *
-     * @param  \WPWhales\Database\Migrations\MigrationRepositoryInterface  $repository
+     * @param  \WPWCore\Database\Migrations\MigrationRepositoryInterface  $repository
      * @return void
      */
     public function __construct(MigrationRepositoryInterface $repository)
