@@ -29,7 +29,7 @@ class SessionTableCommand extends MigrationGeneratorCommand
      */
     protected function migrationTableName()
     {
-        return 'sessions';
+        return \WPWCore\config("session.table");
     }
 
     /**
