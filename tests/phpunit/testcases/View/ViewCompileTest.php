@@ -98,6 +98,42 @@ class ViewCompileTest extends \WP_UnitTestCase
     }
 
 
+    public function test_blade_file_without_ABSPATH_constant_should_throw_error(){
+
+
+        $sessionInstance = $this->getMockBuilder(Request::class)->onlyMethods(["session","get"])->getMock();
+
+        $sessionInstance->expects($this->exactly(1))->method("session")->will($this->returnSelf());
+
+        $sessionInstance->expects($this->exactly(1))->method("get")->will($this->returnValue(null));
+        $this->app["request"] = $sessionInstance;
+
+
+
+        $this->expectException(ViewException::class);
+        $this->expectExceptionMessageMatches("Required code is missing in the Blade template.
+Add this code at the beginning of your Blade file");
+
+        $this->expectExceptionMessageMatches('/^\s*\[ <\?php\s+if\s*\(\s*!\s*defined\(\'ABSPATH\'\)\s*\)\s*die\(\)\s*;\s*\?> \]|^\s*\[ <\?php\s+if\s*\(\s*!\s*defined\("ABSPATH"\)\s*\)\s*die\(\)\s*;\s*\?> \]/m');
+
+
+        /**
+         * @var $view \WPWCore\View\Factory
+         */
+        $view = $this->app["view"];
+
+
+        $view->make("constant-error")->render();
+
+
+
+
+
+
+
+
+    }
+
 
     public function test_exception_thrown_in_view(){
 
