@@ -2,7 +2,6 @@
 
 namespace WPWCore\Cache;
 
-use Symfony\Component\Cache\Adapter\Psr16Adapter;
 use WPWhales\Contracts\Support\DeferrableProvider;
 use WPWhales\Support\ServiceProvider;
 
@@ -15,6 +14,7 @@ class CacheServiceProvider extends ServiceProvider implements DeferrableProvider
      */
     public function register()
     {
+
         $this->app->singleton('cache', function ($app) {
             return new CacheManager($app);
         });
@@ -23,19 +23,6 @@ class CacheServiceProvider extends ServiceProvider implements DeferrableProvider
             return $app['cache']->driver();
         });
 
-        $this->app->singleton('cache.psr6', function ($app) {
-            return new Psr16Adapter($app['cache.store']);
-        });
-
-        $this->app->singleton('memcached.connector', function () {
-            return new MemcachedConnector;
-        });
-
-        $this->app->singleton(RateLimiter::class, function ($app) {
-            return new RateLimiter($app->make('cache')->driver(
-                $app['config']->get('cache.limiter')
-            ));
-        });
     }
 
     /**
@@ -46,7 +33,7 @@ class CacheServiceProvider extends ServiceProvider implements DeferrableProvider
     public function provides()
     {
         return [
-            'cache', 'cache.store', 'cache.psr6', 'memcached.connector', RateLimiter::class,
+            'cache', 'cache.store'
         ];
     }
 }

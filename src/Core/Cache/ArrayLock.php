@@ -9,14 +9,14 @@ class ArrayLock extends Lock
     /**
      * The parent array cache store.
      *
-     * @var \WPWCore\Cache\ArrayStore
+     * @var \WPWhales\Cache\ArrayStore
      */
     protected $store;
 
     /**
      * Create a new lock instance.
      *
-     * @param  \WPWCore\Cache\ArrayStore  $store
+     * @param  \WPWhales\Cache\ArrayStore  $store
      * @param  string  $name
      * @param  int  $seconds
      * @param  string|null  $owner

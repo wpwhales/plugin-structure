@@ -2,35 +2,29 @@
 
 namespace WPWCore\Cache;
 
-class ApcStore extends TaggableStore
+use Exception;
+use WPWhales\Contracts\Cache\LockProvider;
+use WPWhales\Contracts\Cache\Store;
+
+use WPWhales\Support\InteractsWithTime;
+
+class WpObjectCacheStore implements Store, LockProvider
 {
-    use RetrievesMultipleKeys;
+    use InteractsWithTime, RetrievesMultipleKeys;
+
+
 
     /**
-     * The APC wrapper instance.
+     * Create a new file cache store instance.
      *
-     * @var \WPWCore\Cache\ApcWrapper
-     */
-    protected $apc;
-
-    /**
-     * A string that should be prepended to keys.
-     *
-     * @var string
-     */
-    protected $prefix;
-
-    /**
-     * Create a new APC store.
-     *
-     * @param  \WPWCore\Cache\ApcWrapper  $apc
-     * @param  string  $prefix
+     * @param  \WPWhales\Filesystem\Filesystem  $files
+     * @param  string  $directory
+     * @param  int|null  $filePermission
      * @return void
      */
-    public function __construct(ApcWrapper $apc, $prefix = '')
+    public function __construct()
     {
-        $this->apc = $apc;
-        $this->prefix = $prefix;
+
     }
 
     /**
@@ -41,7 +35,7 @@ class ApcStore extends TaggableStore
      */
     public function get($key)
     {
-        return $this->apc->get($this->prefix.$key);
+
     }
 
     /**
@@ -54,19 +48,34 @@ class ApcStore extends TaggableStore
      */
     public function put($key, $value, $seconds)
     {
-        return $this->apc->put($this->prefix.$key, $value, $seconds);
+
+
     }
+
+    /**
+     * Store an item in the cache if the key doesn't exist.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @param  int  $seconds
+     * @return bool
+     */
+    public function add($key, $value, $seconds)
+    {
+
+    }
+
 
     /**
      * Increment the value of an item in the cache.
      *
      * @param  string  $key
      * @param  mixed  $value
-     * @return int|bool
+     * @return int
      */
     public function increment($key, $value = 1)
     {
-        return $this->apc->increment($this->prefix.$key, $value);
+
     }
 
     /**
@@ -74,11 +83,11 @@ class ApcStore extends TaggableStore
      *
      * @param  string  $key
      * @param  mixed  $value
-     * @return int|bool
+     * @return int
      */
     public function decrement($key, $value = 1)
     {
-        return $this->apc->decrement($this->prefix.$key, $value);
+
     }
 
     /**
@@ -93,6 +102,8 @@ class ApcStore extends TaggableStore
         return $this->put($key, $value, 0);
     }
 
+
+
     /**
      * Remove an item from the cache.
      *
@@ -101,7 +112,7 @@ class ApcStore extends TaggableStore
      */
     public function forget($key)
     {
-        return $this->apc->delete($this->prefix.$key);
+
     }
 
     /**
@@ -111,16 +122,23 @@ class ApcStore extends TaggableStore
      */
     public function flush()
     {
-        return $this->apc->flush();
+
     }
 
-    /**
-     * Get the cache key prefix.
-     *
-     * @return string
-     */
+
+
     public function getPrefix()
     {
-        return $this->prefix;
+        // TODO: Implement getPrefix() method.
     }
+    public function lock($name, $seconds = 0, $owner = null)
+    {
+        // TODO: Implement lock() method.
+    }
+    public function restoreLock($name, $owner)
+    {
+        // TODO: Implement restoreLock() method.
+    }
+
+
 }

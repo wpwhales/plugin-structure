@@ -16,9 +16,6 @@ use WPWhales\Contracts\Events\Dispatcher;
 use WPWhales\Support\Carbon;
 use WPWhales\Support\InteractsWithTime;
 use WPWhales\Support\Traits\Macroable;
-use function WPWhales\Cache\collect;
-use function WPWhales\Cache\tap;
-use function WPWhales\Cache\value;
 
 /**
  * @mixin \WPWhales\Contracts\Cache\Store
@@ -107,8 +104,7 @@ class Repository implements ArrayAccess, CacheContract
         if (is_null($value)) {
             $this->event(new CacheMissed($key));
 
-            $value = \WPWCore\Collections\value($default)
-;
+            $value = \WPWCore\Collections\value($default);
         } else {
             $this->event(new CacheHit($key, $value));
         }
@@ -126,15 +122,13 @@ class Repository implements ArrayAccess, CacheContract
      */
     public function many(array $keys)
     {
-        $values = $this->store->many(\WPWCore\Collections\collect($keys)
-            ->map(function ($value, $key) {
-                return is_string($key) ? $key : $value;
-            })->values()->all());
+        $values = $this->store->many(\WPWCore\Collections\collect($keys)->map(function ($value, $key) {
+            return is_string($key) ? $key : $value;
+        })->values()->all());
 
-        return \WPWCore\Collections\collect($values)
-            ->map(function ($value, $key) use ($keys) {
-                return $this->handleManyResult($keys, $key, $value);
-            })->all();
+        return \WPWCore\Collections\collect($values)->map(function ($value, $key) use ($keys) {
+            return $this->handleManyResult($keys, $key, $value);
+        })->all();
     }
 
     /**
@@ -169,8 +163,7 @@ class Repository implements ArrayAccess, CacheContract
         if (is_null($value)) {
             $this->event(new CacheMissed($key));
 
-            return (isset($keys[$key]) && !array_is_list($keys)) ? \WPWCore\Collections\value($keys[$key])
-                : null;
+            return (isset($keys[$key]) && ! array_is_list($keys)) ? \WPWCore\Collections\value($keys[$key]) : null;
         }
 
         // If we found a valid value we will fire the "hit" event and return the value
@@ -192,7 +185,7 @@ class Repository implements ArrayAccess, CacheContract
      */
     public function pull($key, $default = null)
     {
-        return \WPWCore\Support\tap($this->get($key, $default), function () use ($key) {
+        return \WPWCore\tap($this->get($key, $default), function () use ($key) {
             $this->forget($key);
         });
     }
@@ -403,8 +396,7 @@ class Repository implements ArrayAccess, CacheContract
 
         $value = $callback();
 
-        $this->put($key, $value, \WPWCore\Collections\value($ttl, $value)
-);
+        $this->put($key, $value, \WPWCore\Collections\value($ttl, $value));
 
         return $value;
     }
@@ -456,7 +448,7 @@ class Repository implements ArrayAccess, CacheContract
      */
     public function forget($key)
     {
-        return \WPWCore\Support\tap($this->store->forget($this->itemKey($key)), function ($result) use ($key) {
+        return \WPWCore\tap($this->store->forget($this->itemKey($key)), function ($result) use ($key) {
             if ($result) {
                 $this->event(new KeyForgotten($key));
             }

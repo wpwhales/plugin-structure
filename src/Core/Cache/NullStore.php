@@ -3,8 +3,9 @@
 namespace WPWCore\Cache;
 
 use WPWhales\Contracts\Cache\LockProvider;
+use WPWhales\Contracts\Cache\Store;
 
-class NullStore extends TaggableStore implements LockProvider
+class NullStore implements LockProvider,Store
 {
     use RetrievesMultipleKeys;
 
@@ -74,7 +75,7 @@ class NullStore extends TaggableStore implements LockProvider
      * @param  string  $name
      * @param  int  $seconds
      * @param  string|null  $owner
-     * @return \WPWhales\Contracts\Cache\Lock
+     * @return \Illuminate\Contracts\Cache\Lock
      */
     public function lock($name, $seconds = 0, $owner = null)
     {
@@ -86,7 +87,7 @@ class NullStore extends TaggableStore implements LockProvider
      *
      * @param  string  $name
      * @param  string  $owner
-     * @return \WPWhales\Contracts\Cache\Lock
+     * @return \Illuminate\Contracts\Cache\Lock
      */
     public function restoreLock($name, $owner)
     {

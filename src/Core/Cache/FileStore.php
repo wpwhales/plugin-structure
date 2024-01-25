@@ -3,13 +3,12 @@
 namespace WPWCore\Cache;
 
 use Exception;
-use WPWCore\Filesystem\Filesystem;
-use WPWCore\Filesystem\LockableFile;
 use WPWhales\Contracts\Cache\LockProvider;
 use WPWhales\Contracts\Cache\Store;
 use WPWhales\Contracts\Filesystem\LockTimeoutException;
+use WPWCore\Filesystem\Filesystem;
+use WPWCore\Filesystem\LockableFile;
 use WPWhales\Support\InteractsWithTime;
-use function WPWhales\Cache\tap;
 
 class FileStore implements Store, LockProvider
 {
@@ -18,7 +17,7 @@ class FileStore implements Store, LockProvider
     /**
      * The WPWhales Filesystem instance.
      *
-     * @var \WPWCore\Filesystem\Filesystem
+     * @var \WPWhales\Filesystem\Filesystem
      */
     protected $files;
 
@@ -46,7 +45,7 @@ class FileStore implements Store, LockProvider
     /**
      * Create a new file cache store instance.
      *
-     * @param  \WPWCore\Filesystem\Filesystem  $files
+     * @param  \WPWhales\Filesystem\Filesystem  $files
      * @param  string  $directory
      * @param  int|null  $filePermission
      * @return void
@@ -179,7 +178,7 @@ class FileStore implements Store, LockProvider
     {
         $raw = $this->getPayload($key);
 
-        return \WPWCore\Support\tap(((int)$raw['data']) + $value, function ($newValue) use ($key, $raw) {
+        return \WPWCore\tap(((int) $raw['data']) + $value, function ($newValue) use ($key, $raw) {
             $this->put($key, $newValue, $raw['time'] ?? 0);
         });
     }
@@ -291,9 +290,11 @@ class FileStore implements Store, LockProvider
         // just return null. Otherwise, we'll get the contents of the file and get
         // the expiration UNIX timestamps from the start of the file's contents.
         try {
-            $expire = substr(
-                $contents = $this->files->get($path, true), 0, 10
-            );
+            if (is_null($contents = $this->files->get($path, true))) {
+                return $this->emptyPayload();
+            }
+
+            $expire = substr($contents, 0, 10);
         } catch (Exception) {
             return $this->emptyPayload();
         }
@@ -362,7 +363,7 @@ class FileStore implements Store, LockProvider
     /**
      * Get the Filesystem instance.
      *
-     * @return \WPWCore\Filesystem\Filesystem
+     * @return \WPWhales\Filesystem\Filesystem
      */
     public function getFilesystem()
     {

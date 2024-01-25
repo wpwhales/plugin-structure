@@ -2,17 +2,17 @@
 
 namespace WPWCore\Cache;
 
-use Aws\DynamoDb\DynamoDbClient;
+
 use Closure;
-use InvalidArgumentException;
+use WPWCore\Cache\NullStore;
+use WPWCore\Cache\Repository;
 use WPWhales\Contracts\Cache\Factory as FactoryContract;
 use WPWhales\Contracts\Cache\Store;
-use WPWhales\Contracts\Events\Dispatcher as DispatcherContract;
-use WPWhales\Support\Arr;
-use function WPWhales\Cache\tap;
+use InvalidArgumentException;
+use WPWhales\Contracts\Events\Dispatcher;
 
 /**
- * @mixin \WPWCore\Cache\Repository
+ * @mixin \WPWhales\Cache\Repository
  * @mixin \WPWhales\Contracts\Cache\LockProvider
  */
 class CacheManager implements FactoryContract
@@ -74,6 +74,30 @@ class CacheManager implements FactoryContract
     }
 
     /**
+     * Register a custom driver creator Closure.
+     *
+     * @param  string  $driver
+     * @param  \Closure  $callback
+     * @return $this
+     */
+    public function extend($driver, Closure $callback)
+    {
+        $this->customCreators[$driver] = $callback->bindTo($this, $this);
+
+        return $this;
+    }
+
+    /**
+     * Call a custom driver creator.
+     *
+     * @param  array  $config
+     * @return mixed
+     */
+    protected function callCustomCreator(array $config)
+    {
+        return $this->customCreators[$config['driver']]($this->app, $config);
+    }
+    /**
      * Resolve the given store.
      *
      * @param  string  $name
@@ -102,40 +126,6 @@ class CacheManager implements FactoryContract
         throw new InvalidArgumentException("Driver [{$config['driver']}] is not supported.");
     }
 
-    /**
-     * Call a custom driver creator.
-     *
-     * @param  array  $config
-     * @return mixed
-     */
-    protected function callCustomCreator(array $config)
-    {
-        return $this->customCreators[$config['driver']]($this->app, $config);
-    }
-
-    /**
-     * Create an instance of the APC cache driver.
-     *
-     * @param  array  $config
-     * @return \WPWCore\Cache\Repository
-     */
-    protected function createApcDriver(array $config)
-    {
-        $prefix = $this->getPrefix($config);
-
-        return $this->repository(new ApcStore(new ApcWrapper, $prefix));
-    }
-
-    /**
-     * Create an instance of the array cache driver.
-     *
-     * @param  array  $config
-     * @return \WPWCore\Cache\Repository
-     */
-    protected function createArrayDriver(array $config)
-    {
-        return $this->repository(new ArrayStore($config['serialize'] ?? false));
-    }
 
     /**
      * Create an instance of the file cache driver.
@@ -152,26 +142,6 @@ class CacheManager implements FactoryContract
     }
 
     /**
-     * Create an instance of the Memcached cache driver.
-     *
-     * @param  array  $config
-     * @return \WPWCore\Cache\Repository
-     */
-    protected function createMemcachedDriver(array $config)
-    {
-        $prefix = $this->getPrefix($config);
-
-        $memcached = $this->app['memcached.connector']->connect(
-            $config['servers'],
-            $config['persistent_id'] ?? null,
-            $config['options'] ?? [],
-            array_filter($config['sasl'] ?? [])
-        );
-
-        return $this->repository(new MemcachedStore($memcached, $prefix));
-    }
-
-    /**
      * Create an instance of the Null cache driver.
      *
      * @return \WPWCore\Cache\Repository
@@ -182,95 +152,17 @@ class CacheManager implements FactoryContract
     }
 
     /**
-     * Create an instance of the Redis cache driver.
+     * Create an instance of the array cache driver.
      *
      * @param  array  $config
      * @return \WPWCore\Cache\Repository
      */
-    protected function createRedisDriver(array $config)
+    protected function createArrayDriver(array $config)
     {
-        $redis = $this->app['redis'];
-
-        $connection = $config['connection'] ?? 'default';
-
-        $store = new RedisStore($redis, $this->getPrefix($config), $connection);
-
-        return $this->repository(
-            $store->setLockConnection($config['lock_connection'] ?? $connection)
-        );
+        return $this->repository(new ArrayStore($config['serialize'] ?? false));
     }
 
-    /**
-     * Create an instance of the database cache driver.
-     *
-     * @param  array  $config
-     * @return \WPWCore\Cache\Repository
-     */
-    protected function createDatabaseDriver(array $config)
-    {
-        $connection = $this->app['db']->connection($config['connection'] ?? null);
 
-        $store = new DatabaseStore(
-            $connection,
-            $config['table'],
-            $this->getPrefix($config),
-            $config['lock_table'] ?? 'cache_locks',
-            $config['lock_lottery'] ?? [2, 100],
-            $config['lock_timeout'] ?? 86400,
-        );
-
-        return $this->repository($store->setLockConnection(
-            $this->app['db']->connection($config['lock_connection'] ?? $config['connection'] ?? null)
-        ));
-    }
-
-    /**
-     * Create an instance of the DynamoDB cache driver.
-     *
-     * @param  array  $config
-     * @return \WPWCore\Cache\Repository
-     */
-    protected function createDynamodbDriver(array $config)
-    {
-        $client = $this->newDynamodbClient($config);
-
-        return $this->repository(
-            new DynamoDbStore(
-                $client,
-                $config['table'],
-                $config['attributes']['key'] ?? 'key',
-                $config['attributes']['value'] ?? 'value',
-                $config['attributes']['expiration'] ?? 'expires_at',
-                $this->getPrefix($config)
-            )
-        );
-    }
-
-    /**
-     * Create new DynamoDb Client instance.
-     *
-     * @return \Aws\DynamoDb\DynamoDbClient
-     */
-    protected function newDynamodbClient(array $config)
-    {
-        $dynamoConfig = [
-            'region' => $config['region'],
-            'version' => 'latest',
-            'endpoint' => $config['endpoint'] ?? null,
-        ];
-
-        if (! empty($config['key']) && ! empty($config['secret'])) {
-            $dynamoConfig['credentials'] = Arr::only(
-                $config, ['key', 'secret']
-            );
-        }
-
-        if (! empty($config['token'])) {
-            $dynamoConfig['credentials']['token'] = $config['token'];
-        }
-
-        return new DynamoDbClient($dynamoConfig);
-    }
 
     /**
      * Create a new cache repository with the given implementation.
@@ -293,12 +185,12 @@ class CacheManager implements FactoryContract
      */
     protected function setEventDispatcher(Repository $repository)
     {
-        if (! $this->app->bound(DispatcherContract::class)) {
+        if (! $this->app->bound(Dispatcher::class)) {
             return;
         }
 
         $repository->setEventDispatcher(
-            $this->app[DispatcherContract::class]
+            $this->app[Dispatcher::class]
         );
     }
 
@@ -391,19 +283,7 @@ class CacheManager implements FactoryContract
         unset($this->stores[$name]);
     }
 
-    /**
-     * Register a custom driver creator Closure.
-     *
-     * @param  string  $driver
-     * @param  \Closure  $callback
-     * @return $this
-     */
-    public function extend($driver, Closure $callback)
-    {
-        $this->customCreators[$driver] = $callback->bindTo($this, $this);
 
-        return $this;
-    }
 
     /**
      * Set the application instance used by the manager.

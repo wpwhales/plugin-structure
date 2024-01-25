@@ -2,8 +2,6 @@
 
 namespace WPWCore\Cache;
 
-use function WPWhales\Cache\collect;
-
 trait RetrievesMultipleKeys
 {
     /**
@@ -18,10 +16,9 @@ trait RetrievesMultipleKeys
     {
         $return = [];
 
-        $keys = \WPWCore\Collections\collect($keys)
-            ->mapWithKeys(function ($value, $key) {
-                return [is_string($key) ? $key : $value => is_string($key) ? $value : null];
-            })->all();
+        $keys = collect($keys)->mapWithKeys(function ($value, $key) {
+            return [is_string($key) ? $key : $value => is_string($key) ? $value : null];
+        })->all();
 
         foreach ($keys as $key => $default) {
             $return[$key] = $this->get($key, $default);

@@ -3,11 +3,11 @@
 namespace WPWCore\Cache;
 
 use WPWhales\Contracts\Cache\LockProvider;
+use WPWhales\Contracts\Cache\Store;
 use WPWhales\Support\Carbon;
 use WPWhales\Support\InteractsWithTime;
-use function WPWhales\Cache\tap;
 
-class ArrayStore extends TaggableStore implements LockProvider
+class ArrayStore  implements LockProvider , Store
 {
     use InteractsWithTime, RetrievesMultipleKeys;
 
@@ -96,7 +96,7 @@ class ArrayStore extends TaggableStore implements LockProvider
     public function increment($key, $value = 1)
     {
         if (! is_null($existing = $this->get($key))) {
-            return \WPWCore\Support\tap(((int)$existing) + $value, function ($incremented) use ($key) {
+            return tap(((int) $existing) + $value, function ($incremented) use ($key) {
                 $value = $this->serializesValues ? serialize($incremented) : $incremented;
 
                 $this->storage[$key]['value'] = $value;

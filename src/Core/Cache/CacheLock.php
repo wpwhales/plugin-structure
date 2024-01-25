@@ -1,6 +1,6 @@
 <?php
 
-namespace WPWCore\Cache;
+namespace WPWhales\Cache;
 
 class CacheLock extends Lock
 {
