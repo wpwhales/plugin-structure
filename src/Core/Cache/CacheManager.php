@@ -41,7 +41,7 @@ class CacheManager implements FactoryContract
     /**
      * Create a new Cache manager instance.
      *
-     * @param  \WPWhales\Contracts\Foundation\Application  $app
+     * @param \WPWhales\Contracts\Foundation\Application $app
      * @return void
      */
     public function __construct($app)
@@ -52,7 +52,7 @@ class CacheManager implements FactoryContract
     /**
      * Get a cache store instance by name, wrapped in a repository.
      *
-     * @param  string|null  $name
+     * @param string|null $name
      * @return \WPWhales\Contracts\Cache\Repository
      */
     public function store($name = null)
@@ -65,7 +65,7 @@ class CacheManager implements FactoryContract
     /**
      * Get a cache driver instance.
      *
-     * @param  string|null  $driver
+     * @param string|null $driver
      * @return \WPWhales\Contracts\Cache\Repository
      */
     public function driver($driver = null)
@@ -76,8 +76,8 @@ class CacheManager implements FactoryContract
     /**
      * Register a custom driver creator Closure.
      *
-     * @param  string  $driver
-     * @param  \Closure  $callback
+     * @param string $driver
+     * @param \Closure $callback
      * @return $this
      */
     public function extend($driver, Closure $callback)
@@ -90,17 +90,18 @@ class CacheManager implements FactoryContract
     /**
      * Call a custom driver creator.
      *
-     * @param  array  $config
+     * @param array $config
      * @return mixed
      */
     protected function callCustomCreator(array $config)
     {
         return $this->customCreators[$config['driver']]($this->app, $config);
     }
+
     /**
      * Resolve the given store.
      *
-     * @param  string  $name
+     * @param string $name
      * @return \WPWhales\Contracts\Cache\Repository
      *
      * @throws \InvalidArgumentException
@@ -117,7 +118,7 @@ class CacheManager implements FactoryContract
             return $this->callCustomCreator($config);
         }
 
-        $driverMethod = 'create'.ucfirst($config['driver']).'Driver';
+        $driverMethod = 'create' . ucfirst($config['driver']) . 'Driver';
 
         if (method_exists($this, $driverMethod)) {
             return $this->{$driverMethod}($config);
@@ -127,10 +128,16 @@ class CacheManager implements FactoryContract
     }
 
 
+    protected function createWpDriver(array $config){
+        return $this->repository(
+            new WpObjectCacheStore()
+        );
+    }
+
     /**
      * Create an instance of the file cache driver.
      *
-     * @param  array  $config
+     * @param array $config
      * @return \WPWCore\Cache\Repository
      */
     protected function createFileDriver(array $config)
@@ -154,7 +161,7 @@ class CacheManager implements FactoryContract
     /**
      * Create an instance of the array cache driver.
      *
-     * @param  array  $config
+     * @param array $config
      * @return \WPWCore\Cache\Repository
      */
     protected function createArrayDriver(array $config)
@@ -163,11 +170,10 @@ class CacheManager implements FactoryContract
     }
 
 
-
     /**
      * Create a new cache repository with the given implementation.
      *
-     * @param  \WPWhales\Contracts\Cache\Store  $store
+     * @param \WPWhales\Contracts\Cache\Store $store
      * @return \WPWCore\Cache\Repository
      */
     public function repository(Store $store)
@@ -180,12 +186,12 @@ class CacheManager implements FactoryContract
     /**
      * Set the event dispatcher on the given repository instance.
      *
-     * @param  \WPWCore\Cache\Repository  $repository
+     * @param \WPWCore\Cache\Repository $repository
      * @return void
      */
     protected function setEventDispatcher(Repository $repository)
     {
-        if (! $this->app->bound(Dispatcher::class)) {
+        if (!$this->app->bound(Dispatcher::class)) {
             return;
         }
 
@@ -207,7 +213,7 @@ class CacheManager implements FactoryContract
     /**
      * Get the cache prefix.
      *
-     * @param  array  $config
+     * @param array $config
      * @return string
      */
     protected function getPrefix(array $config)
@@ -218,12 +224,12 @@ class CacheManager implements FactoryContract
     /**
      * Get the cache connection configuration.
      *
-     * @param  string  $name
+     * @param string $name
      * @return array|null
      */
     protected function getConfig($name)
     {
-        if (! is_null($name) && $name !== 'null') {
+        if (!is_null($name) && $name !== 'null') {
             return $this->app['config']["cache.stores.{$name}"];
         }
 
@@ -237,13 +243,18 @@ class CacheManager implements FactoryContract
      */
     public function getDefaultDriver()
     {
-        return $this->app['config']['cache.default'];
+        if (wp_using_ext_object_cache()) {
+            return "wp";
+        } else {
+            return "file";
+        }
+
     }
 
     /**
      * Set the default cache driver name.
      *
-     * @param  string  $name
+     * @param string $name
      * @return void
      */
     public function setDefaultDriver($name)
@@ -254,14 +265,14 @@ class CacheManager implements FactoryContract
     /**
      * Unset the given driver instances.
      *
-     * @param  array|string|null  $name
+     * @param array|string|null $name
      * @return $this
      */
     public function forgetDriver($name = null)
     {
         $name ??= $this->getDefaultDriver();
 
-        foreach ((array) $name as $cacheName) {
+        foreach ((array)$name as $cacheName) {
             if (isset($this->stores[$cacheName])) {
                 unset($this->stores[$cacheName]);
             }
@@ -273,7 +284,7 @@ class CacheManager implements FactoryContract
     /**
      * Disconnect the given driver and remove from local cache.
      *
-     * @param  string|null  $name
+     * @param string|null $name
      * @return void
      */
     public function purge($name = null)
@@ -284,11 +295,10 @@ class CacheManager implements FactoryContract
     }
 
 
-
     /**
      * Set the application instance used by the manager.
      *
-     * @param  \WPWhales\Contracts\Foundation\Application  $app
+     * @param \WPWhales\Contracts\Foundation\Application $app
      * @return $this
      */
     public function setApplication($app)
@@ -301,8 +311,8 @@ class CacheManager implements FactoryContract
     /**
      * Dynamically call the default driver instance.
      *
-     * @param  string  $method
-     * @param  array  $parameters
+     * @param string $method
+     * @param array $parameters
      * @return mixed
      */
     public function __call($method, $parameters)

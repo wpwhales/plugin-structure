@@ -16,7 +16,7 @@ trait RetrievesMultipleKeys
     {
         $return = [];
 
-        $keys = collect($keys)->mapWithKeys(function ($value, $key) {
+        $keys = \WPWCore\Collections\collect($keys)->mapWithKeys(function ($value, $key) {
             return [is_string($key) ? $key : $value => is_string($key) ? $value : null];
         })->all();
 

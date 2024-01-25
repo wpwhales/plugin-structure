@@ -34,6 +34,9 @@ return [
 
 
 
+        'wp'=>[
+          'driver'=>'wp'
+        ],
         'file' => [
             'driver' => 'file',
             'path' => WP_CONTENT_DIR."/wpwhales/cache/".(defined("WPW_VIEWS_CACHED_KEY") ? WPW_VIEWS_CACHED_KEY : hash('xxh128', 'SOMERANDOMSTRING')),
