@@ -243,11 +243,7 @@ class CacheManager implements FactoryContract
      */
     public function getDefaultDriver()
     {
-        if (wp_using_ext_object_cache()) {
-            return "wp";
-        } else {
-            return "file";
-        }
+        return "wp";
 
     }
 

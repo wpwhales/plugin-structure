@@ -1,7 +1,6 @@
 <?php
 
-use Illuminate\Support\Str;
-
+if(!defined("ABSPATH")) exit;
 return [
 
     /*
@@ -17,7 +16,7 @@ return [
     |
     */
 
-    'default' => "file",
+    'default' => "wp",
 
     /*
     |--------------------------------------------------------------------------
@@ -36,26 +35,11 @@ return [
 
         'wp'=>[
           'driver'=>'wp'
-        ],
-        'file' => [
-            'driver' => 'file',
-            'path' => WP_CONTENT_DIR."/wpwhales/cache/".(defined("WPW_VIEWS_CACHED_KEY") ? WPW_VIEWS_CACHED_KEY : hash('xxh128', 'SOMERANDOMSTRING')),
-        ],
+        ]
 
 
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Cache Key Prefix
-    |--------------------------------------------------------------------------
-    |
-    | When utilizing a RAM based store such as APC or Memcached, there might
-    | be other applications utilizing the same cache. So, we'll specify a
-    | value to get prefixed to all our keys so we can avoid collisions.
-    |
-    */
 
-    'prefix' => "wpwcore_cache_prefix_",
 
 ];

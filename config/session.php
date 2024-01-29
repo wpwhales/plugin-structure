@@ -1,7 +1,6 @@
 <?php
 
-use WPWhales\Support\Str;
-
+if(!defined("ABSPATH")) exit;
 return [
 
     /*

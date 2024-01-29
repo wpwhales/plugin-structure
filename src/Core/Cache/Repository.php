@@ -387,16 +387,18 @@ class Repository implements ArrayAccess, CacheContract
     {
         $value = $this->get($key);
 
+
         // If the item exists in the cache we will just return this immediately and if
         // not we will execute the given Closure and cache the result of that for a
         // given number of seconds so it's available for all subsequent requests.
-        if (! is_null($value)) {
+        if (!is_null($value)) {
             return $value;
         }
 
         $value = $callback();
 
         $this->put($key, $value, \WPWCore\Collections\value($ttl, $value));
+
 
         return $value;
     }

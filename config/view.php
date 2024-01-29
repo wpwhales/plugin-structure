@@ -1,9 +1,5 @@
 <?php
-
-use WPWhales\Support\Str;
-
-if(!defined("ABSPATH")) die();
-
+if(!defined("ABSPATH")) exit;
 
 return [
 
