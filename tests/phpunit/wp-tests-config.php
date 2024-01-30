@@ -1,10 +1,15 @@
 <?php
 
 // change the next line to points to your wordpress dir
-define( 'ABSPATH', '/app/' );
+if(getenv("WP_TESTS_DIR")){
+    define( 'ABSPATH', getenv("WP_TESTS_DIR") );
+}else{
+    define( 'ABSPATH', '/app/wp/' );
+}
+
 
 define( 'WP_DEBUG', true );
-define( 'WP_DEBUG_LOG', true );
+define( 'WP_DEBUG_LOG', ABSPATH."/wp-content/test-error-logs.log" );
 
 define('WPW_ENVIRONMENT','local');
 
@@ -14,7 +19,13 @@ define('WPW_ENVIRONMENT','local');
 define( 'DB_NAME', 'wptest' );
 define( 'DB_USER', 'wptest' );
 define( 'DB_PASSWORD', 'wptest' );
-define( 'DB_HOST', 'database' );
+
+if(getenv("LANDO")){
+    define( 'DB_HOST', "database" );
+}else{
+    define( 'DB_HOST', '127.0.0.1' );
+}
+
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', '' );
 

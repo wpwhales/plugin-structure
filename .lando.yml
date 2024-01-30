@@ -1,0 +1,56 @@
+name: plugin-pattern
+services:
+  database:
+    type: mariadb
+    portforward: true
+    creds:
+      user: wptest
+      password: wptest
+      database: wptest
+    overrides:
+      environment:
+        DATABASE_HOST_NAME: "database"
+  appserver:
+    type: php:8.1
+    xdebug: off
+    ssl: true
+    composer_version: 2-latest
+    build_as_root:
+      - chmod +x /app/bin/wp.sh
+      - /app/bin/wp.sh
+    run:
+      - composer install
+    webroot: wp
+    overrides:
+      environment:
+        XDEBUG_MODE:
+        PHP_IDE_CONFIG: "serverName=appserver"
+      extra_hosts:
+        - ${LANDO_HOST_NAME_DEV:-host}:${LANDO_HOST_GATEWAY_DEV:-host-gateway}
+  redis:
+    type: redis
+    portforward: true
+  node:
+    type: node:16
+  phpmyadminservice:
+    type: phpmyadmin
+  mailhogservice:
+    type: mailhog
+tooling:
+  xdebug:
+    description: Loads Xdebug in the selected mode.
+    cmd:
+      - appserver: /app/.lando/xdebug.sh
+    user: root
+  npm:
+    service: node
+  node:
+    service: node
+  yarn:
+    service: node
+  test:
+    service: appserver
+    cmd: vendor/bin/phpunit
+
+
+

@@ -45,13 +45,16 @@ class DifferentSessionForUsersCookiesTest extends \WP_UnitTestCase
         $directory = self::$files_directory["session"]["files"];
         $ignoreFiles = ['.gitignore', '.', '..'];
 
-        $files = scandir($directory);
+        if(file_exists($directory)){
+            $files = scandir($directory);
 
-        foreach ($files as $file) {
-            if (!in_array($file, $ignoreFiles)) {
-                unlink($directory . '/' . $file);
+            foreach ($files as $file) {
+                if (!in_array($file, $ignoreFiles)) {
+                    unlink($directory . '/' . $file);
+                }
             }
         }
+
     }
 
 

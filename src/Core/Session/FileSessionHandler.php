@@ -44,6 +44,9 @@ class FileSessionHandler implements SessionHandlerInterface
         $this->path = $path;
         $this->files = $files;
         $this->minutes = $minutes;
+
+        $files->ensureDirectoryExists($path);
+
     }
 
     /**
@@ -88,6 +91,7 @@ class FileSessionHandler implements SessionHandlerInterface
      */
     public function write($sessionId, $data): bool
     {
+
         $this->files->put($this->path.'/'.$sessionId, $data, true);
 
         return true;
