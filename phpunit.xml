@@ -7,17 +7,9 @@
     <testsuite name="default">
       <directory suffix="Test.php">tests/phpunit/testcases/</directory>
     </testsuite>
-    <testsuite name="FastRouteDispatcherTest">
-      <file >tests/phpunit/testcases/Router/FastRouteDispatcherTestSeparately.php</file>
+
+    <testsuite name="commands">
+      <directory suffix="TestCommand.php">tests/phpunit/testcases/Commands/</directory>
     </testsuite>
   </testsuites>
-  <filter>
-    <whitelist processUncoveredFilesFromWhitelist="true">
-      <directory suffix="Test.php">tests/phpunit/testcases/</directory>
-      <!-- Exclude the specific class causing issues -->
-      <exclude>
-        <file>tests/phpunit/testcases/Router/FastRouteDispatcherTestSeparately.php</file>
-      </exclude>
-    </whitelist>
-  </filter>
 </phpunit>

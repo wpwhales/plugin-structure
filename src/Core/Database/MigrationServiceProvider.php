@@ -42,10 +42,10 @@ class MigrationServiceProvider extends ServiceProvider implements DeferrableProv
 //        'MigrateRollback' => RollbackCommand::class,
         'MigrateStatus' => StatusCommand::class,
         'MigrateMake' => MigrateMakeCommand::class,
-        'ShowCommand'=>ShowCommand::class,
-        'MonitorCommand'=>MonitorCommand::class,
-        'ShowModelCommand'=>ShowModelCommand::class,
-        'TableCommand'=>TableCommand::class,
+//        'ShowCommand'=>ShowCommand::class,
+//        'MonitorCommand'=>MonitorCommand::class,
+//        'ShowModelCommand'=>ShowModelCommand::class,
+//        'TableCommand'=>TableCommand::class,
 
     ];
 
