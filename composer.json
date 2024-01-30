@@ -1,6 +1,20 @@
 {
   "name": "wpwhales/plugin-structure",
   "version": "1.0.0",
+  "description": "Framework for WPWhales Team to develop plugins in a better way",
+
+  "authors": [
+    {
+      "name": "Hamza Mirza",
+      "email": "hamza.tariq.mirza@gmail.com"
+    }
+  ],
+  "keywords": [
+    "wordpress",
+    "laravel",
+    "plugin development",
+    "laravel components in wordpress"
+  ],
   "require": {
     "php": "^8.1",
     "ext-ctype": "*",
