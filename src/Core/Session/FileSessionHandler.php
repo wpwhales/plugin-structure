@@ -45,7 +45,7 @@ class FileSessionHandler implements SessionHandlerInterface
         $this->files = $files;
         $this->minutes = $minutes;
 
-        $files->ensureDirectoryExists($path);
+//        $files->ensureDirectoryExists($path);
 
     }
 

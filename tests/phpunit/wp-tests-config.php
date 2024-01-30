@@ -5,7 +5,7 @@ if(getenv("WP_TESTS_DIR")){
     define( 'ABSPATH', "/tmp/wordpress/" );
 }else{
 
-    
+
     define( 'ABSPATH', '/app/wp/' );
 }
 
