@@ -31,7 +31,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           coverage: none
-          php-version: "8.0"
+          php-version: "8.1"
 
       - name: Install PHP Dependencies
         uses: ramsey/composer-install@v2
