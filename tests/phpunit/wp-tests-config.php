@@ -2,7 +2,7 @@
 
 // change the next line to points to your wordpress dir
 if(getenv("WP_TESTS_DIR")){
-    define( 'ABSPATH', getenv("WP_TESTS_DIR") );
+    define( 'ABSPATH', "/".trim(getenv("WP_TESTS_DIR"),"/")."/" );
 }else{
     define( 'ABSPATH', '/app/wp/' );
 }
