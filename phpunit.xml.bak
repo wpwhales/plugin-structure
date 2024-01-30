@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="tests/phpunit/bootstrap.php" backupGlobals="false" colors="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd" cacheDirectory=".phpunit.cache">
-  <testsuites>
-    <testsuite name="default">
-      <directory suffix=".php">tests/phpunit/testcases/</directory>
-    </testsuite>
-  </testsuites>
-</phpunit>
