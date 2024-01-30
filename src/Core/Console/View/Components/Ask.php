@@ -13,7 +13,6 @@ class Ask extends Component
      */
     public function render($question, $default = null)
     {
-
         return $this->usingQuestionHelper(fn () => $this->output->ask($question, $default));
     }
 }
