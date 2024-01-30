@@ -50,8 +50,6 @@ trait WP_Plugin_Application
     }
 
 
-
-
     public function tear_down()
     {
         parent::tear_down();

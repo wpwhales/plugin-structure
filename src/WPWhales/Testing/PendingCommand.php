@@ -2,8 +2,8 @@
 
 namespace WPWhales\Testing;
 
-use WPWCore\Console\OutputStyle;
-use WPWCore\Console\PromptValidationException;
+use WPWhales\Console\OutputStyle;
+use WPWhales\Console\PromptValidationException;
 use WPWhales\Contracts\Console\Kernel;
 use WPWhales\Contracts\Container\Container;
 use WPWhales\Contracts\Support\Arrayable;

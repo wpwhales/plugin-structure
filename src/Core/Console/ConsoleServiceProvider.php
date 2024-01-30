@@ -59,7 +59,7 @@ class ConsoleServiceProvider extends ServiceProvider
      * @var array
      */
     protected $devCommands = [
-//        'CacheTable'   => 'command.cache.table',
+        'CacheTable'   => 'command.cache.table',
         'SeederMake'   => 'command.seeder.make',
         'SessionTable' => 'command.session.table'
     ];
