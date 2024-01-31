@@ -307,6 +307,9 @@ class Application extends Container
 
         $this->configure("app");
         $this->configure("view");
+        $this->configure("hooks");
+        $this->configure("shortcodes");
+        $this->configure("widgets");
 
     }
 
