@@ -153,7 +153,12 @@ trait RoutesRequests
             if (is_callable($callback)) {
                 $callback();
             }
-            wp_die();
+            if($this->runningUnitTests()){
+                wp_die();
+            }else{
+                die();
+            }
+
         }
     }
 
