@@ -3,7 +3,7 @@
 namespace WPWhales\Validation;
 
 use Closure;
-use WPWhales\Database\ConnectionResolverInterface;
+use WPWCore\Database\ConnectionResolverInterface;
 
 class DatabasePresenceVerifier implements DatabasePresenceVerifierInterface
 {

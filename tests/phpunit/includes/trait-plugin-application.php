@@ -86,6 +86,8 @@ trait WP_Plugin_Application
 
         $app->singleton(WPWhales\Contracts\Debug\ExceptionHandler::class, WPWCore\Exceptions\Handler::class);
 
+        $app->withFacades();
+        $app->withEloquent();
 
         return $app;
     }
