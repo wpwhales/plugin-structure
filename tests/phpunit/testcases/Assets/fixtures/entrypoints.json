@@ -1,0 +1,11 @@
+{
+  "entrypoint": {
+    "css": [
+      "entrypoint.css"
+    ],
+    "js": [
+      "entrypoint1.js",
+      "entrypoint2.js"
+    ]
+  }
+}

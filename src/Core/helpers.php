@@ -4,11 +4,13 @@ namespace WPWCore;
 
 
 use Carbon\Carbon;
+use WPWCore\Assets\Bundle;
 use WPWCore\DashboardNotices\Notices;
 use WPWCore\Http\Redirector;
 use WPWCore\Routing\UrlGenerator;
 use WPWhales\Container\Container;
 use WPWhales\Contracts\Debug\ExceptionHandler;
+use WPWhales\Support\Collection;
 use WPWhales\Support\HigherOrderTapProxy;
 use WPWhales\Support\HtmlString;
 /**
@@ -326,4 +328,227 @@ function now(){
 function event($event, $payload = [], $halt = false)
 {
     return app('events')->dispatch($event, $payload, $halt);
+}
+
+
+
+/**
+ * Get bundle from manifest
+ *
+ * @param string $bundle
+ * @param string $manifest
+ * @return Bundle
+ */
+function bundle(string $bundle, ?string $manifest = null): Bundle
+{
+    if (!$manifest) {
+        return app('assets.manifest')->bundle($bundle);
+    }
+
+    return app('assets')->manifest($manifest)->bundle($bundle);
+}
+
+
+
+
+/**
+ * Get manifest.
+ *
+ * @return {Collection}
+ */
+function getManifest(): Collection
+{
+
+    $path = config("assets.manifests.plugin.bundles");
+
+    if (!file_exists($path)) {
+        throw new \Exception("Manifest File missing");
+
+    }
+
+
+    return Collection::make(
+        json_decode(
+            file_get_contents(
+                $path
+            )
+        )
+    );
+}
+
+;
+
+
+/**
+ * Do entrypoint.
+ *
+ * @param  {string} name
+ * @param  {string} type
+ * @param  {object} entrypoint
+ *
+ * @return {Collection}
+ */
+function entrypoint(
+    string $name,
+    string $type,
+    object $entrypoint
+): Collection
+{
+
+
+    $entrypoint->modules = Collection::make(
+        $entrypoint->$type
+    );
+
+    $hasDependencies = $type == 'js' &&
+        property_exists($entrypoint, 'dependencies');
+
+    $entrypoint->dependencies = Collection::make(
+        $hasDependencies
+            ? $entrypoint->dependencies
+            : [],
+    );
+
+    return $entrypoint->modules->map(
+        function ($module, $index) use ($type, $name, $entrypoint) {
+            $name = "{$type}.{$name}.{$index}";
+
+            $dependencies = $entrypoint->dependencies->all();
+
+            $entrypoint->dependencies->push($name);
+
+            return (object)[
+                'name' => $name,
+                'uri' => $module,
+                'deps' => $dependencies,
+            ];
+        }
+    );
+}
+
+
+
+
+function asset($path)
+{
+
+    return app("assets.manifest")->asset($path);
+}
+
+
+
+function bundleJS(string $bundleName): string
+{
+    /**
+     * Filter specified bundle
+     */
+    $filterBundle = function ($_a, $key) use ($bundleName) {
+        return $key === $bundleName;
+    };
+
+    /**
+     * Prepare entrypoints
+     */
+    $prepEntry = function ($item, $name): object {
+
+
+        $obj = (object)[];
+
+        if (isset($item->js)) {
+            $obj->js = entrypoint($name, 'js', $item);
+        }
+
+        return $obj;
+    };
+
+    /**
+     * Filter out HMR assets
+     */
+    $filterHot = function ($entry): bool {
+        return !strpos($entry->uri, 'hot-update');
+    };
+    $app_name = config("app.name");
+    $content = "";
+    getManifest()->filter($filterBundle)
+        ->map($prepEntry)
+        ->each(function ($entrypoint) use ($filterHot, $app_name,&$content): void {
+            $entrypoint
+                ->js
+                ->filter($filterHot)
+                ->each(function ($entry) use ($app_name,&$content) {
+                    $content .= "
+                      <script
+                        src= '".asset($entry->uri)->__toString()."'
+                    id= '".$app_name . "-" . $entry->name."'
+                    >
+                    </script>
+                    ";
+
+                });
+        });
+
+    return $content;
+}
+
+
+function bundleCSS(string $bundleName): string
+{
+
+    //CHECK IF BUNDLE IS EMPTY
+
+    /**
+     * Filter specified bundle
+     */
+    $filterBundle = function ($_a, $key) use ($bundleName) {
+        return $key === $bundleName;
+    };
+
+    /**
+     * Prepare entrypoints
+     */
+    $prepEntry = function ($item, $name): object {
+
+
+        $obj = (object)[];
+        if (isset($item->css)) {
+            $obj->css = entrypoint($name, 'css', $item);
+        }
+
+
+        return $obj;
+
+
+    };
+
+    /**
+     * Filter out HMR assets
+     */
+    $filterHot = function ($entry): bool {
+        return !strpos($entry->uri, 'hot-update');
+    };
+
+    $app_name = config("app.name");
+    $content = "";
+    getManifest()->filter($filterBundle)
+        ->map($prepEntry)
+        ->each(function ($entrypoint) use ($filterHot, $app_name,&$content): void {
+            if (!empty((array)$entrypoint)) {
+                $entrypoint
+                    ->css
+                    ->filter($filterHot)
+                    ->each(function ($entry) use ($app_name,&$content) {
+
+                        $content.= "
+                         <link
+                            href='".asset($entry->uri)->__toString()."'
+                            id='".$app_name . "-" . $entry->name."'
+                            rel='stylesheet'
+                        >
+                        ";
+                    });
+            }
+
+        });
+
+    return $content;
 }

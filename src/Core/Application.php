@@ -287,6 +287,12 @@ class Application extends Container
         });
     }
 
+    protected function registerAssetsBindings(){
+        $this->singleton('assets', function () {
+            return $this->loadComponent('assets', 'WPWCore\Assets\AssetsServiceProvider', 'assets');
+        });
+    }
+
     protected function registerSessionBindings()
     {
 
@@ -1443,5 +1449,6 @@ class Application extends Container
         'cookie'                                         => 'registerCookieBindings',
         'WPWhales\Contracts\Cookie\Factory'              => 'registerCookieBindings',
         'WPWhales\Contracts\Cookie\QueueingFactory'      => 'registerCookieBindings',
+        'assets'=>'registerAssetsBindings'
     ];
 }
