@@ -291,6 +291,10 @@ class Application extends Container
         $this->singleton('assets', function () {
             return $this->loadComponent('assets', 'WPWCore\Assets\AssetsServiceProvider', 'assets');
         });
+
+        $this->singleton('assets.manifest', function () {
+            return $this->loadComponent('assets', 'WPWCore\Assets\AssetsServiceProvider', 'assets.manifest');
+        });
     }
 
     protected function registerSessionBindings()
