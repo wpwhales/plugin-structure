@@ -12,6 +12,6 @@ class BladeDirective
      */
     public function __invoke($expression)
     {
-        return sprintf("<?= %s(%s); ?>", 'asset', $expression);
+        return sprintf("<?= %s(%s); ?>", '\WPWCore\asset', $expression);
     }
 }
