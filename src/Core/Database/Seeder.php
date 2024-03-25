@@ -2,8 +2,8 @@
 
 namespace WPWCore\Database;
 
-use WPWhales\Console\Command;
-use WPWhales\Console\View\Components\TwoColumnDetail;
+use WPWCore\Console\Command;
+use WPWCore\Console\View\Components\TwoColumnDetail;
 use WPWhales\Contracts\Container\Container;
 use WPWCore\Database\Console\Seeds\WithoutModelEvents;
 use WPWhales\Support\Arr;
@@ -158,7 +158,7 @@ abstract class Seeder
     /**
      * Set the console command instance.
      *
-     * @param  \WPWhales\Console\Command  $command
+     * @param  \WPWCore\Console\Command  $command
      * @return $this
      */
     public function setCommand(Command $command)
@@ -187,7 +187,7 @@ abstract class Seeder
             : $this->run(...$parameters);
 
         $uses = array_flip(\WPWCore\Support\class_uses_recursive(static::class)
-);
+        );
 
         if (isset($uses[WithoutModelEvents::class])) {
             $callback = $this->withoutModelEvents($callback);

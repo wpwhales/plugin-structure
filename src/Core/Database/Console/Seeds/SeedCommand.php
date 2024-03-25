@@ -87,17 +87,17 @@ class SeedCommand extends Command
         $class = $this->input->getArgument('class') ?? $this->input->getOption('class');
 
         if (! str_contains($class, '\\')) {
-            $class = 'Database\\Seeders\\'.$class;
+            $class = 'WPWCore\\Database\\Seeders\\'.$class;
         }
 
-        if ($class === 'Database\\Seeders\\DatabaseSeeder' &&
+        if ($class === 'WPWCore\\Database\\Seeders\\DatabaseSeeder' &&
             ! class_exists($class)) {
             $class = 'DatabaseSeeder';
         }
 
         return $this->laravel->make($class)
-                        ->setContainer($this->laravel)
-                        ->setCommand($this);
+            ->setContainer($this->laravel)
+            ->setCommand($this);
     }
 
     /**
