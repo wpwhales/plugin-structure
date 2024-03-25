@@ -104,7 +104,7 @@ abstract class Factory
      *
      * @var string
      */
-    public static $namespace = 'Database\\Factories\\';
+    public static $namespace = 'WPWCore\\Database\\Factories\\';
 
     /**
      * The default model name resolver.
