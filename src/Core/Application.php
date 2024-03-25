@@ -1449,6 +1449,7 @@ class Application extends Container
         'cookie'                                         => 'registerCookieBindings',
         'WPWhales\Contracts\Cookie\Factory'              => 'registerCookieBindings',
         'WPWhales\Contracts\Cookie\QueueingFactory'      => 'registerCookieBindings',
-        'assets'=>'registerAssetsBindings'
+        'assets'=>'registerAssetsBindings',
+    'assets.manifest'=>'registerAssetsBindings'
     ];
 }
