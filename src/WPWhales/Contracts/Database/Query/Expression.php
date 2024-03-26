@@ -2,14 +2,14 @@
 
 namespace WPWhales\Contracts\Database\Query;
 
-use WPWhales\Database\Grammar;
+use WPWCore\Database\Grammar;
 
 interface Expression
 {
     /**
      * Get the value of the expression.
      *
-     * @param  \WPWhales\Database\Grammar  $grammar
+     * @param  \WPWCore\Database\Grammar  $grammar
      * @return string|int|float
      */
     public function getValue(Grammar $grammar);
