@@ -22,8 +22,21 @@ class AuthWordpressGuardTest extends \WP_UnitTestCase
 
     }
 
+    public function test_user_model_is_updated_one_when_replaced_in_container(){
+        $this->app->singleton(User::class,function(){
+           return new NewUserModel();
+        });
+        $user_id = $this->factory()->user->create();
+        wp_set_current_user($user_id);
+
+        $this->assertInstanceOf(NewUserModel::class,Auth::user());
+
+    }
+
     public function test_user_model_gets_populated_with_wordpress_user_data()
     {
+
+
         $user_id = $this->factory()->user->create();
         wp_set_current_user($user_id);
         $user = wp_get_current_user();

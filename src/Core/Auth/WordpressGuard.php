@@ -8,6 +8,7 @@ use WPWCore\Http\Request;
 use WPWhales\Contracts\Auth\Guard;
 use WPWhales\Contracts\Auth\UserProvider;
 use WPWhales\Support\Facades\DB;
+use function WPWCore\app;
 
 class WordpressGuard implements Guard
 {
@@ -79,7 +80,8 @@ class WordpressGuard implements Guard
 
 
 
-        $user = new User();
+
+        $user = app(User::class);
         $user->setRawAttributes($wpUser->to_array());
 
         $this->user = $user;
