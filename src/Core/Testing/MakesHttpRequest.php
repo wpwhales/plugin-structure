@@ -356,11 +356,20 @@ trait MakesHttpRequest
         $this->_last_response = "";
         $uri = str_replace(site_url(), "", admin_url("admin-ajax.php"));
 
-        if (!isset($parameters["NOPARAM"])) {
-            $parameters["action"] = "wpwhales";
-            $parameters["route"] = $route;
+
+
+        $query = [
+            "action"=>"wpwhales",
+            "route"=>$route
+        ];
+        $url_parts = parse_url($uri);
+        if(!empty($url_parts["query"])){
+            parse_str($url_parts["query"],$query);
         }
 
+
+
+        $uri = $url_parts["path"]."?".http_build_query($query);
 
         $this->currentUri = $this->prepareUrlForRequest($uri);
 

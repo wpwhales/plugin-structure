@@ -14,6 +14,7 @@ use Throwable;
 use WPWCore\Auth\Access\AuthorizationException;
 use WPWCore\Console\View\Components\BulletList;
 use WPWCore\Console\View\Components\Error;
+use WPWCore\Session\TokenMismatchException;
 use WPWhales\Contracts\Debug\ExceptionHandler;
 use WPWhales\Contracts\Support\Responsable;
 use WPWCore\Database\Eloquent\ModelNotFoundException;
@@ -125,7 +126,10 @@ class Handler implements ExceptionHandler
             $e = new NotFoundHttpException($e->getMessage(), $e);
         } elseif ($e instanceof AuthorizationException) {
             $e = new HttpException($e->status() ?? 403, $e->getMessage(),$e);
-        } elseif ($e instanceof ValidationException && $e->getResponse()) {
+        }elseif($e instanceof TokenMismatchException){
+            $e = new HttpException(419, "CSRF Token Mismatch",$e);
+        }
+        elseif ($e instanceof ValidationException && $e->getResponse()) {
 
             //if doing ajax
             if($request->expectsJson() || wp_doing_ajax()){
@@ -142,6 +146,8 @@ class Handler implements ExceptionHandler
 
 
         }
+
+
 
         return ($request->expectsJson() || wp_doing_ajax())
             ? $this->prepareJsonResponse($request, $e)

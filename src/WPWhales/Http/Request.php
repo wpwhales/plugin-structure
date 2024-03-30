@@ -212,6 +212,12 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     {
         $path = $this->decodedPath();
 
+        if(wp_doing_ajax()){
+            $path = trim($this->query("route"),"/");
+        }
+
+
+
         return \WPWCore\Collections\collect($patterns)
             ->contains(fn($pattern) => Str::is($pattern, $path));
     }
