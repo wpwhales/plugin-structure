@@ -81,7 +81,7 @@ class Factory
     {
         $this->dispatcher = $dispatcher;
 
-        $this->stubCallbacks = collect();
+        $this->stubCallbacks = \WPWCore\Collections\collect();
     }
 
     /**
@@ -382,7 +382,7 @@ class Factory
     public function recorded($callback = null)
     {
         if (empty($this->recorded)) {
-            return collect();
+            return \WPWCore\Collections\collect();
         }
 
         $callback = $callback ?: function () {
