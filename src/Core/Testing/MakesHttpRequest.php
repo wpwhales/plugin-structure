@@ -1,5 +1,7 @@
 <?php
 
+namespace WPWCore\Testing;
+
 
 use Carbon\Carbon;
 use WPWCore\Http\Request;
@@ -9,7 +11,7 @@ use WPWhales\Testing\Assert as PHPUnit;
 use WPWhales\Testing\TestResponse;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
-trait WP_Makes_Http_Requests
+trait MakesHttpRequest
 {
 
     /**
@@ -391,7 +393,7 @@ trait WP_Makes_Http_Requests
             );
 
 
-        } catch (WPDieException $e) {
+        } catch (\WPDieException $e) {
 
 
             return $this->response = TestResponse::fromBaseResponse(
@@ -412,7 +414,7 @@ trait WP_Makes_Http_Requests
      * @param array $files
      * @param array $server
      * @param string $content
-     * @return \Illuminate\Testing\TestResponse
+     * @return \WPWhales\Testing\TestResponse
      */
     public function call($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
     {
@@ -441,7 +443,7 @@ trait WP_Makes_Http_Requests
             );
 
 
-        } catch (WPDieException $e) {
+        } catch (\WPDieException $e) {
 
             $this->_last_response = ob_get_clean();
 

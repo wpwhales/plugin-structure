@@ -6,6 +6,6 @@
  */
 abstract class WP_UnitTestCase extends WP_UnitTestCase_Base {
 
-    use WP_Plugin_Application,WP_Makes_Http_Requests;
+    use \WPWCore\Testing\PluginApplication,\WPWCore\Testing\MakesHttpRequest;
 
 }

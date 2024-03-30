@@ -38,7 +38,7 @@ class MigrationServiceProvider extends ServiceProvider implements DeferrableProv
 //        'MigrateFresh' => FreshCommand::class,
         'MigrateInstall' => InstallCommand::class,
 //        'MigrateRefresh' => RefreshCommand::class,
-//        'MigrateReset' => ResetCommand::class,
+        'MigrateReset' => ResetCommand::class,
 //        'MigrateRollback' => RollbackCommand::class,
         'MigrateStatus' => StatusCommand::class,
         'MigrateMake' => MigrateMakeCommand::class,

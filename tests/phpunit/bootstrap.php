@@ -14,9 +14,7 @@ $GLOBALS[ 'wp_tests_options' ] = array(
 
 );
 
-// call test-lib's bootstrap.php
-require_once dirname( __FILE__ ) . '/includes/trait-plugin-application.php';
-require_once dirname( __FILE__ ) . '/includes/trait-wp-makes-http-requests.php';
+
 
 require_once $test_lib_bootstrap_file;
 

@@ -11,10 +11,10 @@ trait DatabaseMigrations
      */
     public function runDatabaseMigrations()
     {
-        $this->artisan('migrate:fresh');
+        $artisan = new \WPWCore\Console\Kernel($this->app);
 
-        $this->beforeApplicationDestroyed(function () {
-            $this->artisan('migrate:rollback');
-        });
+        $artisan->call('migrate:reset');
+        $artisan->call('migrate');
+
     }
 }
