@@ -130,7 +130,8 @@ trait ProvidesConvenienceMethods
             return (static::$errorFormatter)($validator);
         }
 
-        return $validator->errors()->getMessages();
+
+        return ["errors"=>$validator->errors()->getMessages()];
     }
 
     /**

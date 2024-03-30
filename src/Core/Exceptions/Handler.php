@@ -129,6 +129,7 @@ class Handler implements ExceptionHandler
 
             //if doing ajax
             if($request->expectsJson() || wp_doing_ajax()){
+
                 return $e->getResponse();
             }else{
                 $viewBag = new ViewErrorBag();

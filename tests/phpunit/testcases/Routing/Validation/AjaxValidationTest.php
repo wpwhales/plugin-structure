@@ -32,7 +32,7 @@ class AjaxValidationTest extends \WP_Ajax_UnitTestCase
 
         $response = $this->adminAjaxCall("GET", "/simple_data_validation");
 
-        $response->assertJsonMissingValidationErrors([
+        $response->assertJsonValidationErrors([
             "text_field"
         ]);
 
