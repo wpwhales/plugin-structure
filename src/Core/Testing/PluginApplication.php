@@ -35,7 +35,11 @@ trait PluginApplication
         }
 
 
+        if(method_exists($this,"runDatabaseMigrations")){
 
+
+            $this->runDatabaseMigrations();
+        }
 
     }
 
@@ -61,6 +65,9 @@ trait PluginApplication
 
     public function tear_down()
     {
+        if(method_exists($this,"runMigrateReset")){
+            $this->runMigrateReset();
+        }
         parent::tear_down();
         if ($this->app) {
             foreach ($this->beforeApplicationDestroyedCallbacks as $callback) {

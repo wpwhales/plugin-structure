@@ -25,6 +25,7 @@ class BaseCommand extends Command
                 })->all();
         }
 
+
         return array_merge(
             $this->migrator->paths(), [$this->getMigrationPath()]
         );
@@ -47,6 +48,7 @@ class BaseCommand extends Command
      */
     protected function getMigrationPath()
     {
+
         return $this->laravel->databasePath().DIRECTORY_SEPARATOR.'migrations';
     }
 }

@@ -20,9 +20,14 @@ class ArtisanTestCommand extends \WP_UnitTestCase
 
     public static function tear_down_after_class()
     {
+
+
         parent::tear_down_after_class();
 
-        $directoryPath = dirname(__DIR__,2)."/database";
+
+        $directoryPath = dirname(__DIR__,4)."/src/Core/database";
+
+
         if (file_exists($directoryPath)) {
             // Remove files or directories
             // Example: \RecursiveDirectoryIterator::CURRENT_AS_SELF ensures the iterator will delete the root directory itself
