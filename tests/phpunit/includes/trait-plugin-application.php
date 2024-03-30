@@ -23,6 +23,11 @@ trait WP_Plugin_Application
     public function set_up()
     {
         parent::set_up();
+        if(get_parent_class($this) === WP_Ajax_UnitTestCase::class){
+            add_filter( 'wp_doing_ajax', '__return_true' );
+
+            set_current_screen( 'ajax' );
+        }
         if (!$this->app) {
             $this->refreshApplication();
         }
