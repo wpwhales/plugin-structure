@@ -39,14 +39,9 @@ class SignedAjaxRoutesTest extends \WP_Ajax_UnitTestCase
         $this->app->createAjaxRoutesFromFile(__DIR__ . "/routes/ajax.php");
 
         $url = $this->app["url"]->signedAdminAjaxRoute("ajax_signed_route_name", ["x" => 1], Carbon::now()->addMonth());
-        $parse_url  =parse_url($url);
-        parse_str($parse_url["query"],$queryStringArray);
-        $route = $queryStringArray["route"];
-        unset($queryStringArray["route"]);
-        unset($queryStringArray["action"]);
 
 
-        $response = $this->adminAjaxCall("GET",$route,$queryStringArray );
+        $response = $this->adminAjaxCall("GET",$url );
         $response->assertOk();
 
 
@@ -60,15 +55,10 @@ class SignedAjaxRoutesTest extends \WP_Ajax_UnitTestCase
 
 
         $url = $this->app["url"]->signedAdminAjaxRoute("ajax_signed_route_name", ["x" => 1], Carbon::now()->addMonth());
-        $parse_url  =parse_url($url);
-        parse_str($parse_url["query"],$queryStringArray);
-        $route = $queryStringArray["route"];
-        unset($queryStringArray["route"]);
-        unset($queryStringArray["action"]);
-        /**
-         * @var $response TestResponse
-         */
-        $response = $this->adminAjaxCall("GET",$route ,$queryStringArray+["xyz"=>123]);
+        $url.="&y=1";
+
+        $response = $this->adminAjaxCall("GET",$url );
+
         $response->assertStatus(403);
         $this->assertStringContainsString("Invalid signature",$response->getContent());
 
@@ -88,19 +78,19 @@ class SignedAjaxRoutesTest extends \WP_Ajax_UnitTestCase
 
         Carbon::setTestNow(Carbon::now()->addMinutes(14));
 
-        $response = $this->adminAjaxCall("GET",$this->getUrlForTime("ajax_signed_route_name",$today_add_15_min)[0],$this->getUrlForTime("ajax_signed_route_name",$today_add_15_min)[1] );
+        $response = $this->adminAjaxCall("GET",$this->getUrlForTime("ajax_signed_route_name",$today_add_15_min) );
         $response->assertStatus(200);
         $response->assertContent("123");
 
         Carbon::setTestNow(Carbon::now()->addMinutes(15));
 
-        $response = $this->adminAjaxCall("GET", $this->getUrlForTime("ajax_signed_route_name",$today_add_15_min)[0],$this->getUrlForTime("ajax_signed_route_name",$today_add_15_min)[1]);
+        $response = $this->adminAjaxCall("GET", $this->getUrlForTime("ajax_signed_route_name",$today_add_15_min));
         $response->assertStatus(403);
         $this->assertStringContainsString("Invalid signature",$response->getContent());
 
         Carbon::setTestNow(Carbon::now()->addMinutes(16));
 
-        $response = $this->adminAjaxCall("GET", $this->getUrlForTime("ajax_signed_route_name",$today_add_15_min)[0],$this->getUrlForTime("ajax_signed_route_name",$today_add_15_min)[1]);
+        $response = $this->adminAjaxCall("GET", $this->getUrlForTime("ajax_signed_route_name",$today_add_15_min));
         $response->assertStatus(403);
 
         $this->assertStringContainsString("Invalid signature",$response->getContent());
@@ -112,13 +102,7 @@ class SignedAjaxRoutesTest extends \WP_Ajax_UnitTestCase
 
     private function getUrlForTime($routeName,$time){
         $url = $this->app["url"]->signedAdminAjaxRoute($routeName, ["x" => 1],$time );
-        $parse_url  =parse_url($url);
-        parse_str($parse_url["query"],$queryStringArray);
-        $route = $queryStringArray["route"];
-        unset($queryStringArray["route"]);
-        unset($queryStringArray["action"]);
-
-        return [$route,$queryStringArray];
+        return $url;
     }
 
 

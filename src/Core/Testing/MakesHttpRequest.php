@@ -353,25 +353,35 @@ trait MakesHttpRequest
     public function adminAjaxCall($method, $route, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
     {
 
+
         $this->_last_response = "";
-        $uri = str_replace(site_url(), "", admin_url("admin-ajax.php"));
+
+        if(!Str::startsWith($route,["http","https","localhost"])){
+            $uri = str_replace(site_url(), "", admin_url("admin-ajax.php"));
+
+            $query = [
+                "action"=>"wpwhales",
+                "route"=>$route
+            ];
+            $url_parts = parse_url($uri);
+            if(!empty($url_parts["query"])){
+                parse_str($url_parts["query"],$query);
+            }
 
 
 
-        $query = [
-            "action"=>"wpwhales",
-            "route"=>$route
-        ];
-        $url_parts = parse_url($uri);
-        if(!empty($url_parts["query"])){
-            parse_str($url_parts["query"],$query);
+            $uri = $uri."?".http_build_query($query);
+
+
+            $this->currentUri = $this->prepareUrlForRequest($uri);
+
+        }else{
+            $route = Str::replace(["https://","http://","www","localhost"],["","",""],$route);
+            $uri = $route;
+
         }
+        $this->currentUri = $uri;
 
-
-
-        $uri = $url_parts["path"]."?".http_build_query($query);
-
-        $this->currentUri = $this->prepareUrlForRequest($uri);
 
 
 
@@ -390,6 +400,7 @@ trait MakesHttpRequest
         );
 
         $this->app['request'] = Request::createFromBase($symfonyRequest);
+
 
         try {
 
