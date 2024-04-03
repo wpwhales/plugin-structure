@@ -53,6 +53,7 @@ use WPWhales\Validation\ValidationServiceProvider;
 class Application extends Container
 {
     use Concerns\RoutesRequests,
+        Concerns\RegisterActionScheduler,
         Concerns\RegistersExceptionHandlers;
 
     /**

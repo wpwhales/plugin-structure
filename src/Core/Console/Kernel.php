@@ -317,4 +317,17 @@ class Kernel implements KernelContract
             return $this->app->make(Handler::class);
         }
     }
+
+
+    public function registerActionHooks()
+    {
+        foreach ($this->getCommands() as $command) {
+
+            add_action("wpwcore_command_" . md5($command) . "_action", function () use ($command) {
+
+                $this->call($command);
+            });
+        }
+
+    }
 }
