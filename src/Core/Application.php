@@ -188,7 +188,7 @@ class Application extends Container
 
 
 
-                $artisan = new Kernel($this);
+                $artisan = $this->make(\WPWhales\Contracts\Console\Kernel::class);
 
                 $status = $artisan->handle((new \WPWCore\Console\ArgvInput()), new ConsoleOutput());
                 // Bind a command
