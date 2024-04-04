@@ -331,5 +331,11 @@ class Kernel implements KernelContract
             });
         }
 
+
+
+        if(method_exists($this,"scheduleEvents")){
+
+            $this->scheduleEvents($this->app["scheduler"]);
+        }
     }
 }
