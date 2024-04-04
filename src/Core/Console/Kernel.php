@@ -196,7 +196,7 @@ class Kernel implements KernelContract
     /**
      * Define the application's command schedule.
      *
-     * @param  \WPWhales\Console\Scheduling\Schedule  $schedule
+     * @param  \WPWCore\Console\Scheduling\Schedule  $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
@@ -321,6 +321,8 @@ class Kernel implements KernelContract
 
     public function registerActionHooks()
     {
+
+
         foreach ($this->getCommands() as $command) {
 
             add_action("wpwcore_command_" . md5($command) . "_action", function () use ($command) {

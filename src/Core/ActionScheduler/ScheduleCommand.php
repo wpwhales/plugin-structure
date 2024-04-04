@@ -22,7 +22,7 @@ class ScheduleCommand
     protected function schedule()
     {
 
-        $this->getScheduler()->schedule_cron(time(), $this->cron,"wpwcore_command_".md5($this->command)."_action",[]);
+        return $this->getScheduler()->schedule_cron(time(), $this->cron,"wpwcore_command_".md5($this->command)."_action",[]);
 
 
     }

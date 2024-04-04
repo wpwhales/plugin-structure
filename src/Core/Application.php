@@ -1189,6 +1189,7 @@ class Application extends Container
      */
     public function prepareForConsoleCommand($aliases = true)
     {
+
         $this->withFacades($aliases);
         $this->withEloquent();
 

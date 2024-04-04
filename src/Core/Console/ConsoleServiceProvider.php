@@ -2,6 +2,8 @@
 
 namespace WPWCore\Console;
 
+use WPWCore\ActionScheduler\Console\ScheduleRefreshCommand;
+use WPWCore\ActionScheduler\Console\ScheduleRemoveCanceledCommand;
 use WPWCore\Auth\Console\ClearResetsCommand;
 use WPWCore\Cache\Console\CacheTableCommand;
 use WPWCore\Cache\Console\ClearCommand as CacheClearCommand;
@@ -50,7 +52,9 @@ class ConsoleServiceProvider extends ServiceProvider
         'ViewClear'  => 'command.view.clear',
         'ViewCache' => 'command.view.cache',
         'ViewSecure' => 'command.view.secure',
-        'Seed'        => 'command.seed'
+        'Seed'        => 'command.seed',
+        'ScheduleRefresh'=>'command.schedule.refresh',
+        'ScheduleRemoveCanceled'=>'command.schedule.remove-canceled'
     ];
 
     /**
@@ -115,6 +119,31 @@ class ConsoleServiceProvider extends ServiceProvider
     {
         $this->app->singleton('command.seed', function ($app) {
             return new SeedCommand($app['db']);
+        });
+    }
+
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerScheduleRefreshCommand()
+    {
+        $this->app->singleton('command.schedule.refresh', function ($app) {
+            return new ScheduleRefreshCommand();
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerScheduleRemoveCanceledCommand()
+    {
+        $this->app->singleton('command.schedule.remove-canceled', function ($app) {
+            return new ScheduleRemoveCanceledCommand();
         });
     }
 

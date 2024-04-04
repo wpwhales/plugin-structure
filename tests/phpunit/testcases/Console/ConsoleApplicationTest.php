@@ -4,12 +4,14 @@ namespace Tests\Console;
 
 use WPWCore\Console\Application;
 use WPWCore\Console\Command;
+use WPWhales\Container\Container;
 use WPWhales\Contracts\Events\Dispatcher;
 use WPWhales\Contracts\Foundation\Application as ApplicationContract;
 use Tests\Console\Fixtures\FakeCommandWithInputPrompting;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
+
 
 class ConsoleApplicationTest extends TestCase
 {
@@ -20,6 +22,8 @@ class ConsoleApplicationTest extends TestCase
 
     public function testAddSetsLaravelInstance()
     {
+
+
         $app = $this->getMockConsole(['addToParent']);
         $command = m::mock(Command::class);
         $command->shouldReceive('setLaravel')->once()->with(m::type(ApplicationContract::class));
@@ -85,6 +89,7 @@ class ConsoleApplicationTest extends TestCase
             $events = m::mock(Dispatcher::class, ['dispatch' => null, 'fire' => null]),
             'testing'
         );
+
 
         $app->addCommands([new FakeCommandWithInputPrompting(false)]);
 

@@ -7,52 +7,52 @@ trait  Schedules {
     protected   $cron; 
     public  function everyMinute() {
         $this->cron =  "* * * * *";
-        $this->schedule();
+        return $this->schedule();
     }
 
     public  function everyFiveMinutes() {
         $this->cron =  "*/5 * * * *";
-        $this->schedule();
+        return $this->schedule();
     }
 
     public  function everyTenMinutes() {
         $this->cron =  "*/10 * * * *";
-        $this->schedule();
+        return $this->schedule();
     }
 
     public  function everyFifteenMinutes() {
         $this->cron =  "*/15 * * * *";
-        $this->schedule();
+        return $this->schedule();
     }
 
     public  function everyThirtyMinutes() {
         $this->cron =  "*/30 * * * *";
-        $this->schedule();
+        return $this->schedule();
     }
 
     public  function everyHour() {
         $this->cron =  "0 * * * *";
-        $this->schedule();
+        return $this->schedule();
     }
 
     public  function everyFiveHours() {
         $this->cron =  "0 */5 * * *";
-        $this->schedule();
+        return $this->schedule();
     }
 
     public  function everyTenHours() {
         $this->cron =  "0 */10 * * *";
-        $this->schedule();
+        return $this->schedule();
     }
 
     public  function daily() {
         $this->cron =  "0 0 * * *";
-        $this->schedule();
+        return $this->schedule();
     }
 
     public  function twiceDaily() {
         $this->cron =  "0 0,12 * * *";
-        $this->schedule();
+        return $this->schedule();
     }
 
     public  function everyDays($days) {
@@ -60,7 +60,7 @@ trait  Schedules {
             $days = 1;
         }
         $this->cron =  "0 0 */$days * *";
-        $this->schedule();
+        return $this->schedule();
     }
 
     public  function everyHours($hours) {
@@ -68,7 +68,7 @@ trait  Schedules {
             $hours = 1;
         }
         $this->cron =  "0 */$hours * * *";
-        $this->schedule();
+        return $this->schedule();
     }
 
     public  function everyMinutes($minutes) {
@@ -76,7 +76,7 @@ trait  Schedules {
             $minutes = 1;
         }
         $this->cron =  "*/$minutes * * * *";
-        $this->schedule();
+        return $this->schedule();
     }
 }
 

@@ -44,7 +44,7 @@ class SimpleTestCommand extends \WP_UnitTestCase
      */
     public function artisan($command, $parameters = [])
     {
-        $this->app->singletonIf(Kernel::class, KernelTest::class);
+        $this->app->singletonIf(Kernel::class, KernelTest2::class);
 
         if (!$this->mockConsoleOutput) {
             return $this->app[Kernel::class]->call($command, $parameters);
@@ -57,18 +57,18 @@ class SimpleTestCommand extends \WP_UnitTestCase
 }
 
 
-class KernelTest extends \WPWCore\Console\Kernel
+class KernelTest2 extends \WPWCore\Console\Kernel
 {
 
     protected $commands = [
 
-        SimpleCommand::class
+        SimpleCommand5::class
     ];
 
 }
 
 
-class SimpleCommand extends Command
+class SimpleCommand5 extends Command
 {
 
     protected $name = "wpwcore:simple";

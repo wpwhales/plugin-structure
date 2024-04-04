@@ -2,6 +2,8 @@
 
 namespace WPWCore\ActionScheduler;
 
+use function PHPUnit\Framework\isEmpty;
+
 class ActionScheduler implements QueueInterface
 {
     /**
@@ -143,9 +145,29 @@ class ActionScheduler implements QueueInterface
      */
     public function schedule_cron($timestamp, $cron_schedule, $hook, $args = [])
     {
-        if ($this->is_scheduled($hook, $args)) {
+
+        /**
+         * @var $action \ActionScheduler_Action
+         */
+        $actions = \WPWCore\Collections\collect(as_get_scheduled_actions(["hook"=>$hook,"status"=>\ActionScheduler_Store::STATUS_PENDING]));
+
+        if($actions->isNotEmpty()){
+            $action = $actions->first();
+            $time = $action->get_schedule()->get_recurrence();
+
+            if($time!=$cron_schedule){
+
+                //it means the schedule is different
+                $this->cancel($hook);
+                return as_schedule_cron_action($timestamp, $cron_schedule, $hook, $args, $this->group);
+
+            }
+
+
             return '';
         }
+
+
         return as_schedule_cron_action($timestamp, $cron_schedule, $hook, $args, $this->group);
     }
 
@@ -231,16 +253,9 @@ class ActionScheduler implements QueueInterface
     public function schedule_command(string $command)
     {
 
-        return new ScheduleCommand($command,$this);
+        return new ScheduleCommand($command, $this);
     }
 
-    /**
-     * @param string $command
-     * @return ScheduleCommand
-     */
-    public function schedule_job(string $job)
-    {
 
-        return new ScheduleCommand($command,$this);
-    }
+
 }
