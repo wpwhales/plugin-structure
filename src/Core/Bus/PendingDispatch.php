@@ -6,6 +6,7 @@ use WPWhales\Container\Container;
 use WPWhales\Contracts\Bus\Dispatcher;
 use WPWhales\Contracts\Cache\Repository as Cache;
 use WPWhales\Contracts\Queue\ShouldBeUnique;
+use function WPWCore\app;
 
 class PendingDispatch
 {
@@ -85,6 +86,7 @@ class PendingDispatch
      */
     public function __destruct()
     {
+
         if (! $this->shouldDispatch()) {
             return;
         } else {

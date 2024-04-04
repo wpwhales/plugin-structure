@@ -3,6 +3,8 @@
 namespace WPWCore\Concerns;
 
 
+use WPWCore\Queue\QueueServiceProvider;
+use WPWhales\Bus\BusServiceProvider;
 use WPWhales\Contracts\Console\Kernel;
 
 trait RegisterActionScheduler
@@ -33,6 +35,8 @@ trait RegisterActionScheduler
         $this->app->singleton('scheduler', \ActionScheduler::class);
         $this->app->singleton('taskmanager', \ActionScheduler::class);
 
+        $this->register( QueueServiceProvider::class);
+        $this->register( BusServiceProvider::class);
 
         $kernel = $this->app[Kernel::class];
 
