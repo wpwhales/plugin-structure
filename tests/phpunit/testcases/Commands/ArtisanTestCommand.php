@@ -77,6 +77,15 @@ class ArtisanTestCommand extends \WP_UnitTestCase
 
     }
 
+    public function test_artisan_jobs_table_status()
+    {
+
+        $this->artisan("schedule:jobs-table")->assertSuccessful();
+
+
+
+    }
+
 
 
 

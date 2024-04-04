@@ -2,6 +2,7 @@
 
 namespace WPWCore\Console;
 
+use WPWCore\ActionScheduler\Console\JobsTableCommand;
 use WPWCore\ActionScheduler\Console\ScheduleRefreshCommand;
 use WPWCore\ActionScheduler\Console\ScheduleRemoveCanceledCommand;
 use WPWCore\Auth\Console\ClearResetsCommand;
@@ -65,7 +66,8 @@ class ConsoleServiceProvider extends ServiceProvider
     protected $devCommands = [
 //        'CacheTable'   => 'command.cache.table',
         'SeederMake'   => 'command.seeder.make',
-        'SessionTable' => 'command.session.table'
+        'SessionTable' => 'command.session.table',
+        'JobsTable' => 'command.jobs.table'
     ];
 
     /**
@@ -162,6 +164,19 @@ class ConsoleServiceProvider extends ServiceProvider
             return new SessionTableCommand($app['files'],$app["composer"]);
         });
     }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerJobsTableCommand()
+    {
+        $this->app->singleton('command.jobs.table', function ($app) {
+            return new JobsTableCommand($app['files'],$app["composer"]);
+        });
+    }
+
 
     /**
      * Register the command.
