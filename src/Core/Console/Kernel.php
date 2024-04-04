@@ -3,10 +3,10 @@
 namespace WPWCore\Console;
 
 use WPWCore\Console\Application as Artisan;
-use WPWhales\Console\Events\CommandFinished;
-use WPWhales\Console\Events\CommandStarting;
-use WPWhales\Console\Scheduling\Schedule;
-use WPWhales\Console\Scheduling\ScheduleRunCommand;
+use WPWCore\Console\Events\CommandFinished;
+use WPWCore\Console\Events\CommandStarting;
+use WPWCore\Console\Scheduling\Schedule;
+use WPWCore\Console\Scheduling\ScheduleRunCommand;
 use WPWhales\Contracts\Console\Kernel as KernelContract;
 use WPWhales\Contracts\Debug\ExceptionHandler;
 use WPWhales\Contracts\Events\Dispatcher;
