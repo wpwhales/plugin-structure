@@ -33,7 +33,9 @@ class Handler implements ExceptionHandler
      *
      * @var array
      */
-    protected $dontReport = [];
+    protected $dontReport = [
+        NotADefinedRouteException::class
+    ];
 
     /**
      * Report or log an exception.

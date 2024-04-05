@@ -274,7 +274,7 @@ trait RoutesRequests
             }
 
             $this->shouldSend = false;
-            throw new NotFoundHttpException("May be a wordpress route", null, 404);
+            throw new NotADefinedRouteException("May be a wordpress route");
         } catch (Throwable $e) {
 
 
