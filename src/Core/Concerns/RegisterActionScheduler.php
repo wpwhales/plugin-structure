@@ -47,13 +47,14 @@ trait RegisterActionScheduler
 
         $kernel->registerActionHooks();
 
-        /**
-         * @var $scheduler ActionScheduler
-         */
-        $scheduler = $this->app->make("scheduler");
+        add_action("action_scheduler_init", function () {
+            /**
+             * @var $scheduler ActionScheduler
+             */
+            $scheduler = $this->app->make("scheduler");
+            $scheduler->schedule_recurring(time(), 120, "wpwcore_schedule_jobs_processing");
 
-        $scheduler->schedule_recurring(time(),120,"wpwcore_schedule_jobs_processing");
-
+        });
         add_action("wpwcore_schedule_jobs_processing", function () {
             $worker = $this->make("queue.worker");
 
