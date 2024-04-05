@@ -85,7 +85,7 @@ class ActionScheduler implements QueueInterface
             $pending_actions = $this->search(
                 [
                     'hook'   => $hook,
-                    'status' => ActionScheduler_Store::STATUS_PENDING,
+                    'status' => \ActionScheduler_Store::STATUS_PENDING,
                 ],
                 'ids'
             );
@@ -96,7 +96,7 @@ class ActionScheduler implements QueueInterface
             $running_actions = $this->search(
                 [
                     'hook'   => $hook,
-                    'status' => ActionScheduler_Store::STATUS_RUNNING,
+                    'status' => \ActionScheduler_Store::STATUS_RUNNING,
                 ],
                 'ids'
             );

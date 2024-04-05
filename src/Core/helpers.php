@@ -5,14 +5,25 @@ namespace WPWCore;
 
 use Carbon\Carbon;
 use WPWCore\Assets\Bundle;
+use WPWCore\Bus\PendingDispatch;
 use WPWCore\DashboardNotices\Notices;
 use WPWCore\Http\Redirector;
 use WPWCore\Routing\UrlGenerator;
 use WPWhales\Container\Container;
 use WPWhales\Contracts\Debug\ExceptionHandler;
+use WPWhales\Contracts\Queue\ShouldQueue;
 use WPWhales\Support\Collection;
 use WPWhales\Support\HigherOrderTapProxy;
 use WPWhales\Support\HtmlString;
+
+
+
+function dispatch(ShouldQueue $job){
+
+    new PendingDispatch($job);
+
+}
+
 /**
  * Get the available container instance.
  *

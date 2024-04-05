@@ -107,7 +107,7 @@ class Dispatcher implements QueueingDispatcher
      */
     public function dispatchNow($command, $handler = null)
     {
-        $uses = class_uses_recursive($command);
+        $uses = \WPWCore\Support\class_uses_recursive($command);
 
         if (in_array(InteractsWithQueue::class, $uses) &&
             in_array(Queueable::class, $uses) &&

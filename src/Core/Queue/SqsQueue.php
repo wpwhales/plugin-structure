@@ -189,7 +189,7 @@ class SqsQueue extends Queue implements QueueContract, ClearableQueue
      */
     public function clear($queue)
     {
-        return tap($this->size($queue), function () use ($queue) {
+        return \WPWCore\tap($this->size($queue), function () use ($queue) {
             $this->sqs->purgeQueue([
                 'QueueUrl' => $this->getQueue($queue),
             ]);

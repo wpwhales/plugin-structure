@@ -41,7 +41,7 @@ use WPWhales\Contracts\Bus\Dispatcher;
 use WPWhales\Contracts\Container\BindingResolutionException;
 use WPWCore\Database\DatabaseServiceProvider;
 use WPWCore\Database\MigrationServiceProvider;
-use WPWhales\Log\LogManager;
+use WPWCore\Log\LogManager;
 use WPWhales\Queue\QueueServiceProvider;
 use WPWhales\Support\Composer;
 use WPWhales\Support\Facades\Facade;
@@ -1122,7 +1122,8 @@ class Application extends Container
      */
     public function storagePath($path = '')
     {
-        return ($this->storagePath ?: $this->basePath . DIRECTORY_SEPARATOR . 'storage') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
+
+        return WP_CONTENT_DIR."/wpwhales";
     }
 
     /**

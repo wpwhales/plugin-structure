@@ -113,7 +113,7 @@ class WorkCommand extends Command
 
         if (Terminal::hasSttyAvailable()) {
             $this->components->info(
-                sprintf('Processing jobs from the [%s] %s.', $queue, str('queue')->plural(explode(',', $queue)))
+                sprintf('Processing jobs from the [%s] %s.', $queue, \WPWCore\Support\str('queue')->plural(explode(',', $queue)))
             );
         }
 

@@ -5,8 +5,8 @@ namespace WPWhales\Support\Testing\Fakes;
 use BadMethodCallException;
 use Closure;
 use WPWhales\Contracts\Queue\Queue;
-use WPWhales\Queue\CallQueuedClosure;
-use WPWhales\Queue\QueueManager;
+use WPWCore\Queue\CallQueuedClosure;
+use WPWCore\Queue\QueueManager;
 use WPWhales\Support\Collection;
 use WPWhales\Support\Traits\ReflectsClosures;
 use PHPUnit\Framework\Assert as PHPUnit;
@@ -96,6 +96,7 @@ class QueueFake extends QueueManager implements Fake, Queue
         if (is_numeric($callback)) {
             return $this->assertPushedTimes($job, $callback);
         }
+
 
         PHPUnit::assertTrue(
             $this->pushed($job, $callback)->count() > 0,
@@ -302,7 +303,7 @@ class QueueFake extends QueueManager implements Fake, Queue
     public function pushed($job, $callback = null)
     {
         if (! $this->hasPushed($job)) {
-            return collect();
+            return \WPWCore\Collections\collect();
         }
 
         $callback = $callback ?: fn () => true;
@@ -359,6 +360,7 @@ class QueueFake extends QueueManager implements Fake, Queue
      */
     public function push($job, $data = '', $queue = null)
     {
+
         if ($this->shouldFakeJob($job)) {
             if ($job instanceof Closure) {
                 $job = CallQueuedClosure::create($job);

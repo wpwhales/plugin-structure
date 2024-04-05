@@ -3,6 +3,11 @@
 
 namespace WPWCore\Testing;
 
+use WPWCore\ActionScheduler\ActionScheduler;
+use WPWCore\Console\Application;
+use WPWhales\Container\Container;
+use WPWhales\Support\Facades\DB;
+
 trait PluginApplication
 {
 
@@ -65,14 +70,26 @@ trait PluginApplication
 
     public function tear_down()
     {
+
         if(method_exists($this,"runMigrateReset")){
             $this->runMigrateReset();
         }
+
         parent::tear_down();
+
+        if($this->app->bound("scheduler")){
+
+            DB::table("actionscheduler_actions")->truncate();
+            DB::table("actionscheduler_logs")->truncate();
+            DB::table("actionscheduler_groups")->truncate();
+        }
+
         if ($this->app) {
+
             foreach ($this->beforeApplicationDestroyedCallbacks as $callback) {
                 $callback();
             }
+
 
             $this->app->flush();
             $this->app = null;
@@ -81,9 +98,12 @@ trait PluginApplication
         /**
          * TODO Will check that after view integration
          */
-//        \WPWhales\View\Component::flushCache();
-//        \WPWhales\View\Component::forgetComponentsResolver();
-//        \WPWhales\View\Component::forgetFactory();
+        \WPWCore\View\Component::flushCache();
+        \WPWCore\View\Component::forgetComponentsResolver();
+        \WPWCore\View\Component::forgetFactory();
+
+        Application::forgetBootstrappers();
+
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace WPWCore\Queue;
 
 use Aws\DynamoDb\DynamoDbClient;
+use WPWCore\ActionScheduler\QueueWorker;
 use WPWhales\Contracts\Debug\ExceptionHandler;
 use WPWhales\Contracts\Support\DeferrableProvider;
 use WPWCore\Queue\Connectors\BeanstalkdConnector;
@@ -39,6 +40,7 @@ class QueueServiceProvider extends ServiceProvider implements DeferrableProvider
         $this->registerWorker();
         $this->registerListener();
         $this->registerFailedJobServices();
+
     }
 
     /**
@@ -214,7 +216,7 @@ class QueueServiceProvider extends ServiceProvider implements DeferrableProvider
                 Facade::clearResolvedInstances();
             };
 
-            return new Worker(
+            return new QueueWorker(
                 $app['queue'],
                 $app['events'],
                 $app[ExceptionHandler::class],
@@ -245,6 +247,7 @@ class QueueServiceProvider extends ServiceProvider implements DeferrableProvider
     {
         $this->app->singleton('queue.failer', function ($app) {
             $config = $app['config']['queue.failed'];
+
 
             if (array_key_exists('driver', $config) &&
                 (is_null($config['driver']) || $config['driver'] === 'null')) {

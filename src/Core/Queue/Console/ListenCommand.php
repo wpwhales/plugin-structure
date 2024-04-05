@@ -69,7 +69,7 @@ class ListenCommand extends Command
             $connection = $this->input->getArgument('connection')
         );
 
-        $this->components->info(sprintf('Processing jobs from the [%s] %s.', $queue, str('queue')->plural(explode(',', $queue))));
+        $this->components->info(sprintf('Processing jobs from the [%s] %s.', $queue, \WPWCore\Support\str('queue')->plural(explode(',', $queue))));
 
         $this->listener->listen(
             $connection, $queue, $this->gatherOptions()

@@ -3,10 +3,12 @@
 namespace WPWCore\Testing;
 
 
+use WPWCore\Testing\Concerns\InteractsWithConsole;
+use WPWhales\Contracts\Console\Kernel;
+
 trait DatabaseMigrations
 {
 
-    protected  $artisan;
     /**
      * Run the database migrations for the application.
      *
@@ -15,22 +17,17 @@ trait DatabaseMigrations
     public function runDatabaseMigrations()
     {
 
-        $this->artisan()->call('migrate');
+
+        return $this->app[Kernel::class]->call("migrate");
+
+
 
     }
 
-    protected function artisan(){
 
-        if(empty($this->artisan)){
-            $this->artisan = new \WPWCore\Console\Kernel($this->app);
-        }
-
-
-        return $this->artisan;
-
-    }
 
     public function runMigrateReset(){
-        $this->artisan()->call('migrate:reset');
+        return $this->app[Kernel::class]->call("migrate:reset");
+
     }
 }

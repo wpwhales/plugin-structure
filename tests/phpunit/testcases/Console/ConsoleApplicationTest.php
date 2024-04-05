@@ -15,10 +15,13 @@ use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
 class ConsoleApplicationTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        m::close();
-    }
+
+
+    public function tear_down()
+  {
+      parent::tear_down();;
+      m::close();
+  }
 
     public function testAddSetsLaravelInstance()
     {

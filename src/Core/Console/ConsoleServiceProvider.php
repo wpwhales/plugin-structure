@@ -29,17 +29,16 @@ use WPWCore\Session\Console\SessionTableCommand;
 use WPWCore\View\Console\ViewCacheCommand;
 use WPWCore\View\Console\ViewClearCommand;
 use WPWCore\View\Console\ViewSecureCommand;
-use WPWhales\Queue\Console\BatchesTableCommand;
-use WPWhales\Queue\Console\ClearCommand as ClearQueueCommand;
-use WPWhales\Queue\Console\FailedTableCommand;
-use WPWhales\Queue\Console\FlushFailedCommand as FlushFailedQueueCommand;
-use WPWhales\Queue\Console\ForgetFailedCommand as ForgetFailedQueueCommand;
-use WPWhales\Queue\Console\ListenCommand as QueueListenCommand;
-use WPWhales\Queue\Console\ListFailedCommand as ListFailedQueueCommand;
-use WPWhales\Queue\Console\RestartCommand as QueueRestartCommand;
-use WPWhales\Queue\Console\RetryCommand as QueueRetryCommand;
-use WPWhales\Queue\Console\TableCommand;
-use WPWhales\Queue\Console\WorkCommand as QueueWorkCommand;
+use WPWCore\Queue\Console\ClearCommand as ClearQueueCommand;
+use WPWCore\Queue\Console\FailedTableCommand;
+use WPWCore\Queue\Console\FlushFailedCommand as FlushFailedQueueCommand;
+use WPWCore\Queue\Console\ForgetFailedCommand as ForgetFailedQueueCommand;
+use WPWCore\Queue\Console\ListenCommand as QueueListenCommand;
+use WPWCore\Queue\Console\ListFailedCommand as ListFailedQueueCommand;
+use WPWCore\Queue\Console\RestartCommand as QueueRestartCommand;
+use WPWCore\Queue\Console\RetryCommand as QueueRetryCommand;
+use WPWCore\Queue\Console\TableCommand;
+use WPWCore\Queue\Console\WorkCommand as QueueWorkCommand;
 use WPWhales\Support\ServiceProvider;
 
 class ConsoleServiceProvider extends ServiceProvider
@@ -55,7 +54,8 @@ class ConsoleServiceProvider extends ServiceProvider
         'ViewSecure' => 'command.view.secure',
         'Seed'        => 'command.seed',
         'ScheduleRefresh'=>'command.schedule.refresh',
-        'ScheduleRemoveCanceled'=>'command.schedule.remove-canceled'
+        'ScheduleRemoveCanceled'=>'command.schedule.remove-canceled',
+
     ];
 
     /**
@@ -67,7 +67,8 @@ class ConsoleServiceProvider extends ServiceProvider
 //        'CacheTable'   => 'command.cache.table',
         'SeederMake'   => 'command.seeder.make',
         'SessionTable' => 'command.session.table',
-        'JobsTable' => 'command.jobs.table'
+        'JobsTable' => 'command.jobs.table',
+        'FailedJobsTable' => 'command.failed-jobs.table'
     ];
 
     /**
@@ -124,6 +125,101 @@ class ConsoleServiceProvider extends ServiceProvider
         });
     }
 
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerQueueClearCommand()
+    {
+        $this->app->singleton('command.queue.clear', function () {
+            return new ClearQueueCommand;
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerQueueFailedCommand()
+    {
+        $this->app->singleton('command.queue.failed', function () {
+            return new ListFailedQueueCommand;
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerQueueForgetCommand()
+    {
+        $this->app->singleton('command.queue.forget', function () {
+            return new ForgetFailedQueueCommand;
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerQueueFlushCommand()
+    {
+        $this->app->singleton('command.queue.flush', function () {
+            return new FlushFailedQueueCommand;
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerQueueListenCommand()
+    {
+        $this->app->singleton('command.queue.listen', function ($app) {
+            return new QueueListenCommand($app['queue.listener']);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerQueueRestartCommand()
+    {
+        $this->app->singleton('command.queue.restart', function ($app) {
+            return new QueueRestartCommand($app['cache.store']);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerQueueRetryCommand()
+    {
+        $this->app->singleton('command.queue.retry', function () {
+            return new QueueRetryCommand;
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerQueueWorkCommand()
+    {
+        $this->app->singleton('command.queue.work', function ($app) {
+            return new QueueWorkCommand($app['queue.worker'], $app['cache.store']);
+        });
+    }
 
     /**
      * Register the command.
@@ -173,7 +269,19 @@ class ConsoleServiceProvider extends ServiceProvider
     protected function registerJobsTableCommand()
     {
         $this->app->singleton('command.jobs.table', function ($app) {
-            return new JobsTableCommand($app['files'],$app["composer"]);
+            return new TableCommand($app['files'],$app["composer"]);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerFailedJobsTableCommand()
+    {
+        $this->app->singleton('command.failed-jobs.table', function ($app) {
+            return new FailedTableCommand($app['files'],$app["composer"]);
         });
     }
 
@@ -341,101 +449,6 @@ class ConsoleServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Register the command.
-     *
-     * @return void
-     */
-    protected function registerQueueClearCommand()
-    {
-        $this->app->singleton('command.queue.clear', function () {
-            return new ClearQueueCommand;
-        });
-    }
-
-    /**
-     * Register the command.
-     *
-     * @return void
-     */
-    protected function registerQueueFailedCommand()
-    {
-        $this->app->singleton('command.queue.failed', function () {
-            return new ListFailedQueueCommand;
-        });
-    }
-
-    /**
-     * Register the command.
-     *
-     * @return void
-     */
-    protected function registerQueueForgetCommand()
-    {
-        $this->app->singleton('command.queue.forget', function () {
-            return new ForgetFailedQueueCommand;
-        });
-    }
-
-    /**
-     * Register the command.
-     *
-     * @return void
-     */
-    protected function registerQueueFlushCommand()
-    {
-        $this->app->singleton('command.queue.flush', function () {
-            return new FlushFailedQueueCommand;
-        });
-    }
-
-    /**
-     * Register the command.
-     *
-     * @return void
-     */
-    protected function registerQueueListenCommand()
-    {
-        $this->app->singleton('command.queue.listen', function ($app) {
-            return new QueueListenCommand($app['queue.listener']);
-        });
-    }
-
-    /**
-     * Register the command.
-     *
-     * @return void
-     */
-    protected function registerQueueRestartCommand()
-    {
-        $this->app->singleton('command.queue.restart', function ($app) {
-            return new QueueRestartCommand($app['cache.store']);
-        });
-    }
-
-    /**
-     * Register the command.
-     *
-     * @return void
-     */
-    protected function registerQueueRetryCommand()
-    {
-        $this->app->singleton('command.queue.retry', function () {
-            return new QueueRetryCommand;
-        });
-    }
-
-    /**
-     * Register the command.
-     *
-     * @return void
-     */
-    protected function registerQueueWorkCommand()
-    {
-        $this->app->singleton('command.queue.work', function ($app) {
-            return new QueueWorkCommand($app['queue.worker'], $app['cache.store']);
-        });
-    }
 
     /**
      * Register the command.
@@ -449,17 +462,7 @@ class ConsoleServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Register the command.
-     *
-     * @return void
-     */
-    protected function registerQueueBatchesTableCommand()
-    {
-        $this->app->singleton('command.queue.batches-table', function ($app) {
-            return new BatchesTableCommand($app['files'], $app['composer']);
-        });
-    }
+
 
     /**
      * Register the command.

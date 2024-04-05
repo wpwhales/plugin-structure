@@ -327,14 +327,14 @@ abstract class Queue
             $this->container->bound('db.transactions')) {
             return $this->container->make('db.transactions')->addCallback(
                 function () use ($payload, $queue, $delay, $callback, $job) {
-                    return tap($callback($payload, $queue, $delay), function ($jobId) use ($job, $payload) {
+                    return \WPWCore\tap($callback($payload, $queue, $delay), function ($jobId) use ($job, $payload) {
                         $this->raiseJobQueuedEvent($jobId, $job, $payload);
                     });
                 }
             );
         }
 
-        return tap($callback($payload, $queue, $delay), function ($jobId) use ($job, $payload) {
+        return \WPWCore\tap($callback($payload, $queue, $delay), function ($jobId) use ($job, $payload) {
             $this->raiseJobQueuedEvent($jobId, $job, $payload);
         });
     }

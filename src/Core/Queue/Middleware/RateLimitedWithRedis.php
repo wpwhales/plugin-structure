@@ -73,7 +73,7 @@ class RateLimitedWithRedis extends RateLimited
             $this->redis, $key, $maxAttempts, $decayMinutes * 60
         );
 
-        return tap(! $limiter->acquire(), function () use ($key, $limiter) {
+        return \WPWCore\tap(! $limiter->acquire(), function () use ($key, $limiter) {
             $this->decaysAt[$key] = $limiter->decaysAt;
         });
     }

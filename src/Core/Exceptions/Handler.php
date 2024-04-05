@@ -50,7 +50,7 @@ class Handler implements ExceptionHandler
          * TODO We'll integrate it later when we have loggin system integrated
          */
 
-        return false;
+
 
         if ($this->shouldntReport($e)) {
             return;
@@ -63,7 +63,7 @@ class Handler implements ExceptionHandler
         }
 
         try {
-            $logger = \WPWhales\app(LoggerInterface::class);
+            $logger = \WPWCore\app(LoggerInterface::class);
         } catch (Exception $ex) {
             throw $e; // throw the original exception
         }
