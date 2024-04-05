@@ -64,6 +64,7 @@ class JobsTest extends \WP_UnitTestCase
 
     public function test_jobs_watcher_action_scheduler_working(){
 
+        do_action("action_scheduler_init");
         $this->assertTrue(as_has_scheduled_action("wpwcore_schedule_jobs_processing"));
         $this->assertIsNumeric(as_next_scheduled_action("wpwcore_schedule_jobs_processing"));
     }
