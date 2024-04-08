@@ -299,7 +299,11 @@ trait RoutesRequests
 
         $this->instance(\WPWhales\Http\Request::class, $this->prepareRequest($request));
         $this->instance(Request::class, $this->prepareRequest($request));
-
+        //This resolves the Signature mismatch issue on live site.
+        //I was unable to create the test case for this to verify why the signed url not working on production
+        // but with this fix it starts working
+        
+        $this->instance("request",$this->prepareRequest($request));
         if (wp_doing_ajax()) {
             $action = $request->get("action");
             $route = $request->get("route");
