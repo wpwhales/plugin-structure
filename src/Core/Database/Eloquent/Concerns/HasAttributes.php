@@ -588,7 +588,7 @@ trait HasAttributes
             ));
         }
 
-        return tap($relation->getResults(), function ($results) use ($method) {
+        return \WPWCore\tap($relation->getResults(), function ($results) use ($method) {
             $this->setRelation($method, $results);
         });
     }

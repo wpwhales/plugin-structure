@@ -392,7 +392,7 @@ abstract class Factory
         }
 
         if ($this->count === null) {
-            return tap($this->makeInstance($parent), function ($instance) {
+            return \WPWCore\tap($this->makeInstance($parent), function ($instance) {
                 $this->callAfterMaking(\WPWCore\Collections\collect([$instance])
 
 );
