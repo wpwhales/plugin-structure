@@ -6,7 +6,7 @@ use WPWhales\Bus\Queueable;
 use WPWhales\Container\Container;
 use WPWhales\Contracts\Queue\Job;
 use WPWhales\Contracts\Queue\ShouldQueue;
-use WPWhales\Queue\InteractsWithQueue;
+use WPWCore\Queue\InteractsWithQueue;
 
 class CallQueuedListener implements ShouldQueue
 {

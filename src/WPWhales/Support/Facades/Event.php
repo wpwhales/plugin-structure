@@ -2,7 +2,7 @@
 
 namespace WPWhales\Support\Facades;
 
-use WPWhales\Database\Eloquent\Model;
+use WPWCore\Database\Eloquent\Model;
 use WPWhales\Support\Testing\Fakes\EventFake;
 
 /**
