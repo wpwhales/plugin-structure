@@ -18,7 +18,7 @@ class RouteNameTest extends \WP_UnitTestCase
                 return 123;
             }
         ]);
-        $this->assertEquals($this->app["url"]->route("something_for_route_name"), site_url("/something"));
+        $this->assertEquals($this->app["url"]->route("something_for_route_name"), site_url("/something","https"));
     }
 
 
@@ -27,7 +27,7 @@ class RouteNameTest extends \WP_UnitTestCase
         $this->app->createAjaxRoutesFromFile(__DIR__ . "/routes/ajax.php");
 
 
-        $this->assertEquals($this->app["url"]->adminAjaxRoute("ajax_route_name"), admin_url("admin-ajax.php?action=wpwhales&route=" . urlencode("/test_ajax_route")));
+        $this->assertEquals($this->app["url"]->adminAjaxRoute("ajax_route_name"), admin_url("admin-ajax.php?action=wpwhales&route=" . urlencode("/test_ajax_route"),"https"));
 
     }
 
@@ -36,9 +36,9 @@ class RouteNameTest extends \WP_UnitTestCase
         $this->app->createAjaxRoutesFromFile(__DIR__ . "/routes/ajax.php");
         $this->app->createWebRoutesFromFile(__DIR__ . "/routes/web.php");
 
-        $this->assertEquals($this->app["url"]->route("test_web_route"), site_url("/test_web_route"));
+        $this->assertEquals($this->app["url"]->route("test_web_route"), site_url("/test_web_route","https"));
 
-        $this->assertEquals($this->app["url"]->adminAjaxRoute("ajax_route_name"), admin_url("admin-ajax.php?action=wpwhales&route=" . urlencode("/test_ajax_route")));
+        $this->assertEquals($this->app["url"]->adminAjaxRoute("ajax_route_name"), admin_url("admin-ajax.php?action=wpwhales&route=" . urlencode("/test_ajax_route"),"https"));
 
     }
 
@@ -51,7 +51,7 @@ class RouteNameTest extends \WP_UnitTestCase
             }
         ]);
 
-        $this->assertEquals($this->app["url"]->route("something_for_route_name"), site_url("/something"));
+        $this->assertEquals($this->app["url"]->route("something_for_route_name"), site_url("/something","https"));
 
         /**
          * @var $response TestResponse
@@ -72,7 +72,7 @@ class RouteNameTest extends \WP_UnitTestCase
             }
         ]);
 
-        $this->assertEquals($this->app["url"]->route("something_for_route_name", ["x" => 1]), site_url("/something?x=1"));
+        $this->assertEquals($this->app["url"]->route("something_for_route_name", ["x" => 1]), site_url("/something?x=1","https"));
     }
 
 
@@ -82,7 +82,7 @@ class RouteNameTest extends \WP_UnitTestCase
         $this->app->createAjaxRoutesFromFile(__DIR__ . "/routes/ajax.php");
 
 
-        $this->assertEquals($this->app["url"]->adminAjaxRoute("test_ajax_route_binding", ["event" => 1234]), admin_url("admin-ajax.php?action=wpwhales&route=" . urlencode("/test_ajax_route_binding/1234/edit")));
+        $this->assertEquals($this->app["url"]->adminAjaxRoute("test_ajax_route_binding", ["event" => 1234]), admin_url("admin-ajax.php?action=wpwhales&route=" . urlencode("/test_ajax_route_binding/1234/edit"),"https"));
 
 
     }

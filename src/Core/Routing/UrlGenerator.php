@@ -247,7 +247,7 @@ class UrlGenerator
      *
      * @throws \InvalidArgumentException
      */
-    public function route($name, $parameters = [], $secure = null)
+    public function route($name, $parameters = [], $secure = true)
     {
         if (!isset($this->app->router->namedRoutes[$name])) {
             throw new \InvalidArgumentException("Route [{$name}] not defined.");
@@ -285,7 +285,7 @@ class UrlGenerator
      *
      * @throws \InvalidArgumentException
      */
-    public function adminAjaxRoute($name, $parameters = [], $secure = null)
+    public function adminAjaxRoute($name, $parameters = [], $secure = true)
     {
         if (!isset($this->app->adminAjaxRouter->namedRoutes[$name])) {
             throw new \InvalidArgumentException("Route [{$name}] not defined.");
