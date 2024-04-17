@@ -306,7 +306,7 @@ class UrlGenerator
             return ($matches[1] == $uri) ? '' : $uri;
         }, $uri);
 
-        $uri = $this->replaceRouteParameters($uri, $parameters);
+        $parameters["route"] = $this->replaceRouteParameters($parameters["route"], $parameters);
 
         $uri = $this->to($uri, [], $secure);
 

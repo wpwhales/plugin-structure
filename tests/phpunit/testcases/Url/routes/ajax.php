@@ -18,3 +18,10 @@ $router->get("/test_ajax_signed_route", [
     function () {
         return "123";
     }]);
+
+
+$router->get("/test_ajax_route_binding/{event}/edit", [
+    "as"=>"test_ajax_route_binding",
+    function ($request,$event) {
+        return "123";
+    }]);
