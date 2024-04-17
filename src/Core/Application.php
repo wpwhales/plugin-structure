@@ -136,6 +136,13 @@ class Application extends Container
     public $adminAjaxRouter;
 
     /**
+     * The Admin Ajax Router instance.
+     *
+     * @var \WPWCore\Routing\Router
+     */
+    public $webRouter;
+
+    /**
      * The array of terminating callbacks.
      *
      * @var callable[]
@@ -365,6 +372,9 @@ class Application extends Container
             $this->createRoutesFromFile($path, $attributes);
         }
 
+        $this->createRoutesFromFile($path, $attributes, $this->webRouter);
+
+
     }
 
     /**
@@ -401,6 +411,7 @@ class Application extends Container
         $this->router = new Router($this);
 
         $this->adminAjaxRouter = new Router($this);
+        $this->webRouter = new Router($this);
     }
 
     /**

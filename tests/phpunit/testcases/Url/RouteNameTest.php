@@ -18,6 +18,14 @@ class RouteNameTest extends \WP_UnitTestCase
                 return 123;
             }
         ]);
+        $this->app->webRouter->get("/something", [
+            "as" => "something_for_route_name", function () {
+
+                return 123;
+            }
+        ]);
+        //duplicate for naming  as name url generation is dependent on webRouter ro adminAjaxRouter
+
         $this->assertEquals($this->app["url"]->route("something_for_route_name"), site_url("/something","https"));
     }
 
@@ -51,6 +59,15 @@ class RouteNameTest extends \WP_UnitTestCase
             }
         ]);
 
+        $this->app->webRouter->get("/something", [
+            "as" => "something_for_route_name", function () {
+
+                return "123";
+            }
+        ]);
+        //duplicate for naming  as name url generation is dependent on webRouter ro adminAjaxRouter
+
+
         $this->assertEquals($this->app["url"]->route("something_for_route_name"), site_url("/something","https"));
 
         /**
@@ -66,6 +83,12 @@ class RouteNameTest extends \WP_UnitTestCase
     {
 
         $this->app->router->get("/something", [
+            "as" => "something_for_route_name", function () {
+
+                return "123";
+            }
+        ]);        //duplicate for naming  as name url generation is dependent on webRouter ro adminAjaxRouter
+        $this->app->webRouter->get("/something", [
             "as" => "something_for_route_name", function () {
 
                 return "123";
