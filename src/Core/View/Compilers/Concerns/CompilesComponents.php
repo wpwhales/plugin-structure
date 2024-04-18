@@ -6,8 +6,6 @@ use WPWCore\View\AnonymousComponent;
 use WPWCore\View\ComponentAttributeBag;
 use WPWhales\Contracts\Support\CanBeEscapedWhenCastToString;
 use WPWhales\Support\Str;
-use function WPWhales\View\Compilers\Concerns\e;
-use function WPWhales\View\Compilers\Concerns\str_contains;
 
 trait CompilesComponents
 {
@@ -70,7 +68,7 @@ trait CompilesComponents
         return implode("\n", [
             '<?php if (isset($component)) { $__componentOriginal'.$hash.' = $component; } ?>',
             '<?php if (isset($attributes)) { $__attributesOriginal'.$hash.' = $attributes; } ?>',
-            '<?php $component = '.$component.'::resolve('.($data ?: '[]').' + (isset($attributes) && $attributes instanceof WPWhales\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>',
+            '<?php $component = '.$component.'::resolve('.($data ?: '[]').' + (isset($attributes) && $attributes instanceof WPWCore\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>',
             '<?php $component->withName('.$alias.'); ?>',
             '<?php if ($component->shouldRender()): ?>',
             '<?php $__env->startComponent($component->resolveView(), $component->data()); ?>',

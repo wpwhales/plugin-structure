@@ -69,7 +69,7 @@ trait CompilesLayouts
     {
         $escapedLastSection = strtr($this->lastSection, ['\\' => '\\\\', "'" => "\\'"]);
 
-        return "<?php echo \WPWhales\View\Factory::parentPlaceholder('{$escapedLastSection}'); ?>";
+        return "<?php echo \WPWCore\View\Factory::parentPlaceholder('{$escapedLastSection}'); ?>";
     }
 
     /**

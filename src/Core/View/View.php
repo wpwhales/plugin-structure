@@ -357,7 +357,7 @@ class View implements ArrayAccess, Htmlable, ViewContract
     /**
      * Get the view factory instance.
      *
-     * @return \WPWhales\View\Factory
+     * @return \WPWCore\View\Factory
      */
     public function getFactory()
     {
@@ -469,7 +469,7 @@ class View implements ArrayAccess, Htmlable, ViewContract
      *
      * @param  string  $method
      * @param  array  $parameters
-     * @return \WPWhales\View\View
+     * @return \WPWCore\View\View
      *
      * @throws \BadMethodCallException
      */

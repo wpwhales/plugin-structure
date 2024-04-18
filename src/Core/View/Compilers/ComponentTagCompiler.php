@@ -259,7 +259,7 @@ class ComponentTagCompiler
         }
 
         return "##BEGIN-COMPONENT-CLASS##@component('{$class}', '{$component}', [".$this->attributesToString($parameters, $escapeBound = false).'])
-<?php if (isset($attributes) && $attributes instanceof WPWhales\View\ComponentAttributeBag && $constructor = (new ReflectionClass('.$class.'::class))->getConstructor()): ?>
+<?php if (isset($attributes) && $attributes instanceof WPWCore\View\ComponentAttributeBag && $constructor = (new ReflectionClass('.$class.'::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['.$this->attributesToString($attributes->all(), $escapeAttributes = $class !== DynamicComponent::class).']); ?>';
@@ -784,7 +784,7 @@ class ComponentTagCompiler
         return \WPWCore\Collections\collect($attributes)
             ->map(function (string $value, string $attribute) use ($escapeBound) {
                 return $escapeBound && isset($this->boundAttributes[$attribute]) && $value !== 'true' && !is_numeric($value)
-                    ? "'{$attribute}' => \WPWhales\View\Compilers\BladeCompiler::sanitizeComponentAttribute({$value})"
+                    ? "'{$attribute}' => \WPWCore\View\Compilers\BladeCompiler::sanitizeComponentAttribute({$value})"
                     : "'{$attribute}' => {$value}";
             })
                 ->implode(',');

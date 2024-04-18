@@ -4,7 +4,7 @@ namespace WPWCore\View;
 
 use WPWhales\Container\Container;
 use WPWhales\Support\Str;
-use WPWhales\View\Compilers\ComponentTagCompiler;
+use WPWCore\View\Compilers\ComponentTagCompiler;
 
 
 class DynamicComponent extends Component
@@ -19,7 +19,7 @@ class DynamicComponent extends Component
     /**
      * The component tag compiler instance.
      *
-     * @var \WPWhales\View\Compilers\BladeTagCompiler
+     * @var \WPWCore\View\Compilers\BladeTagCompiler
      */
     protected static $compiler;
 
@@ -159,7 +159,7 @@ EOF;
     /**
      * Get an instance of the Blade tag compiler.
      *
-     * @return \WPWhales\View\Compilers\ComponentTagCompiler
+     * @return \WPWCore\View\Compilers\ComponentTagCompiler
      */
     protected function compiler()
     {
