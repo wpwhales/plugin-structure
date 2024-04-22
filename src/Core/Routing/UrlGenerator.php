@@ -74,7 +74,7 @@ class UrlGenerator
             return $this->app->make('config')->get('app.key');
         });
 
-        $this->forceRootUrl(site_url());
+        $this->forceRootUrl(home_url());
     }
 
     /**
