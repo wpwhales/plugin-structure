@@ -663,6 +663,7 @@ class TestResponse implements ArrayAccess
         } else {
             $assert = AssertableJson::fromAssertableJsonString($json);
 
+
             $value($assert);
 
             if (Arr::isAssoc($assert->toArray())) {

@@ -15,6 +15,7 @@ use WPWCore\Auth\Access\AuthorizationException;
 use WPWCore\Console\View\Components\BulletList;
 use WPWCore\Console\View\Components\Error;
 use WPWCore\Session\TokenMismatchException;
+use WPWCore\View\ViewException;
 use WPWhales\Contracts\Debug\ExceptionHandler;
 use WPWhales\Contracts\Support\Responsable;
 use WPWCore\Database\Eloquent\ModelNotFoundException;
@@ -22,9 +23,11 @@ use WPWhales\Http\Exceptions\HttpResponseException;
 use WPWhales\Http\JsonResponse;
 use WPWhales\Http\Response;
 use WPWhales\Support\Arr;
+use WPWhales\Support\Facades\Config;
 use WPWhales\Support\Facades\URL;
 use WPWhales\Support\ViewErrorBag;
 use WPWhales\Validation\ValidationException;
+use function WPWCore\view;
 
 class Handler implements ExceptionHandler
 {
@@ -51,7 +54,6 @@ class Handler implements ExceptionHandler
         /**
          * TODO We'll integrate it later when we have loggin system integrated
          */
-
 
 
         if ($this->shouldntReport($e)) {
@@ -127,19 +129,18 @@ class Handler implements ExceptionHandler
         } elseif ($e instanceof ModelNotFoundException) {
             $e = new NotFoundHttpException($e->getMessage(), $e);
         } elseif ($e instanceof AuthorizationException) {
-            $e = new HttpException($e->status() ?? 403, $e->getMessage(),$e);
-        }elseif($e instanceof TokenMismatchException){
-            $e = new HttpException(419, "CSRF Token Mismatch",$e);
-        }
-        elseif ($e instanceof ValidationException && $e->getResponse()) {
+            $e = new HttpException($e->status() ?? 403, $e->getMessage(), $e);
+        } elseif ($e instanceof TokenMismatchException) {
+            $e = new HttpException(419, "CSRF Token Mismatch", $e);
+        } elseif ($e instanceof ValidationException && $e->getResponse()) {
 
             //if doing ajax
-            if($request->expectsJson() || wp_doing_ajax()){
+            if ($request->expectsJson() || wp_doing_ajax()) {
 
                 return $e->getResponse();
-            }else{
+            } else {
                 $viewBag = new ViewErrorBag();
-                $viewBag->put($e->errorBag,$e->validator->getMessageBag());
+                $viewBag->put($e->errorBag, $e->validator->getMessageBag());
 
                 return \WPWCore\redirect()->to(\WPWCore\app("url")->previous())
                     ->withInput($request->input())
@@ -148,7 +149,6 @@ class Handler implements ExceptionHandler
 
 
         }
-
 
 
         return ($request->expectsJson() || wp_doing_ajax())
@@ -235,6 +235,35 @@ class Handler implements ExceptionHandler
      */
     protected function renderExceptionWithSymfony(Throwable $e, $debug)
     {
+
+        if (!$debug) {
+            $content = "Error";
+            $code = 500;
+            if (method_exists($e, "getCode")) {
+
+                $code = $e->getCode();
+
+            } elseif (method_exists($e, "getStatusCode")) {
+                $code = $e->getStatusCode();
+            }
+
+
+            try {
+                $content = view("errors." . $code)->render();
+
+            } catch (\Exception $ve) {
+
+                $content = view("errors.error")->with([
+                    "code"=>500,
+                    "message"=>"Server Error"
+                ])->render();
+
+            }
+
+            return $content;
+
+        }
+
         $renderer = new HtmlErrorRenderer($debug);
 
         return $renderer->render($e)->getAsString();
