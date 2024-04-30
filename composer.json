@@ -2,12 +2,7 @@
   "name": "wpwhales/plugin-structure",
   "version": "1.0.0",
   "description": "Framework for WPWhales Team to develop plugins in a better way",
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/wpwhales/monolog"
-    }
-  ],
+
   "authors": [
     {
       "name": "Hamza Mirza",
@@ -46,8 +41,7 @@
     "symfony/console": "^6.0.9",
     "nunomaduro/termwind": "^1.13",
     "woocommerce/action-scheduler": "^3.7",
-    "ramsey/uuid": "^4.7",
-    "monolog/monolog": "dev-main"
+    "ramsey/uuid": "^4.7"
 
   },
   "require-dev": {
@@ -66,7 +60,8 @@
         "src/WPWhales/Macroable/",
         "src/WPWhales/Collections/",
         "src/WPWhales/Conditionable/"
-      ]
+      ],
+      "WPWCoreMonolog\\": "external/Monolog"
     },
     "files": [
       "src/Core/helpers.php",
