@@ -3,7 +3,7 @@
 namespace WPWCore\Log;
 
 use InvalidArgumentException;
-use Monolog\Level;
+use WPWCoreMonolog\Level;
 
 trait ParsesLogConfiguration
 {
@@ -31,7 +31,7 @@ trait ParsesLogConfiguration
     abstract protected function getFallbackChannelName();
 
     /**
-     * Parse the string level into a Monolog constant.
+     * Parse the string level into a WPWCoreMonolog constant.
      *
      * @param  array  $config
      * @return int

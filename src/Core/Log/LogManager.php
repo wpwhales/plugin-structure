@@ -5,19 +5,19 @@ namespace WPWCore\Log;
 use Closure;
 use WPWhales\Support\Str;
 use InvalidArgumentException;
-use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\ErrorLogHandler;
-use Monolog\Handler\FingersCrossedHandler;
-use Monolog\Handler\FormattableHandlerInterface;
-use Monolog\Handler\HandlerInterface;
-use Monolog\Handler\RotatingFileHandler;
-use Monolog\Handler\SlackWebhookHandler;
-use Monolog\Handler\StreamHandler;
-use Monolog\Handler\SyslogHandler;
-use Monolog\Handler\WhatFailureGroupHandler;
-use Monolog\Logger as Monolog;
-use Monolog\Processor\ProcessorInterface;
-use Monolog\Processor\PsrLogMessageProcessor;
+use WPWCoreMonolog\Formatter\LineFormatter;
+use WPWCoreMonolog\Handler\ErrorLogHandler;
+use WPWCoreMonolog\Handler\FingersCrossedHandler;
+use WPWCoreMonolog\Handler\FormattableHandlerInterface;
+use WPWCoreMonolog\Handler\HandlerInterface;
+use WPWCoreMonolog\Handler\RotatingFileHandler;
+use WPWCoreMonolog\Handler\SlackWebhookHandler;
+use WPWCoreMonolog\Handler\StreamHandler;
+use WPWCoreMonolog\Handler\SyslogHandler;
+use WPWCoreMonolog\Handler\WhatFailureGroupHandler;
+use WPWCoreMonolog\Logger as WPWCoreMonolog;
+use WPWCoreMonolog\Processor\ProcessorInterface;
+use WPWCoreMonolog\Processor\PsrLogMessageProcessor;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
@@ -192,7 +192,7 @@ class LogManager implements LoggerInterface
 
 
         return new Logger(
-            new Monolog('WPWhales', $this->prepareHandlers([$handler])),
+            new WPWCoreMonolog('WPWhales', $this->prepareHandlers([$handler])),
             $this->app['events']
         );
     }
@@ -279,7 +279,7 @@ class LogManager implements LoggerInterface
             $handlers = [new WhatFailureGroupHandler($handlers)];
         }
 
-        return new Monolog($this->parseChannel($config), $handlers, $processors);
+        return new WPWCoreMonolog($this->parseChannel($config), $handlers, $processors);
     }
 
     /**
@@ -290,7 +290,7 @@ class LogManager implements LoggerInterface
      */
     protected function createSingleDriver(array $config)
     {
-        return new Monolog($this->parseChannel($config), [
+        return new WPWCoreMonolog($this->parseChannel($config), [
             $this->prepareHandler(
                 new StreamHandler(
                     $config['path'], $this->level($config),
@@ -308,7 +308,7 @@ class LogManager implements LoggerInterface
      */
     protected function createDailyDriver(array $config)
     {
-        return new Monolog($this->parseChannel($config), [
+        return new WPWCoreMonolog($this->parseChannel($config), [
             $this->prepareHandler(new RotatingFileHandler(
                 $config['path'], $config['days'] ?? 7, $this->level($config),
                 $config['bubble'] ?? true, $config['permission'] ?? null, $config['locking'] ?? false
@@ -324,7 +324,7 @@ class LogManager implements LoggerInterface
      */
     protected function createSlackDriver(array $config)
     {
-        return new Monolog($this->parseChannel($config), [
+        return new WPWCoreMonolog($this->parseChannel($config), [
             $this->prepareHandler(new SlackWebhookHandler(
                 $config['url'],
                 $config['channel'] ?? null,
@@ -348,7 +348,7 @@ class LogManager implements LoggerInterface
      */
     protected function createSyslogDriver(array $config)
     {
-        return new Monolog($this->parseChannel($config), [
+        return new WPWCoreMonolog($this->parseChannel($config), [
             $this->prepareHandler(new SyslogHandler(
                 Str::snake($this->app['config']['app.name'], '-'),
                 $config['facility'] ?? LOG_USER, $this->level($config)
@@ -364,7 +364,7 @@ class LogManager implements LoggerInterface
      */
     protected function createErrorlogDriver(array $config)
     {
-        return new Monolog($this->parseChannel($config), [
+        return new WPWCoreMonolog($this->parseChannel($config), [
             $this->prepareHandler(new ErrorLogHandler(
                 $config['type'] ?? ErrorLogHandler::OPERATING_SYSTEM, $this->level($config)
             )),
@@ -372,7 +372,7 @@ class LogManager implements LoggerInterface
     }
 
     /**
-     * Create an instance of any handler available in Monolog.
+     * Create an instance of any handler available in WPWCoreMonolog.
      *
      * @param  array  $config
      * @return \Psr\Log\LoggerInterface
@@ -380,7 +380,7 @@ class LogManager implements LoggerInterface
      * @throws \InvalidArgumentException
      * @throws \WPWhales\Contracts\Container\BindingResolutionException
      */
-    protected function createMonologDriver(array $config)
+    protected function createWPWCoreMonologDriver(array $config)
     {
         if (! is_a($config['handler'], HandlerInterface::class, true)) {
             throw new InvalidArgumentException(
@@ -412,7 +412,7 @@ class LogManager implements LoggerInterface
             ->map(fn ($processor) => $this->app->make($processor['processor'] ?? $processor, $processor['with'] ?? []))
             ->toArray();
 
-        return new Monolog(
+        return new WPWCoreMonolog(
             $this->parseChannel($config),
             [$handler],
             $processors,
@@ -420,7 +420,7 @@ class LogManager implements LoggerInterface
     }
 
     /**
-     * Prepare the handlers for usage by Monolog.
+     * Prepare the handlers for usage by WPWCoreMonolog.
      *
      * @param  array  $handlers
      * @return array
@@ -435,11 +435,11 @@ class LogManager implements LoggerInterface
     }
 
     /**
-     * Prepare the handler for usage by Monolog.
+     * Prepare the handler for usage by WPWCoreMonolog.
      *
-     * @param  \Monolog\Handler\HandlerInterface  $handler
+     * @param  \WPWCoreMonolog\Handler\HandlerInterface  $handler
      * @param  array  $config
-     * @return \Monolog\Handler\HandlerInterface
+     * @return \WPWCoreMonolog\Handler\HandlerInterface
      */
     protected function prepareHandler(HandlerInterface $handler, array $config = [])
     {
@@ -467,9 +467,9 @@ class LogManager implements LoggerInterface
     }
 
     /**
-     * Get a Monolog formatter instance.
+     * Get a WPWCoreMonolog formatter instance.
      *
-     * @return \Monolog\Formatter\FormatterInterface
+     * @return \WPWCoreMonolog\Formatter\FormatterInterface
      */
     protected function formatter()
     {
