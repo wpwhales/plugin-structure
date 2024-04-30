@@ -528,12 +528,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wpwhales/monolog.git",
-                "reference": "ee45e68041034b17ca701194d45412c35c7fceef"
+                "reference": "f2535d2d7116fb1259ebc405cc0bce4ee895f6d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wpwhales/monolog/zipball/ee45e68041034b17ca701194d45412c35c7fceef",
-                "reference": "ee45e68041034b17ca701194d45412c35c7fceef",
+                "url": "https://api.github.com/repos/wpwhales/monolog/zipball/f2535d2d7116fb1259ebc405cc0bce4ee895f6d3",
+                "reference": "f2535d2d7116fb1259ebc405cc0bce4ee895f6d3",
                 "shasum": ""
             },
             "require": {
@@ -582,7 +582,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "3.x-dev"
+                    "dev-main": "9.9.x-dev"
                 }
             },
             "autoload": {
@@ -633,7 +633,7 @@
                     "url": "https://tidelift.com/funding/github/packagist/monolog/monolog"
                 }
             ],
-            "time": "2024-04-30T21:29:32+00:00"
+            "time": "2024-04-30T22:03:59+00:00"
         },
         {
             "name": "nesbot/carbon",
