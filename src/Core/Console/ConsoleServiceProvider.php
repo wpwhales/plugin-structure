@@ -68,7 +68,12 @@ class ConsoleServiceProvider extends ServiceProvider
         'SeederMake'   => 'command.seeder.make',
         'SessionTable' => 'command.session.table',
         'JobsTable' => 'command.jobs.table',
-        'FailedJobsTable' => 'command.failed-jobs.table'
+        'FailedJobsTable' => 'command.failed-jobs.table',
+        'ForgetFailed'=>'command.forget.failed',
+        'FlushFailed'=>'command.flush.failed',
+        'ListFailed'=>'command.list.failed',
+        'RetryFailed'=>'command.retry.failed'
+
     ];
 
     /**
@@ -142,9 +147,9 @@ class ConsoleServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerQueueFailedCommand()
+    protected function registerListFailedCommand()
     {
-        $this->app->singleton('command.queue.failed', function () {
+        $this->app->singleton('command.list.failed', function () {
             return new ListFailedQueueCommand;
         });
     }
@@ -154,9 +159,9 @@ class ConsoleServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerQueueForgetCommand()
+    protected function registerForgetFailedCommand()
     {
-        $this->app->singleton('command.queue.forget', function () {
+        $this->app->singleton('command.forget.failed', function () {
             return new ForgetFailedQueueCommand;
         });
     }
@@ -166,9 +171,9 @@ class ConsoleServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerQueueFlushCommand()
+    protected function registerFlushFailedCommand()
     {
-        $this->app->singleton('command.queue.flush', function () {
+        $this->app->singleton('command.flush.failed', function () {
             return new FlushFailedQueueCommand;
         });
     }
@@ -202,9 +207,9 @@ class ConsoleServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerQueueRetryCommand()
+    protected function registerRetryFailedCommand()
     {
-        $this->app->singleton('command.queue.retry', function () {
+        $this->app->singleton('command.retry.failed', function () {
             return new QueueRetryCommand;
         });
     }

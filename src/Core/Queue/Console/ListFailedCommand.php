@@ -28,7 +28,7 @@ class ListFailedCommand extends Command
      *
      * @var string[]
      */
-    protected $headers = ['ID', 'Connection', 'Queue', 'Class', 'Failed At'];
+    protected $headers = ['ID', 'Class', 'Failed At','Exception'];
 
     /**
      * Execute the console command.
@@ -55,7 +55,7 @@ class ListFailedCommand extends Command
     {
         $failed = $this->laravel['queue.failer']->all();
 
-        return collect($failed)->map(function ($failed) {
+        return \WPWCore\Collections\collect($failed)->map(function ($failed) {
             return $this->parseFailedJob((array) $failed);
         })->filter()->all();
     }
@@ -68,7 +68,9 @@ class ListFailedCommand extends Command
      */
     protected function parseFailedJob(array $failed)
     {
-        $row = array_values(Arr::except($failed, ['payload', 'exception']));
+        $row = array_values(Arr::except($failed, ["payload","queue","connection"]));
+
+
 
         array_splice($row, 3, 0, $this->extractJobName($failed['payload']) ?: '');
 
@@ -113,11 +115,30 @@ class ListFailedCommand extends Command
      */
     protected function displayFailedJobs(array $jobs)
     {
-        collect($jobs)->each(
-            fn ($job) => $this->components->twoColumnDetail(
-                sprintf('<fg=gray>%s</> %s</>', $job[4], $job[0]),
-                sprintf('<fg=gray>%s@%s</> %s', $job[1], $job[2], $job[3])
-            ),
-        );
+
+        $jobs = \WPWCore\Collections\collect($jobs)->map(function($job){
+
+            $exceptionMessage =$this->parseExceptionMessage($job[1]);
+            $job[1]=$job[3];
+            $job[3] = $exceptionMessage;
+            return $job;
+
+        });
+
+        $this->table($this->headers,$jobs);
+
+    }
+
+    private function parseExceptionMessage($exception)
+    {
+
+
+        $messageStartPos = strpos($exception, 'Exception:');
+        $messageEndPos = strpos($exception, 'Stack trace:');
+        if ($messageStartPos !== false && $messageEndPos !== false) {
+            $message = substr($exception, $messageStartPos, $messageEndPos - $messageStartPos);
+            return trim($message);
+        }
+        return 'N/A';
     }
 }
