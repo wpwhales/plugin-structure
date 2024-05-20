@@ -43,12 +43,7 @@ class ViewCompileTest extends \WP_UnitTestCase
         /**
          * @var $view \WPWCore\View\Factory
          */
-        $sessionInstance = $this->getMockBuilder(Request::class)->onlyMethods(["session","get"])->getMock();
 
-        $sessionInstance->expects($this->exactly(1))->method("session")->will($this->returnSelf());
-
-        $sessionInstance->expects($this->exactly(1))->method("get")->will($this->returnValue(null));
-        $this->app["request"] = $sessionInstance;
 
         $view = $this->app["view"];
 
@@ -69,12 +64,6 @@ class ViewCompileTest extends \WP_UnitTestCase
     public function test_compiled_files_contains_ABSPATH_constant_check(){
 
 
-        $sessionInstance = $this->getMockBuilder(Request::class)->onlyMethods(["session","get"])->getMock();
-
-        $sessionInstance->expects($this->exactly(1))->method("session")->will($this->returnSelf());
-
-        $sessionInstance->expects($this->exactly(1))->method("get")->will($this->returnValue(null));
-        $this->app["request"] = $sessionInstance;
 
         /**
          * @var $view \WPWCore\View\Factory
@@ -101,12 +90,6 @@ class ViewCompileTest extends \WP_UnitTestCase
     public function test_blade_file_without_ABSPATH_constant_should_throw_error(){
 
 
-        $sessionInstance = $this->getMockBuilder(Request::class)->onlyMethods(["session","get"])->getMock();
-
-        $sessionInstance->expects($this->exactly(1))->method("session")->will($this->returnSelf());
-
-        $sessionInstance->expects($this->exactly(1))->method("get")->will($this->returnValue(null));
-        $this->app["request"] = $sessionInstance;
 
 
 
@@ -138,12 +121,6 @@ Add this code at the beginning of your Blade file");
     public function test_exception_thrown_in_view(){
 
 
-        $sessionInstance = $this->getMockBuilder(Request::class)->onlyMethods(["session","get"])->getMock();
-
-        $sessionInstance->expects($this->exactly(1))->method("session")->will($this->returnSelf());
-
-        $sessionInstance->expects($this->exactly(1))->method("get")->will($this->returnValue(null));
-        $this->app["request"] = $sessionInstance;
 
         /**
          * @var $view \WPWCore\View\Factory

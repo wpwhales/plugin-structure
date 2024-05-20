@@ -41,7 +41,7 @@ class WebHandlerTest extends \WP_UnitTestCase
         $response = $this->call("GET", "/test_421_response");
 
         $response->assertStatus(421);
-        $this->assertStringContainsString("error in web route (500 Internal Server Error)",$response->content());
+        $this->assertStringContainsString("Trace:",$response->content());
 
 
         Config::set("app.debug",false);
@@ -63,7 +63,7 @@ class WebHandlerTest extends \WP_UnitTestCase
 
 
         $response->assertStatus(421);
-        $this->assertStringContainsString("error in web route (500 Internal Server Error)",$response->content());
+        $this->assertStringContainsString("Trace:",$response->content());
 
         $paths = \WPWCore\config("view.paths");
         array_unshift($paths,__DIR__);

@@ -11,6 +11,7 @@ use WPWhales\Contracts\View\Factory as FactoryContract;
 use WPWhales\Support\Arr;
 use WPWhales\Support\Traits\Macroable;
 use WPWhales\Support\ViewErrorBag;
+use function WPWCore\app;
 
 class Factory implements FactoryContract
 {
@@ -106,7 +107,20 @@ class Factory implements FactoryContract
         $this->engines = $engines;
 
         $this->share('__env', $this);
-        $this->share('errors', \WPWCore\app("request")->session()->get('errors') ?: new ViewErrorBag());
+
+
+        $this->shareErrorsWithView();
+    }
+
+
+    private function shareErrorsWithView()
+    {
+
+        //Share the error bag if and only if the session is configured with the application
+        if (app()->bound("session")) {
+            $this->share('errors', \WPWCore\app("request")->session()->get('errors') ?: new ViewErrorBag());
+        }
+
 
     }
 

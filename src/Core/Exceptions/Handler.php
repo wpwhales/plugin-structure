@@ -254,8 +254,8 @@ class Handler implements ExceptionHandler
             } catch (\Exception $ve) {
 
                 $content = view("errors.error")->with([
-                    "code"=>500,
-                    "message"=>"Server Error"
+                    "code"    => 500,
+                    "message" => "Server Error"
                 ])->render();
 
             }
@@ -264,9 +264,16 @@ class Handler implements ExceptionHandler
 
         }
 
-        $renderer = new HtmlErrorRenderer($debug);
 
-        return $renderer->render($e)->getAsString();
+
+        $exception = $e;
+        ob_start();
+
+        include dirname(__FILE__, 4) . "/resources/views/errors/trace.php";
+
+        $content = ob_get_clean();
+
+        return $content;
     }
 
     /**

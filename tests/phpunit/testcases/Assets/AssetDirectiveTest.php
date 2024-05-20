@@ -24,12 +24,7 @@ class AssetDirectiveTest extends \WP_UnitTestCase
         $config = \WPWCore\app("config");
         $config->set("view.paths", $paths);
 
-        $sessionInstance = $this->getMockBuilder(Request::class)->onlyMethods(["session","get"])->getMock();
 
-        $sessionInstance->expects($this->exactly(1))->method("session")->will($this->returnSelf());
-
-        $sessionInstance->expects($this->exactly(1))->method("get")->will($this->returnValue(null));
-        $this->app["request"] = $sessionInstance;
 
         $view = $this->app["view"];
 
