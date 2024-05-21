@@ -79,9 +79,9 @@ File: <?= $trace['file'] ?>
                             <?php } ?>
         Type: <?= isset($trace['type']) ?? $trace['type'] ?>
         Args:
-        <?php foreach ($trace['args'] as $arg) { ?>
+        <?php if(isset($trace['args'])){foreach ($trace['args'] as $arg) { ?>
             <?= is_array($arg) ? json_encode($arg):"MAY BE IT's a CLOSURE NEED SOMETHING TO HANDLE IT" ?>
-        <?php } ?>
+        <?php }} ?>
         </code></pre>
             </div>
         <?php } ?>
