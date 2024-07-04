@@ -153,9 +153,9 @@ trait RoutesRequests
             if (is_callable($callback)) {
                 $callback();
             }
-            if($this->runningUnitTests()){
+            if ($this->runningUnitTests()) {
                 wp_die();
-            }else{
+            } else {
                 die();
             }
 
@@ -276,7 +276,7 @@ trait RoutesRequests
 
             //may be a wordpress route so let's handle it over to template_redirect hook
 
-            add_action("template_redirect",[$this,"wordpressRouting"]);
+            add_action("template_redirect", [$this, "wordpressRouting"], 1);
 
             $this->shouldSend = false;
             throw new NotADefinedRouteException("May be a wordpress route");
@@ -286,13 +286,14 @@ trait RoutesRequests
             return $this->prepareResponse($this->sendExceptionToHandler($e));
         }
     }
-    protected function wordpressDispatcher($request){
+
+    protected function wordpressDispatcher($request)
+    {
 
 
         [$method, $pathInfo] = $this->parseIncomingRequest($request);
         //replace the active router with wordpress router
         $this->router = $this->wordpressRouter;
-
 
 
         try {
@@ -326,6 +327,8 @@ trait RoutesRequests
 
 
             }
+
+            return false;
         } catch (Throwable $e) {
 
 
@@ -333,11 +336,17 @@ trait RoutesRequests
         }
 
     }
-    public function wordpressRouting(){
 
-        $request  = app("request");
+    public function wordpressRouting()
+    {
+
+        $request = app("request");
         $response = $this->wordpressDispatcher($request);
 
+        if ($response !== false) {
+            $this->shouldSend = true;
+        }
+            //TODO CHECK IF ROUTE EXISTS OR NOT. OTHER WISE NO NEED TO SEND . LET WORDPRESS HANDLE IT.
         $this->handleResponse($response, function () {
             $this->app->terminate();
         });
@@ -365,8 +374,8 @@ trait RoutesRequests
         //This resolves the Signature mismatch issue on live site.
         //I was unable to create the test case for this to verify why the signed url not working on production
         // but with this fix it starts working
-        
-        $this->instance("request",$this->prepareRequest($request));
+
+        $this->instance("request", $this->prepareRequest($request));
         if (wp_doing_ajax()) {
             $action = $request->get("action");
             $route = $request->get("route");

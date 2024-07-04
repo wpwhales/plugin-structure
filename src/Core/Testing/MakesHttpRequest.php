@@ -6,6 +6,7 @@ namespace WPWCore\Testing;
 use Carbon\Carbon;
 use WPWCore\Http\Request;
 use WPWhales\Support\Arr;
+use WPWhales\Support\Collection;
 use WPWhales\Support\Str;
 use WPWhales\Testing\Assert as PHPUnit;
 use WPWhales\Testing\TestResponse;
@@ -415,6 +416,67 @@ trait MakesHttpRequest
 
         } catch (\WPDieException $e) {
 
+
+            return $this->response = TestResponse::fromBaseResponse(
+                $this->app->getResponse()
+            );
+        }
+
+
+    }
+
+    /**
+     * Call the given URI and return the Response.
+     *
+     * @param string $method
+     * @param string $uri
+     * @param array $parameters
+     * @param array $cookies
+     * @param array $files
+     * @param array $server
+     * @param string $content
+     * @return \WPWhales\Testing\TestResponse
+     */
+    public function wordpressCall($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
+    {
+        $this->_last_response = "";
+
+        $this->currentUri = $this->prepareUrlForRequest($uri);
+
+        $symfonyRequest = SymfonyRequest::create(
+            $this->currentUri, $method, $parameters,
+            $cookies, $files, $server, $content
+        );
+
+
+        $this->app['request'] = Request::createFromBase($symfonyRequest);
+
+        try {
+
+
+            global $wp_filter;
+
+
+
+            ob_start();
+            $response = $this->app->handle($this->app['request']);
+
+            $instance = Collection::make($wp_filter["template_redirect"][1])->first()["function"];
+            if($instance[0] !== $this->app){
+                wp_die("Template redirect hook is not binded in the code");
+            }
+            $method = $instance[1];
+            $instance[0]->{$method}();
+            $this->_last_response = ob_get_clean();
+
+            return $this->response = TestResponse::fromBaseResponse(
+                $this->app->getResponse()
+            );
+
+
+        } catch (\WPDieException $e) {
+
+            $this->_last_response = ob_get_clean();
 
             return $this->response = TestResponse::fromBaseResponse(
                 $this->app->getResponse()
