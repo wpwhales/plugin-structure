@@ -136,6 +136,13 @@ class Application extends Container
     public $adminAjaxRouter;
 
     /**
+     * The Wordpress Router instance.
+     *
+     * @var \WPWCore\Routing\Router
+     */
+    public $wordpressRouter;
+
+    /**
      * The Admin Ajax Router instance.
      *
      * @var \WPWCore\Routing\Router
@@ -365,6 +372,12 @@ class Application extends Container
 
     }
 
+    public function createWordpressRoutesFromFile($path, $attributes = []){
+
+        $this->createRoutesFromFile($path, $attributes, $this->wordpressRouter);
+
+    }
+
     public function createWebRoutesFromFile($path, $attributes = [])
     {
         if (!wp_doing_ajax()) {
@@ -412,6 +425,7 @@ class Application extends Container
 
         $this->adminAjaxRouter = new Router($this);
         $this->webRouter = new Router($this);
+        $this->wordpressRouter = new Router($this);
     }
 
     /**

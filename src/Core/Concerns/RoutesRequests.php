@@ -33,6 +33,7 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
+use function WPWCore\app;
 
 trait RoutesRequests
 {
@@ -273,6 +274,10 @@ trait RoutesRequests
 
             }
 
+            //may be a wordpress route so let's handle it over to template_redirect hook
+
+            add_action("template_redirect",[$this,"wordpressRouting"]);
+
             $this->shouldSend = false;
             throw new NotADefinedRouteException("May be a wordpress route");
         } catch (Throwable $e) {
@@ -280,6 +285,64 @@ trait RoutesRequests
 
             return $this->prepareResponse($this->sendExceptionToHandler($e));
         }
+    }
+    protected function wordpressDispatcher($request){
+
+
+        [$method, $pathInfo] = $this->parseIncomingRequest($request);
+        //replace the active router with wordpress router
+        $this->router = $this->wordpressRouter;
+
+
+
+        try {
+
+            $staticRoute = isset($this->router->getRoutes()[$method . $pathInfo]) ?: [];
+            $dynamicRoute = $this->createDispatcher()->dispatch($method, $pathInfo);
+
+
+            if ((!empty($staticRoute) || $dynamicRoute[0] === Dispatcher::FOUND)
+
+            ) {
+
+
+                return $this->sendThroughPipeline($this->middleware, function ($request) use ($method, $pathInfo, $staticRoute, $dynamicRoute) {
+                    $this->instance(\WPWhales\Http\Request::class, $request);
+
+
+                    if (!empty($staticRoute)) {
+                        return $this->handleFoundRoute([
+                            true, $this->router->getRoutes()[$method . $pathInfo]['action'], []
+                        ]);
+                    }
+
+
+                    return $this->handleDispatcherResponse(
+                        $dynamicRoute
+                    );
+
+
+                });
+
+
+            }
+        } catch (Throwable $e) {
+
+
+            return $this->prepareResponse($this->sendExceptionToHandler($e));
+        }
+
+    }
+    public function wordpressRouting(){
+
+        $request  = app("request");
+        $response = $this->wordpressDispatcher($request);
+
+        $this->handleResponse($response, function () {
+            $this->app->terminate();
+        });
+
+
     }
 
     /**
