@@ -25,6 +25,7 @@ use WPWCore\Filesystem\Filesystem;
 use WPWCore\Filesystem\FilesystemServiceProvider;
 use WPWCore\Hashing\HashServiceProvider;
 use WPWCore\Http\Request;
+use WPWCore\Menu\MenuBuilder;
 use WPWCore\Pagination\PaginationServiceProvider;
 use WPWCore\Routing\BindingResolver;
 use WPWCore\Routing\Router;
@@ -45,6 +46,7 @@ use WPWCore\Log\LogManager;
 use WPWhales\Queue\QueueServiceProvider;
 use WPWhales\Support\Composer;
 use WPWhales\Support\Facades\Facade;
+use WPWhales\Support\Facades\Menu;
 use WPWhales\Support\ServiceProvider;
 use WPWhales\Support\Str;
 use WPWhales\Translation\TranslationServiceProvider;
@@ -187,8 +189,26 @@ class Application extends Container
 
         $this->loadDashboardNotices();
 
+        $this->adminMenuHandler();
+
+        add_action("admin_menu", [$this, "loadAdminMenus"]);
+
+
+
         $this->registerWPCliCommand();
 
+    }
+
+    protected function adminMenuHandler(){
+
+        $this->singleton("menu",function($app){
+            return new MenuBuilder($app);
+        });
+    }
+    public function loadAdminMenus()
+    {
+
+        Menu::register();
     }
 
     protected function registerWPCliCommand()
@@ -197,9 +217,6 @@ class Application extends Container
         if (class_exists('\WP_CLI')) {
 
             \WP_CLI::add_command('wpwcore', function ($args, $assoc_args) {
-
-
-
 
 
                 $artisan = $this->make(\WPWhales\Contracts\Console\Kernel::class);
@@ -302,7 +319,8 @@ class Application extends Container
         });
     }
 
-    protected function registerAssetsBindings(){
+    protected function registerAssetsBindings()
+    {
         $this->singleton('assets', function () {
             return $this->loadComponent('assets', 'WPWCore\Assets\AssetsServiceProvider', 'assets');
         });
@@ -372,7 +390,8 @@ class Application extends Container
 
     }
 
-    public function createWordpressRoutesFromFile($path, $attributes = []){
+    public function createWordpressRoutesFromFile($path, $attributes = [])
+    {
 
         $this->createRoutesFromFile($path, $attributes, $this->wordpressRouter);
 
@@ -1148,7 +1167,7 @@ class Application extends Container
     public function storagePath($path = '')
     {
 
-        return WP_CONTENT_DIR."/wpwhales";
+        return WP_CONTENT_DIR . "/wpwhales";
     }
 
     /**
@@ -1225,7 +1244,7 @@ class Application extends Container
 
         $this->configure('database');
 
-        $this->instance('request',$this[\WPWCore\Http\Request::class]);
+        $this->instance('request', $this[\WPWCore\Http\Request::class]);
 
         $this->register(MigrationServiceProvider::class);
         $this->register(ConsoleServiceProvider::class);
@@ -1481,7 +1500,7 @@ class Application extends Container
         'cookie'                                         => 'registerCookieBindings',
         'WPWhales\Contracts\Cookie\Factory'              => 'registerCookieBindings',
         'WPWhales\Contracts\Cookie\QueueingFactory'      => 'registerCookieBindings',
-        'assets'=>'registerAssetsBindings',
-    'assets.manifest'=>'registerAssetsBindings'
+        'assets'                                         => 'registerAssetsBindings',
+        'assets.manifest'                                => 'registerAssetsBindings'
     ];
 }
