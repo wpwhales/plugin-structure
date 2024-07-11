@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use WPWCore\Exceptions\WPWException;
 use WPWCore\Exceptions\WPWExceptionInterface;
-use WPWCore\Menu\AbstractMenu;
+use WPWCore\Menu\MenuInterface;
 use WPWCore\Menu\MenuBuilder;
 use WPWCore\Menu\MenuException;
 use WPWCore\Routing\Controller;
@@ -51,7 +51,7 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
     {
         $this->app->withAdminMenuHandler();
 
-        $handler = MenuHandlerExtendingAbstract::class;
+        $handler = [MenuHandlerExtendingInterface::class,"render"];
         $capability = 'manage_options';
         $pageTitle = 'Test Menu';
 
@@ -63,7 +63,7 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
         $this->assertEquals($pageTitle, $menu->getName());
         $this->assertEquals($capability, $menu->getCapability());
         $this->assertEquals('test-menu', $menu->getSlug());
-        $this->assertInstanceOf(MenuHandlerExtendingAbstract::class, $menu->getHandler());
+        $this->assertInstanceOf(MenuHandlerExtendingInterface::class, $menu->getHandler()[0]);
 
         $this->assertEquals("http://localhost/wp-admin/admin.php?page=test-menu", Menu::getUrl("xyz"));
 
@@ -78,8 +78,8 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
     {
         $this->app->withAdminMenuHandler();
 
-        $parentHandler = MenuHandlerExtendingAbstract::class;
-        $childHandler = MenuHandlerExtendingAbstract::class;
+        $parentHandler = [MenuHandlerExtendingInterface::class,"render"];
+        $childHandler = [MenuHandlerExtendingInterface::class,"render"];
         $capability = 'manage_options';
         $parentTitle = 'Parent Menu';
         $childTitle = 'Child Menu';
@@ -97,7 +97,7 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
         $this->assertEquals($parentTitle, $parentMenu->getName());
         $this->assertEquals($capability, $parentMenu->getCapability());
         $this->assertEquals('parent-menu', $parentMenu->getSlug());
-        $this->assertInstanceOf(MenuHandlerExtendingAbstract::class, $parentMenu->getHandler());
+        $this->assertInstanceOf(MenuHandlerExtendingInterface::class, $parentMenu->getHandler()[0]);
         $this->assertEquals('parent-route', $parentMenu->getRouteName());
 
         $this->assertInstanceOf(\WPWCore\Menu\Menu::class, $childMenu);
@@ -105,7 +105,7 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
         $this->assertEquals($childTitle, $childMenu->getName());
         $this->assertEquals("read", $childMenu->getCapability());
         $this->assertEquals('parent-menu_child-menu', $childMenu->getSlug());
-        $this->assertInstanceOf(MenuHandlerExtendingAbstract::class, $childMenu->getHandler());
+        $this->assertInstanceOf(MenuHandlerExtendingInterface::class, $childMenu->getHandler()[0]);
         $this->assertEquals('', $childMenu->getRouteName());
         $this->assertEquals('parent-menu', $childMenu->getParentSlug());
 
@@ -114,7 +114,7 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
         $this->assertEquals($childTitle, $childMenu2->getName());
         $this->assertEquals($capability, $childMenu2->getCapability());
         $this->assertEquals('parent-menu_child-menu', $childMenu2->getSlug());
-        $this->assertInstanceOf(MenuHandlerExtendingAbstract::class, $childMenu2->getHandler());
+        $this->assertInstanceOf(MenuHandlerExtendingInterface::class, $childMenu2->getHandler()[0]);
         $this->assertEquals('parent-route.xyz', $childMenu2->getRouteName());
         $this->assertEquals('parent-menu', $childMenu2->getParentSlug());
 
@@ -129,12 +129,12 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
     {
         $this->app->withAdminMenuHandler();
 
-        $handler = TestMenuHandlerWithoutExtendingAbstract::class;
+        $handler = [TestMenuHandlerWithoutExtendingAbstract::class,"render"];
         $capability = 'manage_options';
         $pageTitle = 'Test Menu';
 
         $this->expectException(MenuException::class);
-        $this->expectExceptionMessage("The class $handler must be a instance of " . AbstractMenu::class);
+        $this->expectExceptionMessage("The class $handler[0] must be a instance of " . MenuInterface::class);
 
         $menu = Menu::add($pageTitle, $handler, $capability);
 
@@ -144,7 +144,7 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
     {
         $this->app->withAdminMenuHandler();
 
-        $handler = MenuHandlerExtendingAbstract::class;
+        $handler = [MenuHandlerExtendingInterface::class,"render"];
         $capability = 'manage_options';
         $pageTitle = 'Test Menu';
 
@@ -152,10 +152,12 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
         $menu = Menu::add($pageTitle, $handler, $capability);
 
         $handler = $menu->getHandler();
+        $method = $handler[1];
+        $instance = $handler[0];
 
 
         ob_start();
-        $handler->print();
+        echo $instance->{$method}();
         $content = ob_get_clean();
 
 
@@ -175,7 +177,7 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
         $this->assertEquals("XYZ", $menu->getName());
         $this->assertEquals('read', $menu->getCapability());
         $this->assertEquals('xyz', $menu->getSlug());
-        $this->assertInstanceOf(MenuHandlerExtendingAbstract::class, $menu->getHandler());
+        $this->assertInstanceOf(MenuHandlerExtendingInterface::class, $menu->getHandler()[0]);
         $this->assertEquals('xyz', $menu->getRouteName());
     }
 
@@ -187,15 +189,15 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
 class TestMenuHandlerWithoutExtendingAbstract
 {
 
-    public function handler()
+    public function render()
     {
-        echo 123;
+        return 123;
     }
 }
 
-class MenuHandlerExtendingAbstract extends AbstractMenu
+class MenuHandlerExtendingInterface implements MenuInterface
 {
-    protected function render(): View
+    public function render(): View
     {
         return \WPWCore\view("xyz");
     }

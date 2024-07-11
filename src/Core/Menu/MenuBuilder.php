@@ -63,6 +63,7 @@ class MenuBuilder
             remove_menu_page($slug);
         }
     }
+
     /**
      * Get the registered menus.
      *
@@ -121,7 +122,7 @@ class MenuBuilder
             );
         }
 
-        throw new UrlGenerationException("Unable to found any registered menu with this name [".$name."]");
+        throw new UrlGenerationException("Unable to found any registered menu with this name [" . $name . "]");
     }
 
     /**
@@ -143,7 +144,13 @@ class MenuBuilder
                     $menu->getName(),
                     $menu->getCapability(),
                     $menu->getSlug(),
-                    [$menu->getHandler(),"print"],
+                    function () use ($menu) {
+                        $handler = $menu->getHandler();
+                        $class = $handler[0];
+                        $method = $handler[1];
+                        echo $class->{$method}();
+
+                    },
                     $menu->getPosition()
                 );
             } else {
@@ -152,7 +159,13 @@ class MenuBuilder
                     $menu->getName(),
                     $menu->getCapability(),
                     $menu->getSlug(),
-                    [$menu->getHandler(),"print"],
+                    function () use ($menu) {
+                        $handler = $menu->getHandler();
+                        $class = $handler[0];
+                        $method = $handler[1];
+                        echo $class->{$method}();
+
+                    },
                     $menu->getIcon(),
                     $menu->getPosition()
                 );
@@ -174,6 +187,7 @@ class MenuBuilder
 
         return $slugs;
     }
+
     /**
      * Get the route names of the registered menus.
      *
@@ -188,6 +202,7 @@ class MenuBuilder
 
         return $names;
     }
+
     /**
      * Generate a unique slug for a given string.
      *
@@ -215,6 +230,7 @@ class MenuBuilder
         // Return the unique slug
         return $slug;
     }
+
     /**
      * Get the current group menu, if any.
      *

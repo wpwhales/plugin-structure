@@ -3,4 +3,4 @@
 
 use WPWhales\Support\Facades\Menu;
 
-Menu::add("XYZ", \Tests\Menu\MenuHandlerExtendingAbstract::class, "read")->routeName("xyz");
+Menu::add("XYZ", [\Tests\Menu\MenuHandlerExtendingInterface::class,"render"], "read")->routeName("xyz");

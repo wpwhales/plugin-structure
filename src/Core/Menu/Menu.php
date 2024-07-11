@@ -12,7 +12,7 @@ class Menu
     protected string $parentRouteName = '';
     protected string $capability = '';
     protected string $slug = '';
-    protected AbstractMenu $handler;
+    protected $handler = [];
     protected ?int $position = null;
     protected string $icon = '';
     protected string $parentSlug = '';
@@ -164,27 +164,29 @@ class Menu
         return $name;
     }
 
-    protected function setHandler($handler): self
+    protected function setHandler(array $handler): self
     {
 
-        if (!is_string($handler)) {
-            throw new MenuException("The handler must be a string");
+        if (!is_array($handler)) {
+            throw new MenuException("The handler must be a array");
+        }
+        $class = $handler[0];
+        $method = $handler[1];
+
+        if (!class_exists($class)) {
+            throw new MenuException("The class $class does not exist");
+        }
+        $instance = new $class();
+
+        if (!is_a($instance, MenuInterface::class)) {
+            throw new MenuException("The class $class must be a instance of " . MenuInterface::class);
         }
 
-        if (!class_exists($handler)) {
-            throw new MenuException("The class $handler does not exist");
-        }
-        $instance = new $handler();
-
-        if (!is_a($instance, AbstractMenu::class)) {
-            throw new MenuException("The class $handler must be a instance of " . AbstractMenu::class);
+        if (!method_exists($class, $method)) {
+            throw new MenuException("The method $method does not exist in class $class");
         }
 
-        if (!method_exists($handler, "print")) {
-            throw new MenuException("The method print does not exist in $handler");
-        }
-
-        $this->handler = $instance;
+        $this->handler = [$instance,$method];
 
         return $this;
     }
