@@ -63,7 +63,7 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
         $this->assertEquals($pageTitle, $menu->getName());
         $this->assertEquals($capability, $menu->getCapability());
         $this->assertEquals('test-menu', $menu->getSlug());
-        $this->assertEquals($handler, $menu->getHandler()[0]);
+        $this->assertInstanceOf(MenuHandlerExtendingAbstract::class, $menu->getHandler());
 
         $this->assertEquals("http://localhost/wp-admin/admin.php?page=test-menu", Menu::getUrl("xyz"));
 
@@ -97,7 +97,7 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
         $this->assertEquals($parentTitle, $parentMenu->getName());
         $this->assertEquals($capability, $parentMenu->getCapability());
         $this->assertEquals('parent-menu', $parentMenu->getSlug());
-        $this->assertEquals($parentHandler, $parentMenu->getHandler()[0]);
+        $this->assertInstanceOf(MenuHandlerExtendingAbstract::class, $parentMenu->getHandler());
         $this->assertEquals('parent-route', $parentMenu->getRouteName());
 
         $this->assertInstanceOf(\WPWCore\Menu\Menu::class, $childMenu);
@@ -105,7 +105,7 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
         $this->assertEquals($childTitle, $childMenu->getName());
         $this->assertEquals("read", $childMenu->getCapability());
         $this->assertEquals('parent-menu_child-menu', $childMenu->getSlug());
-        $this->assertEquals($childHandler, $childMenu->getHandler()[0]);
+        $this->assertInstanceOf(MenuHandlerExtendingAbstract::class, $childMenu->getHandler());
         $this->assertEquals('', $childMenu->getRouteName());
         $this->assertEquals('parent-menu', $childMenu->getParentSlug());
 
@@ -114,7 +114,7 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
         $this->assertEquals($childTitle, $childMenu2->getName());
         $this->assertEquals($capability, $childMenu2->getCapability());
         $this->assertEquals('parent-menu_child-menu', $childMenu2->getSlug());
-        $this->assertEquals($childHandler, $childMenu2->getHandler()[0]);
+        $this->assertInstanceOf(MenuHandlerExtendingAbstract::class, $childMenu2->getHandler());
         $this->assertEquals('parent-route.xyz', $childMenu2->getRouteName());
         $this->assertEquals('parent-menu', $childMenu2->getParentSlug());
 
@@ -153,10 +153,9 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
 
         $handler = $menu->getHandler();
 
-        $instance = new $handler[0]();
 
         ob_start();
-        $instance->{$handler[1]}();
+        $handler->print();
         $content = ob_get_clean();
 
 
@@ -176,9 +175,11 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
         $this->assertEquals("XYZ", $menu->getName());
         $this->assertEquals('read', $menu->getCapability());
         $this->assertEquals('xyz', $menu->getSlug());
-        $this->assertEquals(MenuHandlerExtendingAbstract::class, $menu->getHandler()[0]);
+        $this->assertInstanceOf(MenuHandlerExtendingAbstract::class, $menu->getHandler());
         $this->assertEquals('xyz', $menu->getRouteName());
     }
+
+
 
 
 }
