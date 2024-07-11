@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Routing;
+namespace Tests\Menu;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -16,7 +16,6 @@ use WPWhales\Support\Facades\Menu;
 use WPWhales\Testing\TestResponse;
 
 
-
 class AdminMenuHandlerTest extends \WP_UnitTestCase
 {
 
@@ -29,18 +28,15 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
         $config = \WPWCore\app("config");
         $config->set("view.paths", $paths);
 
-    }
-
-    public function testCheckMenuRegister()
-    {
-
 
     }
+
 
     public function testIsMenuRegistered()
     {
         global $wp_filter;
         $app = $this->app;
+        $this->app->withAdminMenuHandler();
 
 
         $this->assertIsInt(has_action("admin_menu", [$app, "loadAdminMenus"]));
@@ -53,6 +49,7 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
      */
     public function testCreateSingleMenu()
     {
+        $this->app->withAdminMenuHandler();
 
         $handler = MenuHandlerExtendingAbstract::class;
         $capability = 'manage_options';
@@ -79,6 +76,7 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
      */
     public function testCreateGroupedMenu()
     {
+        $this->app->withAdminMenuHandler();
 
         $parentHandler = MenuHandlerExtendingAbstract::class;
         $childHandler = MenuHandlerExtendingAbstract::class;
@@ -129,6 +127,7 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
 
     public function testHandlerDoesNotExtend()
     {
+        $this->app->withAdminMenuHandler();
 
         $handler = TestMenuHandlerWithoutExtendingAbstract::class;
         $capability = 'manage_options';
@@ -141,7 +140,9 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
 
     }
 
-    public function testHandlerOutput(){
+    public function testHandlerOutput()
+    {
+        $this->app->withAdminMenuHandler();
 
         $handler = MenuHandlerExtendingAbstract::class;
         $capability = 'manage_options';
@@ -159,7 +160,24 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
         $content = ob_get_clean();
 
 
-        $this->assertStringContainsString("Menu",$content);
+        $this->assertStringContainsString("Menu", $content);
+    }
+
+
+    public function testFilePathMenuIntegration()
+    {
+        $this->app->withAdminMenuHandler(__DIR__ . "/menu.php");
+
+        do_action("admin_menu");
+        $menu = Menu::getMenus()[0];
+
+        $this->assertInstanceOf(\WPWCore\Menu\Menu::class, $menu);
+        $this->assertEquals("XYZ", $menu->getPageTitle());
+        $this->assertEquals("XYZ", $menu->getName());
+        $this->assertEquals('read', $menu->getCapability());
+        $this->assertEquals('xyz', $menu->getSlug());
+        $this->assertEquals(MenuHandlerExtendingAbstract::class, $menu->getHandler()[0]);
+        $this->assertEquals('xyz', $menu->getRouteName());
     }
 
 

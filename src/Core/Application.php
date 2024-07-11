@@ -43,6 +43,7 @@ use WPWhales\Contracts\Container\BindingResolutionException;
 use WPWCore\Database\DatabaseServiceProvider;
 use WPWCore\Database\MigrationServiceProvider;
 use WPWCore\Log\LogManager;
+use WPWhales\Contracts\Filesystem\FileNotFoundException;
 use WPWhales\Queue\QueueServiceProvider;
 use WPWhales\Support\Composer;
 use WPWhales\Support\Facades\Facade;
@@ -166,6 +167,13 @@ class Application extends Container
      */
     protected $shutdownCallbacks = [];
 
+
+    /**
+     *
+     * @var string $adminMenuFilePath
+     */
+    protected $adminMenuFilePath = "";
+
     /**
      * Create a new Lumen application instance.
      *
@@ -189,27 +197,40 @@ class Application extends Container
 
         $this->loadDashboardNotices();
 
-        $this->adminMenuHandler();
-
-        add_action("admin_menu", [$this, "loadAdminMenus"]);
-
-
 
         $this->registerWPCliCommand();
 
     }
 
-    protected function adminMenuHandler(){
+    public function withAdminMenuHandler($path = "")
+    {
 
-        $this->singleton("menu",function($app){
+
+        $this->adminMenuFilePath = $path;
+
+        $this->singleton("menu", function ($app) {
             return new MenuBuilder($app);
         });
+
+        add_action("admin_menu", [$this, "loadAdminMenus"]);
+
     }
+
     public function loadAdminMenus()
     {
+        if (!empty($this->adminMenuFilePath) && !file_exists($this->adminMenuFilePath)) {
+            throw new FileNotFoundException("Menu file doesn't exists'");
+        }
+
+        if (file_exists($this->adminMenuFilePath)) {
+
+            require $this->adminMenuFilePath;
+        }
+
 
         Menu::register();
     }
+
 
     protected function registerWPCliCommand()
     {
