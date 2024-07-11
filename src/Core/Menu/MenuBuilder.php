@@ -143,7 +143,7 @@ class MenuBuilder
                     $menu->getName(),
                     $menu->getCapability(),
                     $menu->getSlug(),
-                    $menu->getHandler(),
+                    [$menu->getHandler(),"print"],
                     $menu->getPosition()
                 );
             } else {
@@ -152,7 +152,7 @@ class MenuBuilder
                     $menu->getName(),
                     $menu->getCapability(),
                     $menu->getSlug(),
-                    $menu->getHandler(),
+                    [$menu->getHandler(),"print"],
                     $menu->getIcon(),
                     $menu->getPosition()
                 );
