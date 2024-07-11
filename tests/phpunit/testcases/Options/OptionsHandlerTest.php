@@ -3,9 +3,15 @@
 namespace Tests\Options;
 
 
+use Mockery\Mock;
+use WPWCore\Assets\Asset\Asset;
+use WPWCore\Assets\Manifest;
 use WPWCore\Options\OptionsField;
 use WPWCore\Options\OptionsPage;
 use WPWCore\Options\OptionsSection;
+use WPWCore\Testing\DatabaseMigrations;
+use Mockery as m;
+use function WPWCore\base_path;
 
 class OptionsHandlerTest extends \WP_UnitTestCase
 {
@@ -73,19 +79,48 @@ class OptionsHandlerTest extends \WP_UnitTestCase
                     'content' => '<p>description here</p>',
                 ]
             ],
-            'scripts'     => ['https://unpkg.com/vue/dist/vue.js'],
+            'scripts'     => ['/my-js.js'],
             'styles'      => ['/my-css.css'],
         ]);
+
 
         $optionsPage->register();
 
 
-        $this->runOptionsPageHooks($optionsPage->hookSufix,$optionsPage->menuTitle());
+
+
+        //mock the assets.manifest class and check if a method named as asset is getting hit or not.
+
+        $assetsInstance = $this->getMockBuilder(Manifest::class)->disableOriginalConstructor()->onlyMethods(["asset"])->getMock();
+
+        $directory_root = dirname(base_path(),2)."/";
+        $asset = new Asset($directory_root,$directory_root);
+        $assetsInstance->expects($this->exactly(1))->method("asset")->will($this->returnValue($asset));
+
+        $this->app["assets.manifest"]= $assetsInstance;
+        $this->runOptionsPageHooks("CUSTOM_PLUGIN_page_".$optionsPage->menuSlug(), $optionsPage->menuTitle());
+
+        $this->assertTrue(in_array("/my-css.css",wp_styles()->queue));
+        $this->assertTrue(in_array("/app/css/sharedStyle.css",wp_styles()->queue));
+        $this->assertTrue(in_array("/app/css/media.css",wp_styles()->queue));
+
+        $this->assertTrue(in_array("/app/js/MediaFieldGenerator.js",wp_scripts()->queue));
+        $this->assertTrue(in_array("/my-js.js",wp_scripts()->queue));
 
         ob_start();
         $optionsPage->render();
-        $content =ob_get_clean();
+        $content = ob_get_clean();
 
+        $this->assertStringContainsString('<input type=\'hidden\' name=\'option_page\' value=\'my_options_page\' />', $content);
+        $this->assertMatchesRegularExpression('/<input type="hidden" id="_wpnonce" name="_wpnonce" value="[^"]+" \/>/', $content);
+        $this->assertStringContainsString('<div class="js-laraish-media-field laraish-media-field ">', $content);
+        $this->assertStringContainsString('<h2>Section title</h2>', $content);
+        $this->assertStringContainsString('<p>Section Description</p>', $content);
+
+        $this->assertStringContainsString('<input type="email" class="regular-text" name="my_options[my-email]" value="">', $content);
+
+        $this->assertStringContainsString('<input type="text" class="regular-text" placeholder="your nice name" maxlength="10" name="my_options[my-nice-name]" value="">', $content);
+        $this->assertStringContainsString('<textarea cols="60" rows="5" name="my_options[my-description]"></textarea>', $content);
 
 
     }
@@ -116,6 +151,7 @@ class OptionsHandlerTest extends \WP_UnitTestCase
                 $i->{$method}();
             }
         }
+        do_action("admin_enqueue_scripts",$pageHook);
 
     }
 }

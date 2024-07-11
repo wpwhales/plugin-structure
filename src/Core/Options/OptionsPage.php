@@ -300,8 +300,9 @@ class OptionsPage implements OptionsPageContract
 
         $scriptDependencies = ['jquery', 'underscore', 'backbone'];
 
+
         if (is_array($asset)) {
-            if (Arr::isSequential($asset)) {
+            if (Arr::isList($asset)) {
                 call_user_func_array("wp_enqueue_$type", $asset);
             } else {
                 if (!isset($asset['name'])) {
@@ -338,6 +339,7 @@ class OptionsPage implements OptionsPageContract
             if ($type === 'style') {
                 wp_enqueue_style($assetName, $asset);
             } else {
+
                 wp_enqueue_script($assetName, $asset, $scriptDependencies);
             }
         }

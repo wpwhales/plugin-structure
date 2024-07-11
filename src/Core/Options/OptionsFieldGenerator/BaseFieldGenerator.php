@@ -105,6 +105,7 @@ abstract class BaseFieldGenerator implements OptionsFieldGeneratorContract
 //        $isEnqueued = true;
 
         // if no script and style need to be enqueued quit immediately.
+
         if (!(static::$scripts or static::$styles)) {
             return;
         }
@@ -123,6 +124,7 @@ abstract class BaseFieldGenerator implements OptionsFieldGeneratorContract
                 $prefix = $optionsPage . '__' . static::class . '__';
 
                 if (static::$scripts) {
+
                     foreach ((array) static::$scripts as $script) {
                         if (filter_var($script, FILTER_VALIDATE_URL) === false) {
                             $script = $assetsUrl . trim($script, '/');
