@@ -6,29 +6,29 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use WPWCore\Exceptions\WPWException;
 use WPWCore\Exceptions\WPWExceptionInterface;
+use WPWCore\Menu\AbstractMenu;
 use WPWCore\Menu\MenuBuilder;
+use WPWCore\Menu\MenuException;
 use WPWCore\Routing\Controller;
+use WPWCore\View\View;
 use WPWhales\Http\Request;
 use WPWhales\Support\Facades\Menu;
 use WPWhales\Testing\TestResponse;
 
 
-/**
- *  !!!! ONLY FOR WEB CALL !!!!
- *
- * Tests for the Ajax calls to save and get sos stats.
- * For speed, non ajax calls of class-ajax.php are tested in test-ajax-others.php
- * Ajax tests are not marked risky when run in separate processes and wp_debug
- * disabled. But, this makes tests slow so non ajax calls are kept separate
- *
- *
- */
+
 class AdminMenuHandlerTest extends \WP_UnitTestCase
 {
 
     public function set_up()
     {
         parent::set_up();
+
+        $paths = \WPWCore\config("view.paths");
+        $paths[] = __DIR__;
+        $config = \WPWCore\app("config");
+        $config->set("view.paths", $paths);
+
     }
 
     public function testCheckMenuRegister()
@@ -37,12 +37,13 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
 
     }
 
-    public function testIsMenuRegistered(){
+    public function testIsMenuRegistered()
+    {
         global $wp_filter;
         $app = $this->app;
 
 
-        $this->assertIsInt(has_action("admin_menu",[$app,"loadAdminMenus"]));
+        $this->assertIsInt(has_action("admin_menu", [$app, "loadAdminMenus"]));
     }
 
     /**
@@ -53,9 +54,7 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
     public function testCreateSingleMenu()
     {
 
-        $handler = function () {
-            // Menu handler
-        };
+        $handler = MenuHandlerExtendingAbstract::class;
         $capability = 'manage_options';
         $pageTitle = 'Test Menu';
 
@@ -67,7 +66,7 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
         $this->assertEquals($pageTitle, $menu->getName());
         $this->assertEquals($capability, $menu->getCapability());
         $this->assertEquals('test-menu', $menu->getSlug());
-        $this->assertEquals($handler, $menu->getHandler());
+        $this->assertEquals($handler, $menu->getHandler()[0]);
 
         $this->assertEquals("http://localhost/wp-admin/admin.php?page=test-menu", Menu::getUrl("xyz"));
 
@@ -81,19 +80,15 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
     public function testCreateGroupedMenu()
     {
 
-        $parentHandler = function () {
-            // Parent menu handler
-        };
-        $childHandler = function () {
-            // Child menu handler
-        };
+        $parentHandler = MenuHandlerExtendingAbstract::class;
+        $childHandler = MenuHandlerExtendingAbstract::class;
         $capability = 'manage_options';
         $parentTitle = 'Parent Menu';
         $childTitle = 'Child Menu';
 
-        $parentMenu = Menu::group($parentTitle, $parentHandler, $capability, function ($builder) use ($childTitle,$capability, $childHandler) {
+        $parentMenu = Menu::group($parentTitle, $parentHandler, $capability, function ($builder) use ($childTitle, $capability, $childHandler) {
             $builder->add($childTitle, $childHandler);
-            $builder->add($childTitle, $childHandler,$capability)->routeName("xyz");
+            $builder->add($childTitle, $childHandler, $capability)->routeName("xyz");
         }, 'parent-route');
 
         //looks like it's on 1 index as per our code
@@ -104,7 +99,7 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
         $this->assertEquals($parentTitle, $parentMenu->getName());
         $this->assertEquals($capability, $parentMenu->getCapability());
         $this->assertEquals('parent-menu', $parentMenu->getSlug());
-        $this->assertEquals($parentHandler, $parentMenu->getHandler());
+        $this->assertEquals($parentHandler, $parentMenu->getHandler()[0]);
         $this->assertEquals('parent-route', $parentMenu->getRouteName());
 
         $this->assertInstanceOf(\WPWCore\Menu\Menu::class, $childMenu);
@@ -112,7 +107,7 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
         $this->assertEquals($childTitle, $childMenu->getName());
         $this->assertEquals("read", $childMenu->getCapability());
         $this->assertEquals('parent-menu_child-menu', $childMenu->getSlug());
-        $this->assertEquals($childHandler, $childMenu->getHandler());
+        $this->assertEquals($childHandler, $childMenu->getHandler()[0]);
         $this->assertEquals('', $childMenu->getRouteName());
         $this->assertEquals('parent-menu', $childMenu->getParentSlug());
 
@@ -121,7 +116,7 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
         $this->assertEquals($childTitle, $childMenu2->getName());
         $this->assertEquals($capability, $childMenu2->getCapability());
         $this->assertEquals('parent-menu_child-menu', $childMenu2->getSlug());
-        $this->assertEquals($childHandler, $childMenu2->getHandler());
+        $this->assertEquals($childHandler, $childMenu2->getHandler()[0]);
         $this->assertEquals('parent-route.xyz', $childMenu2->getRouteName());
         $this->assertEquals('parent-menu', $childMenu2->getParentSlug());
 
@@ -132,7 +127,59 @@ class AdminMenuHandlerTest extends \WP_UnitTestCase
     }
 
 
+    public function testHandlerDoesNotExtend()
+    {
 
+        $handler = TestMenuHandlerWithoutExtendingAbstract::class;
+        $capability = 'manage_options';
+        $pageTitle = 'Test Menu';
+
+        $this->expectException(MenuException::class);
+        $this->expectExceptionMessage("The class $handler must be a instance of " . AbstractMenu::class);
+
+        $menu = Menu::add($pageTitle, $handler, $capability);
+
+    }
+
+    public function testHandlerOutput(){
+
+        $handler = MenuHandlerExtendingAbstract::class;
+        $capability = 'manage_options';
+        $pageTitle = 'Test Menu';
+
+
+        $menu = Menu::add($pageTitle, $handler, $capability);
+
+        $handler = $menu->getHandler();
+
+        $instance = new $handler[0]();
+
+        ob_start();
+        $instance->{$handler[1]}();
+        $content = ob_get_clean();
+
+
+        $this->assertStringContainsString("Menu",$content);
+    }
+
+
+}
+
+class TestMenuHandlerWithoutExtendingAbstract
+{
+
+    public function handler()
+    {
+        echo 123;
+    }
+}
+
+class MenuHandlerExtendingAbstract extends AbstractMenu
+{
+    protected function render(): View
+    {
+        return \WPWCore\view("xyz");
+    }
 
 }
 

@@ -24,11 +24,12 @@ class Menu
         $this->pageTitle = $pageTitle;
         $this->capability = $capability;
         $this->slug = $this->toUrlParam($pageTitle);
-        $this->handler = $handler;
+        $this->setHandler($handler);
         $this->name = $pageTitle;
 
 
     }
+
 
     public function hasSubMenu()
     {
@@ -161,6 +162,31 @@ class Menu
 
 
         return $name;
+    }
+
+    protected function setHandler($handler): self
+    {
+
+        if(!is_string($handler)){
+            throw new MenuException("The handler must be a string");
+        }
+
+        if(!class_exists($handler)){
+            throw new MenuException("The class $handler does not exist");
+        }
+        $instance = new $handler();
+
+        if(!is_a($instance,AbstractMenu::class)){
+            throw new MenuException("The class $handler must be a instance of " . AbstractMenu::class);
+        }
+
+        if(!method_exists($handler,"print")){
+            throw new MenuException("The method print does not exist in $handler");
+        }
+
+        $this->handler = [$handler,"print"];
+
+        return $this;
     }
 
     protected function toSnakeCase($string): string
