@@ -18,6 +18,7 @@ use WPWCore\Auth\AuthServiceProvider;
 use WPWCore\Cache\CacheServiceProvider;
 use WPWCore\Console\ConsoleServiceProvider;
 use WPWCore\Console\Kernel;
+use WPWCore\DashboardNotices\AdminNotice;
 use WPWCore\DashboardNotices\Notices;
 use WPWCore\Encryption\EncryptionServiceProvider;
 use WPWCore\Events\EventServiceProvider;
@@ -195,9 +196,6 @@ class Application extends Container
         $this->loadShutDownMethodWithWordpress();
 
 
-        $this->loadDashboardNotices();
-
-
         $this->registerWPCliCommand();
 
     }
@@ -251,15 +249,11 @@ class Application extends Container
     }
 
 
-    protected function loadDashboardNotices()
+    protected function withDashboardNotices()
     {
 
-        $dashboardNotice = new Notices($this);
-        $this->instance(Notices::class, $dashboardNotice);
+        AdminNotice::init();
 
-        add_action("admin_notices", function () {
-            $this->make(Notices::class)->renderNotices();
-        });
 
     }
 
