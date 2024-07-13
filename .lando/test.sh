@@ -10,7 +10,7 @@ ip_list=($(get_ipv4_addresses) $(hostname -I) 172.31.32.1)
 
 # Define the port on which xdebug client listens
 # Define the port on which xdebug client listens
-port=9003
+port=9515
 
 echo "Testing xdebug client on different IPs..."
 

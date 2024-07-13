@@ -90,7 +90,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/service-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/string" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/translation" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/process" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-uuid" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/myclabs/deep-copy" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/theseer/tokenizer" />
@@ -110,6 +109,8 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/deprecations" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/cache" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/woocommerce/action-scheduler" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-webdriver/webdriver" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/process" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
