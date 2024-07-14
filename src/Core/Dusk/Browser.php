@@ -640,7 +640,7 @@ class Browser
     public function ensurejQueryIsAvailable()
     {
         if ($this->driver->executeScript('return window.jQuery == null')) {
-            $this->driver->executeScript(file_get_contents(__DIR__.'/../bin/jquery.js'));
+            $this->driver->executeScript(file_get_contents(dirname(__DIR__,3)."/resources/scripts/jquery.js"));
         }
     }
 
