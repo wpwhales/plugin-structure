@@ -15,7 +15,7 @@ use WPWhales\Contracts\Queue\ShouldQueue;
 use WPWhales\Support\Collection;
 use WPWhales\Support\HigherOrderTapProxy;
 use WPWhales\Support\HtmlString;
-
+use WPWhales\Support\Sleep;
 
 
 function dispatch(ShouldQueue $job){
@@ -562,4 +562,39 @@ function bundleCSS(string $bundleName): string
         });
 
     return $content;
+}
+
+
+function retry($times, callable $callback, $sleepMilliseconds = 0, $when = null)
+{
+    $attempts = 0;
+
+    $backoff = [];
+
+    if (is_array($times)) {
+        $backoff = $times;
+
+        $times = count($times) + 1;
+    }
+
+    beginning:
+    $attempts++;
+    $times--;
+
+    try {
+        return $callback($attempts);
+    } catch (\Exception $e) {
+        if ($times < 1 || ($when && ! $when($e))) {
+            throw $e;
+        }
+
+        $sleepMilliseconds = $backoff[$attempts - 1] ?? $sleepMilliseconds;
+
+        if ($sleepMilliseconds) {
+            Sleep::usleep(\WPWCore\Collections\value($sleepMilliseconds, $attempts, $e)
+                * 1000);
+        }
+
+        goto beginning;
+    }
 }
