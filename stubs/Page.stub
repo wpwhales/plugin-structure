@@ -3,6 +3,8 @@
 namespace {{ namespace }}\Browser\Pages;
 
 use WPWCore\Dusk\Browser;
+use WPWCore\Dusk\Page as BasePage;
+
 
 abstract class Page extends BasePage
 {

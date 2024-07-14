@@ -9,6 +9,9 @@ use function WPWCore\route;
 
 trait InteractsWithAuthentication
 {
+    static protected $messageSent = false;
+    protected $message = "Please define the constant 'DUSK_TESTING_ENVIRONMENT' in your wp-config.php file to use the loginAs method for browser testing.";
+
     /**
      * Log into the application as the default user.
      *
@@ -22,8 +25,8 @@ trait InteractsWithAuthentication
     /**
      * Log into the application using a given user ID or email.
      *
-     * @param  object|string  $userId
-     * @param  string|null  $guard
+     * @param object|string $userId
+     * @param string|null $guard
      * @return $this
      */
     public function loginAs($userId, $guard = null)
@@ -33,7 +36,13 @@ trait InteractsWithAuthentication
         $userId = is_object($userId) && method_exists($userId, 'getKey') ? $userId->getKey() : $userId;
 
 
+        if (!static::$messageSent) {
+            $border = str_repeat('*', strlen($this->message) + 4);
+            $formattedMessage = PHP_EOL . $border . PHP_EOL . "* " . $this->message . " *" . PHP_EOL . $border . PHP_EOL;
+            fwrite(STDOUT, $formattedMessage);
 
+            static::$messageSent = true;
+        }
 
 
         return $this->visit(rtrim(route('dusk.login', ['userId' => $userId])));
@@ -42,7 +51,7 @@ trait InteractsWithAuthentication
     /**
      * Log out of the application.
      *
-     * @param  string|null  $guard
+     * @param string|null $guard
      * @return $this
      */
     public function logout($guard = null)
@@ -53,7 +62,7 @@ trait InteractsWithAuthentication
     /**
      * Get the ID and the class name of the authenticated user.
      *
-     * @param  string|null  $guard
+     * @param string|null $guard
      * @return array
      */
     protected function currentUserInfo($guard = null)
@@ -66,7 +75,7 @@ trait InteractsWithAuthentication
     /**
      * Assert that the user is authenticated.
      *
-     * @param  string|null  $guard
+     * @param string|null $guard
      * @return $this
      */
     public function assertAuthenticated($guard = null)
@@ -81,7 +90,7 @@ trait InteractsWithAuthentication
     /**
      * Assert that the user is not authenticated.
      *
-     * @param  string|null  $guard
+     * @param string|null $guard
      * @return $this
      */
     public function assertGuest($guard = null)
@@ -98,8 +107,8 @@ trait InteractsWithAuthentication
     /**
      * Assert that the user is authenticated as the given user.
      *
-     * @param  mixed  $user
-     * @param  string|null  $guard
+     * @param mixed $user
+     * @param string|null $guard
      * @return $this
      */
     public function assertAuthenticatedAs($user, $guard = null)
@@ -107,7 +116,7 @@ trait InteractsWithAuthentication
         $currentUrl = $this->driver->getCurrentURL();
 
         $expected = [
-            'id' => $user->getAuthIdentifier(),
+            'id'        => $user->getAuthIdentifier(),
             'className' => get_class($user),
         ];
 
