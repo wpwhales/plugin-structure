@@ -79,4 +79,16 @@ abstract class TestCase extends BaseTestCase
     {
         return isset($_ENV['LARAVEL_SAIL']) && $_ENV['LARAVEL_SAIL'] == '1';
     }
+
+
+    /**
+     * Determine if the tests are running within Lando.
+     *
+     * @return bool
+     */
+    protected static function runningInLando()
+    {
+
+        return isset($_ENV['LANDO']) && $_ENV['LANDO'] == 'ON';
+    }
 }
