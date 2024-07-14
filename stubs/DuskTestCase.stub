@@ -1,16 +1,34 @@
 <?php
 
-namespace Tests;
+namespace WPWCoreTests\Browser;
 
-use Illuminate\Support\Collection;
+use WPWCore\Dusk\Browser;
+use WPWhales\Support\Collection;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
-use Laravel\Dusk\TestCase as BaseTestCase;
+use WPWCore\Dusk\TestCase as BaseTestCase;
+use WPWhales\Support\Facades\Http;
+use function WPWCore\base_path;
+use function WPWCore\Collections\collect;
 
 abstract class DuskTestCase extends BaseTestCase
 {
-    use CreatesApplication;
+
+
+    public function setUp(): void
+    {
+       parent::setUp();
+
+        Browser::$storeScreenshotsAt = __DIR__."/screenshots";
+
+        Browser::$storeConsoleLogAt =  __DIR__."/console";
+
+        Browser::$storeSourceAt =  __DIR__."/source";
+
+        $this->app["url"]->forceRootUrl(defined("WP_TESTS_DOMAIN") ? WP_TESTS_DOMAIN : "localhost");
+        $this->app["url"]->forceScheme(defined("WP_TESTS_SCHEME") ? WP_TESTS_SCHEME : "https");
+    }
 
     /**
      * Prepare for Dusk test execution.
@@ -19,6 +37,9 @@ abstract class DuskTestCase extends BaseTestCase
      */
     public static function prepare(): void
     {
+
+
+
         if (! static::runningInSail()) {
             static::startChromeDriver();
         }
@@ -34,12 +55,14 @@ abstract class DuskTestCase extends BaseTestCase
         ])->unless($this->hasHeadlessDisabled(), function (Collection $items) {
             return $items->merge([
                 '--disable-gpu',
-                '--headless=new',
+                '--ignore-certificate-errors',
+                '--ignore-ssl-errors',
+//                '--headless=new',
             ]);
         })->all());
 
         return RemoteWebDriver::create(
-            $_ENV['DUSK_DRIVER_URL'] ?? 'http://localhost:9515',
+            $_ENV['DUSK_DRIVER_URL'] ?? 'http://192.168.80.1:9515',
             DesiredCapabilities::chrome()->setCapability(
                 ChromeOptions::CAPABILITY, $options
             )

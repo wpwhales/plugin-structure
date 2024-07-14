@@ -53,13 +53,14 @@ class InstallCommand extends Command
         $stubs = [
             'ExampleTest.stub' => base_path('tests/Browser/ExampleTest.php'),
             'HomePage.stub' => base_path('tests/Browser/Pages/HomePage.php'),
-            'DuskTestCase.stub' => base_path('tests/DuskTestCase.php'),
+            'DuskTestCase.stub' => base_path('tests/Browser/DuskTestCase.php'),
             'Page.stub' => base_path('tests/Browser/Pages/Page.php'),
         ];
 
         foreach ($stubs as $stub => $file) {
+
             if (! is_file($file)) {
-                copy(__DIR__.'/../../stubs/'.$stub, $file);
+                copy(__DIR__.'/../../../../stubs/'.$stub, $file);
             }
         }
 
