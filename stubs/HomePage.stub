@@ -1,9 +1,8 @@
 <?php
 
-namespace Tests\Browser\Pages;
+namespace {{ namespace }}\Browser\Pages;
 
-use Laravel\Dusk\Browser;
-
+use WPWCore\Dusk\Browser;
 class HomePage extends Page
 {
     /**
