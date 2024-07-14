@@ -1,16 +1,63 @@
 <?php
 
-namespace Tests;
+namespace {{ namespace }}\Browser;
 
-use Illuminate\Support\Collection;
+use WPWCore\Dusk\Browser;
+use WPWhales\Support\Collection;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
-use Laravel\Dusk\TestCase as BaseTestCase;
+use WPWCore\Dusk\TestCase as BaseTestCase;
+use WPWhales\Support\Facades\Http;
+use function WPWCore\base_path;
+use function WPWCore\Collections\collect;
+use WPWCore\Dusk\DuskServiceProvider;
+
 
 abstract class DuskTestCase extends BaseTestCase
 {
-    use CreatesApplication;
+
+
+    public function setUp(): void
+    {
+       parent::setUp();
+
+        Browser::$storeScreenshotsAt = __DIR__."/screenshots";
+
+        Browser::$storeConsoleLogAt =  __DIR__."/console";
+
+        Browser::$storeSourceAt =  __DIR__."/source";
+
+    }
+
+    /**
+         * Creates the application.
+         *
+         * @return \WPWCore\Application
+         */
+        public function createApplication()
+        {
+
+            $app = new \WPWCore\Application(
+                dirname(__DIR__)
+            );
+            $app->singleton(\WPWhales\Contracts\Debug\ExceptionHandler::class, \WPWCore\Exceptions\Handler::class);
+            $app->register(DuskServiceProvider::class);
+            $app->withFacades();
+            $app->withEloquent();
+
+            return $app;
+        }
+
+        /**
+             * Determine the application's base URL.
+             *
+             * @return string
+             */
+            protected function baseUrl()
+            {
+                return rtrim(TESTING_WEBSITE_URL, '/');
+            }
 
     /**
      * Prepare for Dusk test execution.
@@ -19,7 +66,11 @@ abstract class DuskTestCase extends BaseTestCase
      */
     public static function prepare(): void
     {
-        if (! static::runningInSail()) {
+
+
+        static::useChromedriver(defined("CHROME_DRIVER_PATH") ? CHROME_DRIVER_PATH : "/app");
+
+        if (! static::runningInLando()) {
             static::startChromeDriver();
         }
     }
@@ -29,17 +80,22 @@ abstract class DuskTestCase extends BaseTestCase
      */
     protected function driver(): RemoteWebDriver
     {
-        $options = (new ChromeOptions)->addArguments(collect([
-            $this->shouldStartMaximized() ? '--start-maximized' : '--window-size=1920,1080',
-        ])->unless($this->hasHeadlessDisabled(), function (Collection $items) {
-            return $items->merge([
-                '--disable-gpu',
-                '--headless=new',
-            ]);
-        })->all());
+          $options = (new ChromeOptions)->addArguments(collect([
+                    $this->shouldStartMaximized() ? '--start-maximized' : '--window-size=1920,1080',
+                    '--disable-gpu',
+                    '--ignore-certificate-errors',
+                    '--ignore-ssl-errors'
+                ])->unless($this->hasHeadlessDisabled(), function (Collection $items) {
+                    return $items->merge([
+                        '--disable-gpu',
+                        '--ignore-certificate-errors',
+                        '--ignore-ssl-errors',
+                        '--headless=new',
+                    ]);
+                })->all());
 
         return RemoteWebDriver::create(
-            $_ENV['DUSK_DRIVER_URL'] ?? 'http://localhost:9515',
+            $_ENV['DUSK_DRIVER_URL'] ?? 'http://192.168.80.1:9515',
             DesiredCapabilities::chrome()->setCapability(
                 ChromeOptions::CAPABILITY, $options
             )
