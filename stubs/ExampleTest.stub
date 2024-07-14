@@ -1,6 +1,6 @@
 <?php
 
-namespace WPWCoreTests\Browser;
+namespace {{ namespace }}\Browser;
 
 
 use WPWCore\Dusk\Browser;

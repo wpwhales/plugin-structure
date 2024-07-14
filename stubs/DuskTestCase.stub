@@ -1,6 +1,6 @@
 <?php
 
-namespace WPWCoreTests\Browser;
+namespace {{ namespace }}\Browser;
 
 use WPWCore\Dusk\Browser;
 use WPWhales\Support\Collection;
@@ -26,19 +26,36 @@ abstract class DuskTestCase extends BaseTestCase
 
         Browser::$storeSourceAt =  __DIR__."/source";
 
-        $this->app["url"]->forceRootUrl(defined("WP_TESTS_DOMAIN") ? WP_TESTS_DOMAIN : "localhost");
-        $this->app["url"]->forceScheme(defined("WP_TESTS_SCHEME") ? WP_TESTS_SCHEME : "https");
     }
 
     /**
-         * Determine the application's base URL.
+         * Creates the application.
          *
-         * @return string
+         * @return \WPWCore\Application
          */
-        protected function baseUrl()
+        public function createApplication()
         {
-            return rtrim(WP_TESTS_SCHEME."://".WP_TESTS_DOMAIN. "/", '/');
+
+            $app = new \WPWCore\Application(
+                dirname(__DIR__)
+            );
+            $app->singleton(\WPWhales\Contracts\Debug\ExceptionHandler::class, \WPWCore\Exceptions\Handler::class);
+            $app->register(DuskServiceProvider::class);
+            $app->withFacades();
+            $app->withEloquent();
+
+            return $app;
         }
+
+        /**
+             * Determine the application's base URL.
+             *
+             * @return string
+             */
+            protected function baseUrl()
+            {
+                return rtrim(TESTING_WEBSITE_URL, '/');
+            }
 
     /**
      * Prepare for Dusk test execution.

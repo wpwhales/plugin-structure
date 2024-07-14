@@ -23,6 +23,7 @@ class InstallCommand extends Command
      */
     protected $description = 'Install Dusk into the application';
 
+
     /**
      * Execute the console command.
      *
@@ -30,6 +31,7 @@ class InstallCommand extends Command
      */
     public function handle()
     {
+
         if (! is_dir(base_path('tests/Browser/Pages'))) {
             mkdir(base_path('tests/Browser/Pages'), 0755, true);
         }
@@ -57,10 +59,15 @@ class InstallCommand extends Command
             'Page.stub' => base_path('tests/Browser/Pages/Page.php'),
         ];
 
+        $autoload = $this->getAutoloadNamespace();
+        $namespace = trim(key($autoload),"\\");
         foreach ($stubs as $stub => $file) {
 
             if (! is_file($file)) {
-                copy(__DIR__.'/../../../../stubs/'.$stub, $file);
+                $content = file_get_contents(__DIR__.'/../../../../stubs/'.$stub);
+                $content = str_replace("{{ namespace }}",$namespace,$content);
+                file_put_contents($file,$content);
+
             }
         }
 
@@ -79,6 +86,20 @@ class InstallCommand extends Command
         }
 
         $this->call('dusk:chrome-driver', $driverCommandArgs);
+    }
+
+    protected function getAutoloadNamespace(){
+        $composerJsonPath = base_path('composer.json');
+        if (!file_exists($composerJsonPath)) {
+            throw new \Exception('composer.json file not found');
+        }
+
+        $composerJson = json_decode(file_get_contents($composerJsonPath), true);
+        if (!isset($composerJson['autoload']['psr-4'])) {
+            throw new \Exception('PSR-4 autoload section not found in composer.json');
+        }
+
+        return $composerJson['autoload-dev']['psr-4'];
     }
 
     /**

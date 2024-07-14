@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Browser\Pages;
+namespace {{ namespace }}\Browser\Pages;
 
-use Laravel\Dusk\Page as BasePage;
+use WPWCore\Dusk\Browser;
 
 abstract class Page extends BasePage
 {
