@@ -51,6 +51,9 @@ tooling:
   test:
     service: appserver
     cmd: vendor/bin/phpunit
+proxy:
+  appserver:
+    - hostname: plugin-pattern.lndo.site
 
 
 

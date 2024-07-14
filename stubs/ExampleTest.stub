@@ -1,0 +1,28 @@
+<?php
+
+namespace {{ namespace }}\Browser;
+
+
+use WPWCore\Dusk\Browser;
+use WPWhales\Support\Facades\Http;
+
+class ExampleTest extends DuskTestCase
+{
+    /**
+     * A basic browser test example.
+     */
+    public function testBasicExample(): void
+    {
+
+
+        $this->browse(function (Browser $browser) {
+
+            $browser->visit("/");
+
+
+
+        });
+
+
+    }
+}

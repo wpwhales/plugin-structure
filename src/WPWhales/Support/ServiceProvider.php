@@ -3,12 +3,12 @@
 namespace WPWhales\Support;
 
 use Closure;
-use WPWhales\Console\Application as Artisan;
+use WPWCore\Console\Application as Artisan;
 use WPWhales\Contracts\Foundation\CachesConfiguration;
 use WPWhales\Contracts\Foundation\CachesRoutes;
 use WPWhales\Contracts\Support\DeferrableProvider;
-use WPWhales\Database\Eloquent\Factory as ModelFactory;
-use WPWhales\View\Compilers\BladeCompiler;
+use WPWCore\Database\Eloquent\Factories\Factory as ModelFactory;
+use WPWCore\View\Compilers\BladeCompiler;
 
 abstract class ServiceProvider
 {
