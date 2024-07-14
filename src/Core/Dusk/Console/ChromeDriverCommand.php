@@ -74,7 +74,7 @@ class ChromeDriverCommand extends Command
      *
      * @var string
      */
-    protected $directory = __DIR__.'/../../../../bin/';
+    protected $directory = WP_CONTENT_DIR;
 
     /**
      * Execute the console command.
@@ -83,6 +83,7 @@ class ChromeDriverCommand extends Command
      */
     public function handle()
     {
+
 
         $version = $this->version();
 
