@@ -39,8 +39,9 @@ abstract class DuskTestCase extends BaseTestCase
     {
 
 
+        static::useChromedriver(defined("CHROME_DRIVER_PATH") ? CHROME_DRIVER_PATH : "/app");
 
-        if (! static::runningInSail()) {
+        if (! static::runningInLando()) {
             static::startChromeDriver();
         }
     }
