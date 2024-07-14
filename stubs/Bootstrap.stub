@@ -1,0 +1,39 @@
+<?php
+
+if(!getenv("DUSK_TESTING")){
+    die();
+}
+define("ABSPATH", "/app/");
+define("TESTING_WEBSITE_URL", "https://localhost");
+
+
+define("SHORTINIT", true);
+define("WPLANG", "en_US");
+
+
+//load the rest of the wordpress
+require ABSPATH . "/wp-config.php";
+//load the vendor autoload;
+
+require dirname(__DIR__, 2) . "/vendor/autoload.php";
+
+
+function site_url()
+{
+
+    return TESTING_WEBSITE_URL;
+}
+
+function home_url()
+{
+
+    return TESTING_WEBSITE_URL;
+}
+
+function get_locale()
+{
+
+    return WPLANG;
+}
+
+
