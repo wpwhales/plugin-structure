@@ -68,11 +68,8 @@ abstract class DuskTestCase extends BaseTestCase
     {
 
 
-        static::useChromedriver(defined("CHROME_DRIVER_PATH") ? CHROME_DRIVER_PATH : "/app");
+    //TODO we can run the instance of chrome driver from here. But for now not required as we'll use a external chromedrier that we'll run manually;
 
-        if (! static::runningInLando()) {
-            static::startChromeDriver();
-        }
     }
 
     /**
