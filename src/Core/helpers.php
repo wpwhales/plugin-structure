@@ -293,6 +293,77 @@ function route($name, $parameters = [], $secure = null)
     return app('url')->route($name, $parameters, $secure);
 }
 
+/**
+ * Generate a URL to a named wordpress route.
+ *
+ * @param string $name
+ * @param array $parameters
+ * @param bool|null $secure
+ * @return string
+ */
+function wordpressRoute($name, $parameters = [], $secure = null)
+{
+    return app('url')->wordpressRoute($name, $parameters, $secure);
+}
+
+/**
+ * Generate a URL to a named adminajax route.
+ *
+ * @param string $name
+ * @param array $parameters
+ * @param bool|null $secure
+ * @return string
+ */
+function adminAjaxRoute($name, $parameters = [], $secure = null)
+{
+    return app('url')->adminAjaxRoute($name, $parameters, $secure);
+}
+
+
+
+
+
+/**
+ * Generate a URL to a signed route.
+ *
+ * @param string $name
+ * @param array $parameters
+ * @param bool|null $secure
+ * @return string
+ */
+function signedRoute($name, $parameters = [], $expiration = null, $absolute = true)
+{
+    return app('url')->signedRoute($name, $parameters, $expiration, $absolute);
+}
+
+/**
+ * Generate a URL to a signedAdminAjax  route.
+ *
+ * @param string $name
+ * @param array $parameters
+ * @param bool|null $secure
+ * @return string
+ */
+function signedAdminAjaxRoute($name, $parameters = [], $expiration = null, $absolute = true)
+{
+    return app('url')->signedAdminAjaxRoute($name, $parameters, $expiration, $absolute);
+}
+
+
+
+/**
+ * Generate a URL to a signedAdminAjax  route.
+ *
+ * @param string $name
+ * @param array $parameters
+ * @param bool|null $secure
+ * @return string
+ */
+function signedWordpressRoute($name, $parameters = [], $expiration = null, $absolute = true)
+{
+    return app('url')->signedWordpressRoute($name, $parameters, $expiration, $absolute);
+}
+
 
 /**
  * Generate a url for the application.
@@ -311,14 +382,6 @@ function url($path = null, $parameters = [], $secure = null)
     return app(UrlGenerator::class)->to($path, $parameters, $secure);
 }
 
-/**
- * Generate dashboard notice.
- *
- */
-function dashboard_notice(...$parameters)
-{
-    return app(Notices::class)->addNotice(...array_values($parameters));
-}
 
 
 function now(){
