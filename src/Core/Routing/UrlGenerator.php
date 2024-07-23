@@ -276,6 +276,45 @@ class UrlGenerator
 
 
     /**
+     * Get the URL to a wordpress named route.
+     *
+     * @param string $name
+     * @param mixed $parameters
+     * @param bool|null $secure
+     * @return string
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function wordpressRoute($name, $parameters = [], $secure = true)
+    {
+        if (!isset($this->app->wordpressRouter->namedRoutes[$name])) {
+            throw new \InvalidArgumentException("Route [{$name}] not defined.");
+        }
+
+        $uri = $this->app->wordpressRouter->namedRoutes[$name];
+
+        $parameters = $this->formatParameters($parameters);
+
+        $uri = preg_replace_callback('/\[([^\]]*)\]$/', function ($matches) use ($uri, &$parameters) {
+            $uri = $this->replaceRouteParameters($matches[1], $parameters);
+
+            return ($matches[1] == $uri) ? '' : $uri;
+        }, $uri);
+
+        $uri = $this->replaceRouteParameters($uri, $parameters);
+
+        $uri = $this->to($uri, [], $secure);
+
+        if (!empty($parameters)) {
+            $uri .= '?' . http_build_query($parameters);
+        }
+
+        return $uri;
+    }
+
+
+
+    /**
      * Get the URL to a named admin ajax route.
      *
      * @param string $name
@@ -465,6 +504,40 @@ class UrlGenerator
 
         return $this->route($name, $parameters + [
                 'signature' => hash_hmac('sha256', $this->route($name, $parameters, $absolute), $key),
+            ], $absolute);
+    }
+
+    /**
+     * Create a signed  Wordpress route URL for a named route.
+     *
+     * @param string $name
+     * @param mixed $parameters
+     * @param \DateTimeInterface|\DateInterval|int|null $expiration
+     * @param bool $absolute
+     * @return string
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function signedWordpressRoute($name, $parameters = [], $expiration = null, $absolute = true)
+    {
+        $parameters = Arr::wrap($parameters);
+
+        if (array_key_exists('signature', $parameters)) {
+            throw new InvalidArgumentException(
+                '"Signature" is a reserved parameter when generating signed routes. Please rename your route parameter.'
+            );
+        }
+
+        if ($expiration) {
+            $parameters = $parameters + ['expires' => $this->availableAt($expiration)];
+        }
+
+        ksort($parameters);
+
+        $key = call_user_func($this->keyResolver);
+
+        return $this->wordpressRoute($name, $parameters + [
+                'signature' => hash_hmac('sha256', $this->wordpressRoute($name, $parameters, $absolute), $key),
             ], $absolute);
     }
 
