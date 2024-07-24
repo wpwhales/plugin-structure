@@ -30,6 +30,11 @@ return [
     |
     */
     'cache' => true,
-    'compiled' => WP_CONTENT_DIR."/wpwhales/".(defined("WPW_VIEWS_CACHED_KEY") ? WPW_VIEWS_CACHED_KEY : hash('xxh128', 'SOMERANDOMSTRING')),
+    'compiled' => defined("WPWCORE_VIEWS_COMPILED")
+        ? WPWCORE_VIEWS_COMPILED
+        : WP_CONTENT_DIR . "/wpwhales/" . (defined("WPW_VIEWS_CACHED_KEY")
+            ? md5(WPW_VIEWS_CACHED_KEY)
+            : md5("RANDOMSTRINGOFUSER"))
+
 
 ];
