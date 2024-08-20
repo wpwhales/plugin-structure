@@ -1,0 +1,11 @@
+<?php
+
+namespace {{ namespace }};
+
+use WPWCore\Database\Eloquent\Factories\HasFactory;
+use WPWCore\Database\Eloquent\Model;
+
+class {{ class }} extends Model
+{
+    use HasFactory;
+}

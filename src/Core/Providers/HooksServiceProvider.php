@@ -18,19 +18,52 @@ class HooksServiceProvider extends ServiceProvider
         //
     }
 
+    private function normalizeArray($array)
+    {
+
+        return array_unique(array_map(function ($className) {
+            // Remove leading backslashes
+            $className = ltrim($className, '\\');
+
+            // Convert ::class constant to string if applicable
+            if (defined($className)) {
+                $className = constant($className);
+            }
+
+            return $className;
+        }, $array));
+    }
 
     public function boot()
     {
-        $hooks = config("hooks", []);
-        $widgets = config("widgets", []);
-        $shortcodes = config("shortcodes", []);
+        $hooks = $this->normalizeArray(config("hooks", []));
+        $widgets = $this->normalizeArray(config("widgets", []));
 
+
+
+        add_action("init",function(){
+            $shortcodes = $this->normalizeArray(config("shortcodes", []));
+            foreach ($shortcodes as $sc) {
+                $instance = new $sc;
+                if(!method_exists($instance,"render")){
+                    throw new WPWException("Shortcode {$sc} is missing the render method");
+                }
+
+                if(!method_exists($instance,"getName")){
+                    throw new WPWException("Shortcode {$sc} is missing the getName method");
+                }
+                add_shortcode($instance->getName(), [$instance, "render"]);
+
+            }
+        });
 
         foreach ($hooks as $class) {
 
-            new $class;
+            $obj = new $class;
+            $this->app->registerHook($obj);
 
         }
+
         add_action('widgets_init', function () use ($widgets) {
 
             foreach ($widgets as $w) {
@@ -44,16 +77,7 @@ class HooksServiceProvider extends ServiceProvider
         });
 
 
-        foreach ($shortcodes as $sc) {
-            $instance = new $sc;
 
-            if (!($instance instanceof ShortCodeInterface)) {
-                throw new WPWException("Shortcode class must implements the ShortCodeInterface");
-            }
-
-            add_shortcode($instance->getName(), [$instance, "render"]);
-
-        }
 
     }
 

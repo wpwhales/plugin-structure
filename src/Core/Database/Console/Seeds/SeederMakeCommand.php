@@ -87,6 +87,6 @@ class SeederMakeCommand extends GeneratorCommand
      */
     protected function rootNamespace()
     {
-        return 'Database\Seeders\\';
+        return 'WPWCore\Database\Seeders\\';
     }
 }

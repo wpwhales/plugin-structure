@@ -1,0 +1,20 @@
+<?php
+
+namespace {{ namespace }};
+
+
+
+class {{ class }}
+{
+
+
+    /**
+     * Create a new event instance.
+     */
+    public function __construct()
+    {
+        //
+    }
+
+
+}

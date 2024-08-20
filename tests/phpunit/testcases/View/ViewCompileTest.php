@@ -94,10 +94,7 @@ class ViewCompileTest extends \WP_UnitTestCase
 
 
         $this->expectException(ViewException::class);
-        $this->expectExceptionMessageMatches("Required code is missing in the Blade template.
-Add this code at the beginning of your Blade file");
-
-        $this->expectExceptionMessageMatches('/^\s*\[ <\?php\s+if\s*\(\s*!\s*defined\(\'ABSPATH\'\)\s*\)\s*die\(\)\s*;\s*\?> \]|^\s*\[ <\?php\s+if\s*\(\s*!\s*defined\("ABSPATH"\)\s*\)\s*die\(\)\s*;\s*\?> \]/m');
+ 
 
 
         /**

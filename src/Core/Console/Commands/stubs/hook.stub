@@ -1,0 +1,20 @@
+<?php
+
+namespace {{ namespace }};
+
+
+class {{ class }}
+{
+
+
+    /**
+     * You can use add_action and add_filter hooks here
+     */
+      public function __construct()
+        {
+
+
+
+        }
+
+}

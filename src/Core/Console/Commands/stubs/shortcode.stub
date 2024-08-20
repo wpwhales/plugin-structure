@@ -1,0 +1,30 @@
+<?php
+
+namespace {{ namespace }};
+
+use function WPWCore\view;
+
+class {{ class }}
+{
+
+
+
+    public function getName(){
+
+        return "{{viewName}}";
+    }
+    /**
+     * Shortcode Render function to generate output.
+     */
+    public function render($atts)
+    {
+        $atts = shortcode_atts(
+    		array(
+    			'foo' => 'no foo',
+    		), $atts );
+
+
+        return view("shortcodes.{{viewName}}")->render();
+    }
+
+}

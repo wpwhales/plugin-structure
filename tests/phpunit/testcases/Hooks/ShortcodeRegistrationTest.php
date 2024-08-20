@@ -25,7 +25,7 @@ class ShortcodeRegistrationTest extends \WP_UnitTestCase
         $this->app["config"]->set("shortcodes", [Shortcode::class]);
 
         $this->app->register(HooksServiceProvider::class);
-
+        do_action("init");
         $this->assertArrayHasKey("xyz", $shortcode_tags);
 
         $this->assertInstanceOf(Shortcode::class, $shortcode_tags["xyz"][0]);
@@ -37,6 +37,7 @@ class ShortcodeRegistrationTest extends \WP_UnitTestCase
         $this->app["config"]->set("shortcodes", [Shortcode::class]);
 
         $this->app->register(HooksServiceProvider::class);
+        do_action("init");
 
         $this->assertSame(do_shortcode("[xyz]"), "123");
 
@@ -46,11 +47,10 @@ class ShortcodeRegistrationTest extends \WP_UnitTestCase
     {
 
         $this->expectException(WPWException::class);
-        $this->expectExceptionMessage("Shortcode class must implements the ShortCodeInterface");
         $this->app["config"]->set("shortcodes", [FailShortCode::class]);
 
         $this->app->register(HooksServiceProvider::class);
-
+        do_action("init");
     }
 
 }

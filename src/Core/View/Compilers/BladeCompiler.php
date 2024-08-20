@@ -180,7 +180,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
         $codeSnippet = "[ <?php if (!defined('ABSPATH')) die();?> ]\n\r";
         $message = "Required code is missing in the Blade template.\n\r"
             . "Add this code at the beginning of your Blade file:\n\r" . "($file)\r\n"
-            . $codeSnippet;
+            . htmlentities($codeSnippet);
 
         return $message;
     }

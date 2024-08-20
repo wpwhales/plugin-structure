@@ -1,0 +1,18 @@
+<?php
+
+namespace {{ namespace }};
+
+
+class {{ class }} extends \WP_Ajax_UnitTestCase
+{
+    /**
+     * A basic feature test example.
+     */
+    public function test_example(): void
+    {
+      do_action("init");
+
+              $this->assertIsNumeric(did_action("init"));
+
+    }
+}

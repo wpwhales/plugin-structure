@@ -1,0 +1,20 @@
+<?php
+
+namespace DummyNamespace;
+
+use Tests\DuskTestCase;
+use Laravel\Dusk\Browser;
+
+class DummyClass extends DuskTestCase
+{
+    /**
+     * A Dusk test example.
+     */
+    public function testExample(): void
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit('/')
+                    ->assertSee('Laravel');
+        });
+    }
+}
