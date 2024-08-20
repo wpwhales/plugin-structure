@@ -8,6 +8,7 @@ use WPWCore\Filesystem\Filesystem;
 use WPWhales\Support\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Finder\Finder;
+use function WPWCore\app_path;
 
 abstract class GeneratorCommand extends Command implements PromptsForMissingInput
 {
@@ -156,6 +157,8 @@ abstract class GeneratorCommand extends Command implements PromptsForMissingInpu
 
             return false;
         }
+
+
 
         $name = $this->qualifyClass($this->getNameInput());
 

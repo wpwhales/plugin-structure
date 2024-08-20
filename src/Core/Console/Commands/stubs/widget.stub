@@ -1,0 +1,17 @@
+<?php
+
+namespace {{ namespace }};
+
+
+class {{ class }} extends \WP_Widget
+{
+
+  public function __construct()
+    {
+
+        parent::__construct(false, 'custom-widget-side');
+
+    }
+
+
+}

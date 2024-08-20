@@ -18,7 +18,8 @@ use WPWhales\Support\HtmlString;
 use WPWhales\Support\Sleep;
 
 
-function dispatch(ShouldQueue $job){
+function dispatch(ShouldQueue $job)
+{
 
     new PendingDispatch($job);
 
@@ -41,12 +42,15 @@ function app($make = null, array $parameters = [])
 
     return Container::getInstance()->make($make, $parameters);
 }
-function resource_path($path){
+
+function resource_path($path)
+{
     return app()->resourcePath($path);
 }
 
 
-function database_path($path = ''){
+function database_path($path = '')
+{
 
     return app()->databasePath($path);
 }
@@ -58,9 +62,9 @@ function database_path($path = ''){
  * @template TRescueValue
  * @template TRescueFallback
  *
- * @param  callable(): TRescueValue  $callback
- * @param  (callable(\Throwable): TRescueFallback)|TRescueFallback  $rescue
- * @param  bool|callable  $report
+ * @param callable(): TRescueValue $callback
+ * @param (callable(\Throwable): TRescueFallback)|TRescueFallback $rescue
+ * @param bool|callable $report
  * @return TRescueValue|TRescueFallback
  */
 function rescue(callable $callback, $rescue = null, $report = true)
@@ -83,22 +87,23 @@ function app_path($path = '')
 
 function base_path($path = '')
 {
-    return app()->basePath().($path ? '/'.$path : $path);
+    return app()->basePath() . ($path ? '/' . $path : $path);
 }
 
 
-
-function check_content_for_ABSPATH_constant($contents){
+function check_content_for_ABSPATH_constant($contents)
+{
 
     $pattern = '/^\s*<\?php\s+if\s*\(\s*!\s*defined\(\'ABSPATH\'\)\s*\)\s*die\(\)\s*;\s*\?>|^\s*<\?php\s+if\s*\(\s*!\s*defined\("ABSPATH"\)\s*\)\s*die\(\)\s*;\s*\?>/m';
 
     return preg_match($pattern, $contents, $matches, PREG_OFFSET_CAPTURE, 0);
 
 }
+
 /**
  * Report an exception.
  *
- * @param  \Throwable|string  $exception
+ * @param \Throwable|string $exception
  * @return void
  */
 function report($exception)
@@ -154,7 +159,6 @@ function redirect($to = null, $status = 302, $headers = [], $secure = null)
 }
 
 
-
 /**
  * Get the evaluated view contents for the given view.
  *
@@ -175,6 +179,13 @@ function view($view = null, $data = [], $mergeData = [])
 }
 
 
+function factory($class)
+{
+
+    return app($class)->factory();
+}
+
+
 /**
  * Generate a CSRF token form field.
  *
@@ -184,7 +195,6 @@ function csrf_field()
 {
     return new HtmlString('<input type="hidden" name="_token" value="' . csrf_token() . '">');
 }
-
 
 
 /**
@@ -203,7 +213,6 @@ function csrf_token()
     throw new RuntimeException("Application session store not set.");
 
 }
-
 
 
 /**
@@ -264,8 +273,8 @@ function old($key = null, $default = null)
 /**
  * Call the given Closure with the given value then return the value.
  *
- * @param  mixed  $value
- * @param  callable|null  $callback
+ * @param mixed $value
+ * @param callable|null $callback
  * @return mixed
  */
 function tap($value, $callback = null)
@@ -320,9 +329,6 @@ function adminAjaxRoute($name, $parameters = [], $secure = null)
 }
 
 
-
-
-
 /**
  * Generate a URL to a signed route.
  *
@@ -350,7 +356,6 @@ function signedAdminAjaxRoute($name, $parameters = [], $expiration = null, $abso
 }
 
 
-
 /**
  * Generate a URL to a signedAdminAjax  route.
  *
@@ -368,9 +373,9 @@ function signedWordpressRoute($name, $parameters = [], $expiration = null, $abso
 /**
  * Generate a url for the application.
  *
- * @param  string|null  $path
- * @param  mixed  $parameters
- * @param  bool|null  $secure
+ * @param string|null $path
+ * @param mixed $parameters
+ * @param bool|null $secure
  * @return \WPWhales\Contracts\Routing\UrlGenerator|string
  */
 function url($path = null, $parameters = [], $secure = null)
@@ -383,12 +388,11 @@ function url($path = null, $parameters = [], $secure = null)
 }
 
 
-
-function now(){
+function now()
+{
 
     return Carbon::now();
 }
-
 
 
 /**
@@ -403,7 +407,6 @@ function event($event, $payload = [], $halt = false)
 {
     return app('events')->dispatch($event, $payload, $halt);
 }
-
 
 
 /**
@@ -421,8 +424,6 @@ function bundle(string $bundle, ?string $manifest = null): Bundle
 
     return app('assets')->manifest($manifest)->bundle($bundle);
 }
-
-
 
 
 /**
@@ -493,7 +494,7 @@ function entrypoint(
 
             return (object)[
                 'name' => $name,
-                'uri' => $module,
+                'uri'  => $module,
                 'deps' => $dependencies,
             ];
         }
@@ -501,14 +502,11 @@ function entrypoint(
 }
 
 
-
-
 function asset($path)
 {
 
     return app("assets.manifest")->asset($path);
 }
-
 
 
 function bundleJS(string $bundleName): string
@@ -545,15 +543,15 @@ function bundleJS(string $bundleName): string
     $content = "";
     getManifest()->filter($filterBundle)
         ->map($prepEntry)
-        ->each(function ($entrypoint) use ($filterHot, $app_name,&$content): void {
+        ->each(function ($entrypoint) use ($filterHot, $app_name, &$content): void {
             $entrypoint
                 ->js
                 ->filter($filterHot)
-                ->each(function ($entry) use ($app_name,&$content) {
+                ->each(function ($entry) use ($app_name, &$content) {
                     $content .= "
                       <script
-                        src= '".asset($entry->uri)->__toString()."'
-                    id= '".$app_name . "-" . $entry->name."'
+                        src= '" . asset($entry->uri)->__toString() . "'
+                    id= '" . $app_name . "-" . $entry->name . "'
                     >
                     </script>
                     ";
@@ -605,17 +603,17 @@ function bundleCSS(string $bundleName): string
     $content = "";
     getManifest()->filter($filterBundle)
         ->map($prepEntry)
-        ->each(function ($entrypoint) use ($filterHot, $app_name,&$content): void {
+        ->each(function ($entrypoint) use ($filterHot, $app_name, &$content): void {
             if (!empty((array)$entrypoint)) {
                 $entrypoint
                     ->css
                     ->filter($filterHot)
-                    ->each(function ($entry) use ($app_name,&$content) {
+                    ->each(function ($entry) use ($app_name, &$content) {
 
-                        $content.= "
+                        $content .= "
                          <link
-                            href='".asset($entry->uri)->__toString()."'
-                            id='".$app_name . "-" . $entry->name."'
+                            href='" . asset($entry->uri)->__toString() . "'
+                            id='" . $app_name . "-" . $entry->name . "'
                             rel='stylesheet'
                         >
                         ";
@@ -647,7 +645,7 @@ function retry($times, callable $callback, $sleepMilliseconds = 0, $when = null)
     try {
         return $callback($attempts);
     } catch (\Exception $e) {
-        if ($times < 1 || ($when && ! $when($e))) {
+        if ($times < 1 || ($when && !$when($e))) {
             throw $e;
         }
 

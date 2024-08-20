@@ -10,6 +10,25 @@ use WPWCore\Cache\Console\CacheTableCommand;
 use WPWCore\Cache\Console\ClearCommand as CacheClearCommand;
 use WPWCore\Cache\Console\ForgetCommand as CacheForgetCommand;
 use WPWCore\Console\Application as Artisan;
+use WPWCore\Console\Commands\ComponentMakeCommand;
+use WPWCore\Console\Commands\ConsoleMakeCommand;
+use WPWCore\Console\Commands\ControllerMakeCommand;
+use WPWCore\Console\Commands\EventListCommand;
+use WPWCore\Console\Commands\EventMakeCommand;
+use WPWCore\Console\Commands\ExceptionMakeCommand;
+use WPWCore\Console\Commands\FactoryGenerateCommand;
+use WPWCore\Console\Commands\FactoryMakeCommand;
+use WPWCore\Console\Commands\HookMakeCommand;
+use WPWCore\Console\Commands\ListenerMakeCommand;
+use WPWCore\Console\Commands\MiddlewareMakeCommand;
+use WPWCore\Console\Commands\ModelMakeCommand;
+use WPWCore\Console\Commands\ObserverMakeCommand;
+use WPWCore\Console\Commands\PolicyMakeCommand;
+use WPWCore\Console\Commands\ProviderMakeCommand;
+use WPWCore\Console\Commands\RuleMakeCommand;
+use WPWCore\Console\Commands\ShortcodeMakeCommand;
+use WPWCore\Console\Commands\TestMakeCommand;
+use WPWCore\Console\Commands\WidgetMakeCommand;
 use WPWCore\Console\Scheduling\ScheduleFinishCommand;
 use WPWCore\Console\Scheduling\ScheduleRunCommand;
 use WPWCore\Console\Scheduling\ScheduleWorkCommand;
@@ -72,9 +91,270 @@ class ConsoleServiceProvider extends ServiceProvider
         'ForgetFailed'=>'command.forget.failed',
         'FlushFailed'=>'command.flush.failed',
         'ListFailed'=>'command.list.failed',
-        'RetryFailed'=>'command.retry.failed'
+        'RetryFailed'=>'command.retry.failed',
+        'ComponentMake' => 'command.component.make',
+        'ConsoleMake' => 'command.console.make',
+        'ControllerMake' => 'command.controller.make',
+        'EventList' => 'command.event.list',
+        'EventMake' => 'command.event.make',
+        'ListenerMake' => 'command.listener.make',
+        'ExceptionMake' => 'command.exception.make',
+        'FactoryMake' => 'command.factory.make',
+        'FactoryGenerate'=>'command.factory.generate',
+        'ShortcodeMake' => 'command.shortcode.make',
+        'HookMake' => 'command.hook.make',
+        'WidgetMake' => 'command.widget.make',
+        'MiddlewareMake' => 'command.middleware.make',
+        'ModelMake' => 'command.model.make',
+        'ObserverMake' => 'command.observer.make',
+        'ProviderMake' => 'command.provider.make',
+        'RuleMake' => 'command.rule.make',
+        'TestMake' => 'command.test.make',
 
     ];
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerObserverMakeCommand()
+    {
+        $this->app->singleton('command.observer.make', function ($app) {
+            return new ObserverMakeCommand($app["files"]);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerPolicyMakeCommand()
+    {
+        $this->app->singleton('command.policy.make', function ($app) {
+            return new PolicyMakeCommand($app["files"]);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerTestMakeCommand()
+    {
+        $this->app->singleton('command.test.make', function ($app) {
+            return new TestMakeCommand($app["files"]);
+        });
+    }
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerRuleMakeCommand()
+    {
+        $this->app->singleton('command.rule.make', function ($app) {
+            return new RuleMakeCommand($app["files"]);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerProviderMakeCommand()
+    {
+        $this->app->singleton('command.provider.make', function ($app) {
+            return new ProviderMakeCommand($app["files"]);
+        });
+    }
+
+
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerModelMakeCommand()
+    {
+        $this->app->singleton('command.model.make', function ($app) {
+            return new ModelMakeCommand($app["files"]);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerMiddlewareMakeCommand()
+    {
+        $this->app->singleton('command.middleware.make', function ($app) {
+            return new MiddlewareMakeCommand($app["files"]);
+        });
+    }
+
+    protected function registerWidgetMakeCommand()
+    {
+
+        $this->app->singleton('command.widget.make', function ($app) {
+            return new WidgetMakeCommand($app["files"],$app["config"]);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerShortcodeMakeCommand()
+    {
+
+        $this->app->singleton('command.shortcode.make', function ($app) {
+            return new ShortcodeMakeCommand($app["files"],$app["config"]);
+        });
+    }
+
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerHookMakeCommand()
+    {
+
+        $this->app->singleton('command.hook.make', function ($app) {
+            return new HookMakeCommand($app["files"],$app["config"]);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerFactoryGenerateCommand()
+    {
+
+        $this->app->singleton('command.factory.generate', function ($app) {
+            return new FactoryGenerateCommand($app["files"],$app['view']);
+        });
+    }
+
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerFactoryMakeCommand()
+    {
+        $this->app->singleton('command.factory.make', function ($app) {
+            return new FactoryMakeCommand($app["files"]);
+        });
+    }
+
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerExceptionMakeCommand()
+    {
+        $this->app->singleton('command.exception.make', function ($app) {
+            return new ExceptionMakeCommand($app["files"]);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerListenerMakeCommand()
+    {
+        $this->app->singleton('command.listener.make', function ($app) {
+            return new ListenerMakeCommand($app["files"]);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerEventMakeCommand()
+    {
+        $this->app->singleton('command.event.make', function ($app) {
+            return new EventMakeCommand($app["files"]);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerEventListCommand()
+    {
+        $this->app->singleton('command.event.list', function ($app) {
+            return new EventListCommand($app["files"]);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerControllerMakeCommand()
+    {
+        $this->app->singleton('command.controller.make', function ($app) {
+            return new ControllerMakeCommand($app["files"]);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerConsoleMakeCommand()
+    {
+        $this->app->singleton('command.console.make', function ($app) {
+            return new ConsoleMakeCommand($app["files"]);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerComponentMakeCommand()
+    {
+        $this->app->singleton('command.component.make', function ($app) {
+            return new ComponentMakeCommand($app["files"]);
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerMakeCommandsCommand()
+    {
+        $this->app->singleton('command.', function ($app) {
+            return new SeedCommand($app['db']);
+        });
+    }
 
     /**
      * Register the service provider.

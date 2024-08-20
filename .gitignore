@@ -3,3 +3,4 @@ vendor
 .phpunit.result.cache
 wp
 src/Core/database
+plugins/

@@ -20,3 +20,4 @@ CONTRIBUTING.md export-ignore
 phpstan.src.neon.dist export-ignore
 phpstan.types.neon.dist export-ignore
 phpunit.xml export-ignore
+composer-plugin-structure.json export-ignore

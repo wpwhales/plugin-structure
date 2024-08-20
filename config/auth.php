@@ -58,7 +58,7 @@ return [
     'providers' => [
       'users'=>[
           "driver"=>'eloquent',
-          "model"=> \Core\Models\User::class
+          "model"=> \WPWCore\Models\User::class
       ]
     ],
 

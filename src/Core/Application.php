@@ -76,6 +76,12 @@ class Application extends Container
 
 
     /**
+     * This will hold all the registered hooks
+     * @var array
+     */
+    protected $registeredHooks = [];
+
+    /**
      * The domain of the plugin (used for translations).
      *
      * @var string
@@ -174,6 +180,24 @@ class Application extends Container
      * @var string $adminMenuFilePath
      */
     protected $adminMenuFilePath = "";
+
+
+    public function getRegisteredHooks( $hookName = ""){
+
+        if(empty($hookName)){
+
+            return $this->registeredHooks;
+        }
+
+        return $this->registeredHooks[$hookName];
+    }
+
+
+    public function registerHook($hookInstance){
+
+        $this->registeredHooks[$hookInstance::class] = $hookInstance;
+
+    }
 
     /**
      * Create a new Lumen application instance.
@@ -438,9 +462,9 @@ class Application extends Container
 
 
         //TODO Will handle it later after integrating more features
-        //$this->instance('path', $this->path());
+        $this->instance('path', $this->path());
 
-        //$this->instance('env', $this->environment());
+        $this->instance('env', $this->environment());
 
         $this->registerContainerAliases();
     }
