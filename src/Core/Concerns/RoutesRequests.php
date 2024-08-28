@@ -276,7 +276,7 @@ trait RoutesRequests
 
             //may be a wordpress route so let's handle it over to template_redirect hook
 
-            add_action("template_redirect", [$this, "wordpressRouting"], 1);
+            $this->wordpressDispatcher($request);
 
             $this->shouldSend = false;
             throw new NotADefinedRouteException("May be a wordpress route");
@@ -298,34 +298,37 @@ trait RoutesRequests
 
         try {
 
-            $staticRoute = isset($this->router->getRoutes()[$method . $pathInfo]) ?: [];
+            $staticRoute = isset($this->router->getRoutes()[$method . $pathInfo]) ?$this->router->getRoutes()[$method . $pathInfo]: [];
             $dynamicRoute = $this->createDispatcher()->dispatch($method, $pathInfo);
 
 
             if ((!empty($staticRoute) || $dynamicRoute[0] === Dispatcher::FOUND)
 
             ) {
+                // run the rest of the code inside a specific hook of wordpress
 
 
-                return $this->sendThroughPipeline($this->middleware, function ($request) use ($method, $pathInfo, $staticRoute, $dynamicRoute) {
-                    $this->instance(\WPWhales\Http\Request::class, $request);
-
-
-                    if (!empty($staticRoute)) {
-                        return $this->handleFoundRoute([
-                            true, $this->router->getRoutes()[$method . $pathInfo]['action'], []
-                        ]);
-                    }
-
-
-                    return $this->handleDispatcherResponse(
-                        $dynamicRoute
-                    );
-
-
+                add_action("wpwcore_wordpress_route_handler", function () use ($method, $pathInfo, $staticRoute, $dynamicRoute) {
+                    $this->handleWordpressRoutingInsideAHook($method, $pathInfo, $staticRoute, $dynamicRoute);
                 });
 
+                //get the hook
+                $hook = [
+                    "name"=>"template_redirect",
+                    "priority" => 1,
+                ];
+                if(!empty($staticRoute) && isset($staticRoute["hook"])){
+                    $hook = $staticRoute["hook"];
+                }
 
+                if(!empty($dynamicRoute) && isset($dynamicRoute[1]["hook"])){
+                    $hook = $dynamicRoute[1]["hook"];
+                }
+
+                add_action($hook["name"], [$this, "wordpressRouteHandler"], $hook["priority"]);
+
+            }else{
+                add_action("template_redirect", [$this, "wordpressRouteHandler"], 1);
             }
 
             return false;
@@ -337,22 +340,49 @@ trait RoutesRequests
 
     }
 
-    public function wordpressRouting()
+    public function wordpressRouteHandler()
     {
 
-        $request = app("request");
-        $response = $this->wordpressDispatcher($request);
+        do_action("wpwcore_wordpress_route_handler");
+    }
+
+    public function handleWordpressRoutingInsideAHook($method, $pathInfo, $staticRoute, $dynamicRoute)
+    {
+
+        try {
+            $response = $this->sendThroughPipeline($this->middleware, function ($request) use ($method, $pathInfo, $staticRoute, $dynamicRoute) {
+                $this->instance(\WPWhales\Http\Request::class, $request);
+
+
+                if (!empty($staticRoute)) {
+                    return $this->handleFoundRoute([
+                        true, $this->router->getRoutes()[$method . $pathInfo]['action'], []
+                    ]);
+                }
+
+
+                return $this->handleDispatcherResponse(
+                    $dynamicRoute
+                );
+
+
+            });
+
+        } catch (Throwable $e) {
+            $response = $this->prepareResponse($this->sendExceptionToHandler($e));;
+        }
 
         if ($response !== false) {
             $this->shouldSend = true;
         }
-            //TODO CHECK IF ROUTE EXISTS OR NOT. OTHER WISE NO NEED TO SEND . LET WORDPRESS HANDLE IT.
+        //TODO CHECK IF ROUTE EXISTS OR NOT. OTHER WISE NO NEED TO SEND . LET WORDPRESS HANDLE IT.
         $this->handleResponse($response, function () {
             $this->app->terminate();
         });
 
 
     }
+
 
     /**
      * Parse the incoming request and return the method and path info.

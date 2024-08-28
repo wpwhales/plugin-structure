@@ -357,34 +357,30 @@ trait MakesHttpRequest
 
         $this->_last_response = "";
 
-        if(!Str::startsWith($route,["http","https","localhost"])){
+        if (!Str::startsWith($route, ["http", "https", "localhost"])) {
             $uri = str_replace(site_url(), "", admin_url("admin-ajax.php"));
 
             $query = [
-                "action"=>"wpwhales",
-                "route"=>$route
+                "action" => "wpwhales",
+                "route"  => $route
             ];
             $url_parts = parse_url($uri);
-            if(!empty($url_parts["query"])){
-                parse_str($url_parts["query"],$query);
+            if (!empty($url_parts["query"])) {
+                parse_str($url_parts["query"], $query);
             }
 
 
-
-            $uri = $uri."?".http_build_query($query);
+            $uri = $uri . "?" . http_build_query($query);
 
 
             $this->currentUri = $this->prepareUrlForRequest($uri);
 
-        }else{
-            $route = Str::replace(["https://","http://","www","localhost"],["","",""],$route);
+        } else {
+            $route = Str::replace(["https://", "http://", "www", "localhost"], ["", "", ""], $route);
             $uri = $route;
 
         }
         $this->currentUri = $uri;
-
-
-
 
 
         $server["PHP_SELF"] = $uri;
@@ -392,8 +388,8 @@ trait MakesHttpRequest
         $server["SCRIPT_NAME"] = $uri;
         $server["SCRIPT_NAME"] = $uri;
         $server["SCRIPT_FILENAME"] = ABSPATH . "." . $uri;
-        $server["HTTPS"]="https";
-        $server["SERVER_PORT"]=443;
+        $server["HTTPS"] = "https";
+        $server["SERVER_PORT"] = 443;
 
         $symfonyRequest = SymfonyRequest::create(
             $this->currentUri, $method, $parameters,
@@ -443,6 +439,15 @@ trait MakesHttpRequest
 
         $this->currentUri = $this->prepareUrlForRequest($uri);
 
+
+        $hook = "template_redirect";
+        $priority = 1;
+        if (isset($parameters["hook"])) {
+            $hook = $parameters["hook"]["name"];
+            $priority = $parameters["hook"]["priority"];
+
+            unset($parameters["hook"]);
+        }
         $symfonyRequest = SymfonyRequest::create(
             $this->currentUri, $method, $parameters,
             $cookies, $files, $server, $content
@@ -461,10 +466,19 @@ trait MakesHttpRequest
             ob_start();
             $response = $this->app->handle($this->app['request']);
 
-            $instance = Collection::make($wp_filter["template_redirect"][1])->first()["function"];
-            if($instance[0] !== $this->app){
-                wp_die("Template redirect hook is not binded in the code");
+            $this->assertArrayHasKey($priority, $wp_filter[$hook],"Hook {$hook} is not binded in the code for the route {$uri}");
+
+
+
+            $instance = Collection::make($wp_filter[$hook][$priority]);
+            $instance = $instance->filter(function($filter,$key){
+
+                return $filter["function"][0] ===$this->app && str_contains($key,"wordpressRouteHandler");
+            })->first()["function"];
+            if ($instance[0] !== $this->app) {
+                wp_die("hook is not binded in the code");
             }
+
             $method = $instance[1];
             $instance[0]->{$method}();
             $this->_last_response = ob_get_clean();
@@ -513,7 +527,6 @@ trait MakesHttpRequest
         $this->app['request'] = Request::createFromBase($symfonyRequest);
 
         try {
-
 
 
             ob_start();

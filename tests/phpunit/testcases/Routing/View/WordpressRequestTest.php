@@ -27,14 +27,45 @@ class WordpressRequestTest extends \WP_UnitTestCase
         $config->set("view.paths", $paths);
     }
 
+    public function test_response_in_a_seperate_hook()
+    {
+
+
+
+        $this->app->wordpressRouter->get("/view_in_response", [
+            "uses" => \Tests\Routing\View\TestController::class . "@view_in_response",
+            "hook"=>[
+                "name"=>"init",
+                "priority" => 10
+            ]
+        ]);
+
+
+
+        $response = $this->wordpressCall("GET", "/view_in_response",[
+            "hook"=>[
+                "name"=>"init",
+                "priority"=>10
+            ]
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertContent("<h1>Hello World</h1>");
+        $response->assertViewIs("test");
+
+
+    }
+
     public function test_view_in_response()
     {
 
 
 
         $this->app->wordpressRouter->get("/view_in_response", [
-            "uses" => \Tests\Routing\View\TestController::class . "@view_in_response"
+            "uses" => \Tests\Routing\View\TestController::class . "@view_in_response",
+
         ]);
+
 
 
         $response = $this->wordpressCall("GET", "/view_in_response");
