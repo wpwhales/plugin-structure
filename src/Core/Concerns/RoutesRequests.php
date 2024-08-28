@@ -276,7 +276,7 @@ trait RoutesRequests
 
             //may be a wordpress route so let's handle it over to template_redirect hook
 
-            $this->wordpressDispatcher($request);
+            $this->wordpressDispatcher();
 
             $this->shouldSend = false;
             throw new NotADefinedRouteException("May be a wordpress route");
@@ -287,9 +287,9 @@ trait RoutesRequests
         }
     }
 
-    protected function wordpressDispatcher($request)
+    protected function wordpressDispatcher()
     {
-
+        $request = app("request");
 
         [$method, $pathInfo] = $this->parseIncomingRequest($request);
         //replace the active router with wordpress router
